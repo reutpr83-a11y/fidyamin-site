@@ -16,6 +16,7 @@
 | `src/film.html` | קוד המקור של הסרטון — כל פריים מיוצר מכאן |
 | `src/render.js` | סקריפט הרינדור (Playwright → פריימים) |
 | `src/score.py` | מחולל הפסקול |
+| `poster.jpg` | תמונת נושא (thumbnail) |
 
 ## עריכה ורינדור מחדש
 
