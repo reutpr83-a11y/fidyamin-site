@@ -1,3 +1,6 @@
 # large render intermediates, rebuilt by render.js and sound.py
 out/video-only.mp4
 out/score.wav
+
+# the share copy is generated from the master, see README
+out/harish-budget-reels-1080x1920-lite.mp4
