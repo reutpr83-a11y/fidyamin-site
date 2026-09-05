@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>פרוטוטייפ תנועה</title>
+<style>
+@font-face{font-family:'HeeboV';src:url('fonts/Heebo.ttf') format('truetype');font-weight:100 900;font-display:block}
+
+:root{
+  --navy-deep:#0b2b44; --navy-mid:#123d60; --blue:#1a6ba4;
+  --cream:#fbfaf6; --gold:#f5b04a; --blue-deep:#12456e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000;
+  font-family:'HeeboV',sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;isolation:isolate}
+
+#bg{position:absolute;inset:-6%;
+  background:linear-gradient(207deg,var(--navy-deep) 0%,#0e3452 32%,var(--navy-mid) 58%,var(--blue) 100%);
+  will-change:transform}
+#glow{position:absolute;inset:0;
+  background:radial-gradient(46% 34% at 18% 74%,rgba(56,142,204,.32) 0%,rgba(56,142,204,0) 70%);
+  will-change:transform}
+#vignette{position:absolute;inset:0;
+  background:radial-gradient(120% 78% at 62% 34%,rgba(0,0,0,0) 42%,rgba(4,17,29,.32) 100%)}
+#cream{position:absolute;left:0;right:0;top:1740px;height:0;background:var(--cream)}
+#wedge{position:absolute;left:0;top:1628px;width:100%;height:112px;
+  background:linear-gradient(90deg,#19669d 0%,#165482 54%,#123e62 100%);
+  clip-path:polygon(0% 100%,0% 6%,93% 100%);opacity:0}
+
+/* every text element is one persistent node. nothing is created or
+   destroyed mid film, which is what stops it reading as slides. */
+.el{position:absolute;white-space:nowrap;transform-origin:100% 0;
+  will-change:transform,opacity;opacity:0}
+
+.head{color:#fff;font-weight:700;line-height:1.08;letter-spacing:-.01em}
+.fig {color:#fff;font-weight:700;line-height:1.02;letter-spacing:-.022em}
+.exp {color:rgba(255,255,255,.76);font-weight:500;line-height:1.22}
+.label{color:var(--gold);font-weight:700;line-height:1.2;letter-spacing:.07em}
+.gold{color:var(--gold);font-weight:700;line-height:1.08;letter-spacing:-.01em}
+.dkfig{color:var(--navy-deep);font-weight:700;line-height:1.02;letter-spacing:-.022em}
+.dkexp{color:var(--blue-deep);font-weight:500;line-height:1.22}
+
+/* ONE gold rule for the whole film. it travels, stretches and crosses the
+   split line rather than being redrawn on every screen. */
+#rule{position:absolute;left:912px;width:6px;background:var(--gold);
+  border-radius:3px;will-change:top,height,opacity;opacity:0}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div><div id="glow"></div><div id="vignette"></div>
+  <div id="cream"></div><div id="wedge"></div>
+  <div id="els"></div>
+  <div id="rule"></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const RIGHT = 880;          // right edge of the RTL column
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const easeIO  = x => x < .5 ? 2*x*x : 1 - Math.pow(-2*x+2, 2)/2;
+const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
+
+/* Each element carries a base position and size, and a list of keyframes.
+   Between keyframes we interpolate opacity, offset and scale, so an element
+   can shrink and travel from one role to another instead of being replaced.
+   That is the whole trick: the eye follows an object, not a slide. */
+const E = [
+  { k:'kicker',  t:'עדכון התקציב',            c:'label', s:42,  top:690, keys:[
+      [0,    {o:0, y:14}], [260, {o:1, y:0}], [3400, {o:1}], [3620, {o:0, y:-10}] ]},
+
+  { k:'total',   t:'3.2 מיליון ש״ח',           c:'fig',   s:128, top:748, keys:[
+      [0,    {o:0, y:14}], [260, {o:1, y:0}], [3400, {o:1, y:0, sc:1}],
+      /* the hero number does not leave. it shrinks and takes up station at
+         the top, where it stays as the whole that every part belongs to. */
+      [4000, {o:.62, y:-448, x:-122, sc:42/128}],
+      [10400,{o:.62, y:-448, x:-122, sc:42/128}],
+      [10700,{o:0,   y:-462, x:-122, sc:42/128}] ]},
+
+  { k:'from',    t:'מתוך',                      c:'label', s:42,  top:300, keys:[
+      [3400, {o:0}], [3620, {o:0}], [4000, {o:.62}], [10400,{o:.62}], [10700,{o:0}] ]},
+
+  { k:'capTot',  t:'פחות בשכר עובדי העירייה',   c:'exp',   s:54,  top:892, keys:[
+      [0,{o:0,y:14}], [320,{o:1,y:0}], [3400,{o:1}], [3600,{o:0,y:-10}] ]},
+
+  { k:'labEng',  t:'הנדסה',                     c:'label', s:42,  top:700, keys:[
+      [3500,{o:0,y:12}], [3800,{o:1,y:0}], [7000,{o:1}], [7220,{o:0,y:-10}] ]},
+  { k:'labSan',  t:'תברואה',                    c:'label', s:42,  top:700, keys:[
+      [7100,{o:0,y:12}], [7400,{o:1,y:0}], [10400,{o:1}], [10620,{o:0,y:-10}] ]},
+
+  { k:'figEng',  t:'1.325 מיליון ש״ח',          c:'fig',   s:110, top:760, keys:[
+      [3560,{o:0,y:16}], [3860,{o:1,y:0}], [7000,{o:1,y:0}], [7240,{o:0,y:-12}] ]},
+  { k:'figSan',  t:'421 אלף ש״ח',               c:'fig',   s:110, top:760, keys:[
+      [7160,{o:0,y:16}], [7460,{o:1,y:0}], [10400,{o:1}], [10640,{o:0,y:-12}] ]},
+
+  /* the caption is identical on both department screens, so it simply stays
+     put while the figures change underneath it */
+  { k:'capSal',  t:'פחות בשכר עובדי העירייה',   c:'exp',   s:54,  top:888, keys:[
+      [3620,{o:0,y:14}], [3920,{o:1,y:0}], [10400,{o:1}], [10620,{o:0,y:-10}] ]},
+
+  { k:'creEng',  t:'970 אלף ש״ח',               c:'dkfig', s:110, top:1370, keys:[
+      [3710,{o:0,y:16}], [4010,{o:1,y:0}], [7000,{o:1}], [7240,{o:0,y:-12}] ]},
+  { k:'creCapE', t:'יותר לייעוץ ולפיקוח מבחוץ', c:'dkexp', s:54,  top:1498, keys:[
+      [3770,{o:0,y:14}], [4070,{o:1,y:0}], [7000,{o:1}], [7240,{o:0,y:-10}] ]},
+  { k:'creSan',  t:'2.43 מיליון ש״ח',           c:'dkfig', s:110, top:1370, keys:[
+      [7310,{o:0,y:16}], [7610,{o:1,y:0}], [10400,{o:1}], [10640,{o:0,y:-12}] ]},
+  { k:'creCapS', t:'יותר לקבלנים',              c:'dkexp', s:54,  top:1498, keys:[
+      [7370,{o:0,y:14}], [7670,{o:1,y:0}], [10400,{o:1}], [10640,{o:0,y:-10}] ]},
+
+  /* the sentence corrects itself. the verb never moves; only the negation
+     arrives and the object changes. */
+  { k:'canLine', t:'אפשר להעביר',               c:'head',  s:84,  top:820, keys:[
+      [10900,{o:0,y:16,x:0}], [11220,{o:1,y:0,x:0}],
+      [12600,{o:1,x:0}], [12980,{o:1,x:-96}], [15300,{o:1,x:-96}], [15600,{o:0,x:-96}] ]},
+  { k:'neg',     t:'אי',                         c:'gold',  s:84,  top:820, keys:[
+      [12600,{o:0,x:70}], [12980,{o:1,x:0}], [15300,{o:1,x:0}], [15600,{o:0}] ]},
+  { k:'objA',    t:'עבודה החוצה.',              c:'head',  s:84,  top:928, keys:[
+      [11000,{o:0,y:16}], [11320,{o:1,y:0}], [12600,{o:1,x:0}], [12880,{o:0,x:-40}] ]},
+  { k:'objB',    t:'את האחריות.',                c:'head',  s:84,  top:928, keys:[
+      [12800,{o:0,y:12,x:-96}], [13160,{o:1,y:0,x:-96}], [15300,{o:1,x:-96}], [15600,{o:0,x:-96}] ]}
+];
+
+/* the cream band and the single gold rule are keyframed the same way */
+const BAND = [ [0,{top:1740,h:0}], [3500,{top:1740,h:0}],
+               [3980,{top:1300,h:440}], [10400,{top:1300,h:440}],
+               [10820,{top:1740,h:0}] ];
+
+const RULE = [ [0,   {o:0, top:682, h:275}],
+               [300, {o:1, top:682, h:275}],
+               [3400,{o:1, top:682, h:275}],
+               /* it stretches across the split line, stitching navy to cream */
+               [4050,{o:1, top:692, h:888}],
+               [10400,{o:1, top:692, h:888}],
+               [10900,{o:1, top:800, h:300}],
+               [15600,{o:1, top:800, h:300}] ];
+
+const DUR = 15.6;
+window.TOTAL = DUR;
+
+const host = document.getElementById('els');
+E.forEach(e => {
+  const d = document.createElement('div');
+  d.className = 'el ' + e.c;
+  d.style.fontSize = e.s + 'px';
+  d.style.right = (1080 - RIGHT) + 'px';
+  d.style.top = e.top + 'px';
+  d.textContent = e.t;
+  host.appendChild(d);
+  e.node = d;
+});
+
+function track(keys, ms, fields){
+  let a = keys[0], b = keys[0];
+  for(let i = 0; i < keys.length; i++){
+    if(keys[i][0] <= ms) a = keys[i];
+    if(keys[i][0] > ms){ b = keys[i]; break; }
+    b = keys[i];
+  }
+  const span = b[0] - a[0];
+  const k = span > 0 ? easeOut(clamp01((ms - a[0]) / span)) : 1;
+  const out = {};
+  fields.forEach(f => {
+    const va = a[1][f] !== undefined ? a[1][f] : (f === 'sc' ? 1 : 0);
+    const vb = b[1][f] !== undefined ? b[1][f] : va;
+    out[f] = va + (vb - va) * k;
+  });
+  return out;
+}
+
+const bg = document.getElementById('bg');
+const glow = document.getElementById('glow');
+const creamEl = document.getElementById('cream');
+const wedgeEl = document.getElementById('wedge');
+const ruleEl = document.getElementById('rule');
+
+function setTime(t){
+  t = Math.max(0, Math.min(DUR - 0.001, t));
+  const ms = t * 1000;
+  const p = t / DUR;
+
+  bg.style.transform = 'scale(' + (1 + p * 0.03).toFixed(5) + ') translate3d(' +
+    (-p * 12).toFixed(2) + 'px,' + (-p * 8).toFixed(2) + 'px,0)';
+  glow.style.transform = 'translate3d(' + (Math.sin(t * 0.21) * 40).toFixed(2) + 'px,' +
+    (Math.cos(t * 0.16) * 28).toFixed(2) + 'px,0)';
+
+  E.forEach(e => {
+    const v = track(e.keys, ms, ['o', 'x', 'y', 'sc']);
+    const sc = v.sc || 1;
+    e.node.style.opacity = v.o.toFixed(4);
+    e.node.style.transform = 'translate3d(' + v.x.toFixed(2) + 'px,' + v.y.toFixed(2) +
+                             'px,0) scale(' + sc.toFixed(4) + ')';
+  });
+
+  const bnd = track(BAND, ms, ['top', 'h']);
+  creamEl.style.top = bnd.top.toFixed(1) + 'px';
+  creamEl.style.height = bnd.h.toFixed(1) + 'px';
+  wedgeEl.style.top = (bnd.top + bnd.h - 112).toFixed(1) + 'px';
+  wedgeEl.style.opacity = clamp01((bnd.h - 100) / 200).toFixed(3);
+
+  const r = track(RULE, ms, ['o', 'top', 'h']);
+  ruleEl.style.opacity = r.o.toFixed(3);
+  ruleEl.style.top = r.top.toFixed(1) + 'px';
+  ruleEl.style.height = r.h.toFixed(1) + 'px';
+}
+window.setTime = setTime;
+window.SCENES = [{ id: 'proto', dur: DUR }];
+window.ready = false;
+document.fonts.ready.then(() => { setTime(0); window.ready = true; });
+})();
+</script>
+</body>
+</html>

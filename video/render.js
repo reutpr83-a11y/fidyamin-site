@@ -11,6 +11,8 @@ const DIR = __dirname;
 const OUT = path.join(DIR, 'out');
 const FPS = 30;
 const FF = process.env.FFMPEG || '/tmp/ffdl/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2';
+const PAGE = process.env.PAGE || 'video.html';
+const NAME = process.env.NAME || 'video-only';
 
 (async () => {
   const mode = process.argv[2] || 'sheet';
@@ -24,7 +26,7 @@ const FF = process.env.FFMPEG || '/tmp/ffdl/imageio_ffmpeg/binaries/ffmpeg-linux
     viewport: { width: 1080, height: 1920 },
     deviceScaleFactor: 1
   });
-  await page.goto('file://' + path.join(DIR, 'video.html'));
+  await page.goto('file://' + path.join(DIR, PAGE));
   await page.waitForFunction('window.ready === true', null, { timeout: 30000 });
 
   const total = await page.evaluate('window.TOTAL');
@@ -51,7 +53,7 @@ const FF = process.env.FFMPEG || '/tmp/ffdl/imageio_ffmpeg/binaries/ffmpeg-linux
   }
 
   // full render
-  const outFile = path.join(OUT, 'video-only.mp4');
+  const outFile = path.join(OUT, NAME + '.mp4');
   const args = [
     '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-i', 'pipe:0',
     '-c:v', 'libx264', '-profile:v', 'high', '-level', '4.2',
