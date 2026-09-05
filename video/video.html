@@ -17,6 +17,7 @@
   --blue:#1a6ba4;
   --cream:#fbfaf6;
   --gold:#f5b04a;
+  --blue-deep:#12456e;
   --muted:rgba(255,255,255,.60);
 }
 
@@ -75,12 +76,13 @@ html,body{
 
 /* ---- one type scale for the whole film ----
    head 64 / 800   every statement and headline
-   sub  56 / 700   cream lists
+   sub  58 / 700   cream paragraphs
    fig  88 / 800   section figures     hero 104 / 800  the one total
-   kick 40 / 600   gold lead in        cap  40 / 500   muted caption
+   kick 48 / 600   gold lead in        cap  44 / 500   muted caption
    Sizes are assigned in JS from window.TYPE, never per scene. */
 .st{color:#fff;font-weight:800;line-height:1.42;letter-spacing:-.005em}
-.sub{font-weight:700;line-height:1.40;letter-spacing:-.004em}
+.sub{font-weight:700;line-height:1.46;letter-spacing:-.004em}
+.sub.dk{color:var(--blue-deep)}
 .kick{color:var(--gold);font-weight:600;line-height:1.35;letter-spacing:.014em}
 .label{color:var(--gold);font-weight:700;line-height:1.35;letter-spacing:.07em}
 .fig{color:#fff;font-weight:800;line-height:1.12;letter-spacing:-.02em}
@@ -136,9 +138,9 @@ const TYPE = window.TYPE = {
   hero:    104,   // the single total figure
   fig:      88,   // section figures
   head:     64,   // every statement and headline
-  sub:      56,   // cream lists
-  kicker:   40,   // gold lead in
-  caption:  40    // muted caption under a figure
+  sub:      58,   // cream paragraphs on the cream panel
+  kicker:   48,   // gold lead in
+  caption:  44    // muted caption under a figure
 };
 /* vertical rhythm, in px */
 const GAP = { afterLabel: 46, afterKicker: 56, beforeCaption: 16, beforeTail: 64 };
@@ -153,7 +155,7 @@ function creamH(sc){
   switch(sc.type){
     case 'data':   return sc.bottom ? 820 : 0;
     case 'total':  return 820;
-    case 'split':  return sc.creamList ? 1000 : 790;
+    case 'split':  return 820;
     case 'people': return 900;
     default:       return 0;
   }
@@ -336,7 +338,7 @@ function layout(){
       if(boxH && h > boxH){ apply(boxH / h); FITWARN.push(b.sc.id + ' height x' + (boxH/h).toFixed(3)); }
     };
     fit(b.nav, BOX_W, b.navyBottom - 60 - L.safeTop);
-    fit(b.cre, b.sc.type === 'data' ? BOX_W : 900,
+    fit(b.cre, b.sc.type === 'data' ? BOX_W : 860,
                L.safeBottom - (L.H - b.ch + 50));
 
     /* vertical centring inside the navy band */

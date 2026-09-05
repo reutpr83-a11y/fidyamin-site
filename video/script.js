@@ -6,7 +6,8 @@
    Every element takes its size from window.TYPE in video.html.
    Lines are hand broken so that nothing ever needs to be shrunk
    to fit, which is what keeps the hierarchy identical end to end.
-   Keep every statement line at 22 characters or fewer.
+   Keep every statement line at 22 characters or fewer, and every
+   cream paragraph line at 28 or fewer.
    ------------------------------------------------------------------ */
 
 /* Safe area for Instagram Reels (1080x1920):
@@ -114,8 +115,9 @@ window.SCENES = [
 
   { id: 'growth', dur: 4.2, type: 'split',
     lines: ['וחריש עדיין גדלה.'],
-    creamList: ['יותר שכונות.', 'יותר בתי ספר.', 'יותר כבישים.',
-                'יותר תשתיות.', 'יותר תושבים.', 'יותר שירותים לנהל.'] },
+    creamList: ['יותר שכונות. יותר בתי ספר.',
+                'יותר כבישים. יותר תשתיות.',
+                'יותר תושבים ויותר שירותים.'] },
 
   { id: 'meaning', dur: 4.6, type: 'statement',
     lines: [
@@ -145,8 +147,9 @@ window.SCENES = [
 
   { id: 'not-budget', dur: 4.6, type: 'split',
     lines: ['זו כבר לא שאלה', 'של תקציב.', '', 'זו היכולת של העירייה', 'לתת שירות.'],
-    creamList: ['לילדים.', 'למשפחות.', 'למבוגרים.',
-                'למשרתי מילואים.', 'לעסקים.', 'לכל מי שחי כאן.'] },
+    creamList: ['לילדים. למשפחות. למבוגרים.',
+                'למשרתי מילואים. לעסקים.',
+                'לכל מי שחי כאן.'] },
 
   { id: 'systems', dur: 4.8, type: 'kicker',
     kicker: 'מי שמבין בניהול יודע',
