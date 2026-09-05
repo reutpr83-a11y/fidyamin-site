@@ -1,0 +1,22 @@
+{
+  "_comment": [
+    "Edit decision list. Every entry is a verbatim slice of the source, in the",
+    "order it will appear in the reel. Copy start/end/text straight out of",
+    "transcript.txt - do not paraphrase, and keep each answer long enough that",
+    "it still means what it meant in the interview.",
+    "",
+    "  start, end  seconds into source.mp4",
+    "  role        'q' = interviewer's question, 'a' = interviewee's answer",
+    "  text        what is spoken in that slice. Omit it and the words are",
+    "              pulled from transcript.json by timecode.",
+    "",
+    "Lead each answer with the question that prompted it: the pairing is what",
+    "keeps a pulled quote honest, and it is also what makes the clip land."
+  ],
+  "cuts": [
+    { "start": 12.40, "end": 18.90, "role": "q", "text": "" },
+    { "start": 19.10, "end": 31.75, "role": "a", "text": "" },
+    { "start": 58.20, "end": 63.40, "role": "q", "text": "" },
+    { "start": 63.60, "end": 79.05, "role": "a", "text": "" }
+  ]
+}
