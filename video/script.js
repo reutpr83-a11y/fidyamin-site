@@ -38,11 +38,11 @@ window.LAYOUT = {
 window.SCENES = [
 
   /* 1. the hook: the number and the contradiction in one frame */
-  { id: 'hook', dur: 4.2, type: 'data', enter: 260, label: 'עדכון התקציב',
+  { id: 'hook', dur: 4.2, type: 'data', enter: 260, lead: -200, label: 'עדכון התקציב',
     top:    { figure: '3.2 מיליון ש״ח', caption: 'פחות בשכר עובדי העירייה', hero: true },
     creamLines: ['ויותר לקבלנים, ליועצים', 'ולספקים מבחוץ.'] },
 
-  /* 2 to 4. where it happens */
+  /* 2 and 3. where it happens */
   { id: 'eng', dur: 3.8, type: 'data', enter: 240, label: 'הנדסה',
     top:    { figure: '1.325 מיליון ש״ח', caption: 'פחות בשכר עובדי העירייה' },
     bottom: { figure: '970 אלף ש״ח',      caption: 'יותר לייעוץ ולפיקוח מבחוץ' } },
@@ -50,9 +50,6 @@ window.SCENES = [
   { id: 'san', dur: 3.8, type: 'data', enter: 240, label: 'תברואה',
     top:    { figure: '421 אלף ש״ח',     caption: 'פחות בשכר עובדי העירייה' },
     bottom: { figure: '2.43 מיליון ש״ח', caption: 'יותר לקבלנים' } },
-
-  { id: 'col', dur: 2.8, type: 'data', enter: 240, label: 'גבייה',
-    top: { figure: '900 אלף ש״ח', caption: 'יותר לקבלנים מבחוץ' } },
 
   /* 5. what a resident actually meets */
   { id: 'life', dur: 4.2, type: 'statement', enter: 300,
@@ -109,7 +106,7 @@ window.SCENES = [
                  'לכל מי שחי כאן.'] },
 
   /* 11. the concrete ask */
-  { id: 'ask', dur: 4.8, type: 'people', enter: 360, lead: 160,
+  { id: 'ask', dur: 6.0, type: 'people', enter: 360, lead: 160,
     lines: ['לעצור את', 'עדכון התקציב', 'ולהחזיר אותו לדיון.'],
     people: [
       { img: 'assets/itzik-lev.png',       name: 'איציק לב' },
@@ -119,7 +116,7 @@ window.SCENES = [
     ] },
 
   /* 12. one closing sentence */
-  { id: 'end', dur: 5.2, type: 'statement', enter: 380, lead: 140,
+  { id: 'end', dur: 5.8, type: 'statement', enter: 380, lead: 140,
     lines: [
       'זה לא ויכוח',
       'על שורה בתקציב.',

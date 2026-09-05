@@ -7,8 +7,8 @@ percussion, one clean synth layer, and a build made of layers arriving
 rather than of anything getting louder. No vocals, no melody, no trailer
 drums, no heartbeat, no news sting.
 
-Six distinct effects in the whole piece and nothing else:
-  four small ticks on the four figure reveals,
+Five distinct effects in the whole piece and nothing else:
+  three small ticks on the three figure reveals,
   one low layer arriving when the film turns from data to meaning,
   one clean resolve under the closing line.
 
@@ -24,12 +24,12 @@ BEAT = 60.0 / BPM               # 0.714s
 
 # scene starts, from script.js
 SCENES = [
-    ('hook', 0.0, 4.2), ('eng', 4.2, 3.8), ('san', 8.0, 3.8), ('col', 11.8, 2.8),
-    ('life', 14.6, 4.2), ('msg1', 18.8, 4.2), ('growth', 23.0, 3.6), ('msg2', 26.6, 4.2),
-    ('msg3', 30.8, 4.4), ('service', 35.2, 4.0), ('ask', 39.2, 4.8), ('end', 44.0, 5.2),
+    ('hook', 0.0, 4.2), ('eng', 4.2, 3.8), ('san', 8.0, 3.8),
+    ('life', 11.8, 4.2), ('msg1', 16.0, 4.2), ('growth', 20.2, 3.6), ('msg2', 23.8, 4.2),
+    ('msg3', 28.0, 4.4), ('service', 32.4, 4.0), ('ask', 36.4, 6.0), ('end', 42.4, 5.8),
 ]
 AT = {n: s for n, s, d in SCENES}
-DUR = 49.2
+DUR = 48.2
 TAIL = 1.4                      # room for the resolve to decay
 N = int((DUR + TAIL) * SR)
 
@@ -154,7 +154,7 @@ for i, (start, freqs) in enumerate(CHORDS):
 
 # ------------------------------------------------------- 5. figure impacts
 # Four of them, one per figure reveal, small enough to feel like punctuation.
-for name, gain in [('hook', 0.16), ('eng', 0.12), ('san', 0.12), ('col', 0.10)]:
+for name, gain in [('hook', 0.16), ('eng', 0.12), ('san', 0.12)]:
     n = int(0.30 * SR)
     hit = (sine(72.0, n) * 0.66 + sine(108.0, n) * 0.20 +
            sine(216.0, n) * 0.10 + sine(432.0, n) * 0.04) * env(n, 0.003, 0.297, curve=4.0)
