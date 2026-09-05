@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>עדכון התקציב חריש</title>
+<style>
+@font-face{
+  font-family:'HeeboV';
+  src:url('fonts/Heebo.ttf') format('truetype');
+  font-weight:100 900;
+  font-display:block;
+}
+
+:root{
+  --navy-deep:#0b2b44;
+  --navy-mid:#123d60;
+  --blue:#1a6ba4;
+  --cream:#fbfaf6;
+  --gold:#f5b04a;
+  --muted:rgba(255,255,255,.60);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:1080px;height:1920px;overflow:hidden;background:#000;
+  font-family:'HeeboV',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;isolation:isolate}
+
+/* ---------- background ---------- */
+#bg{
+  position:absolute;inset:-6%;
+  background:linear-gradient(207deg,var(--navy-deep) 0%,#0e3452 32%,var(--navy-mid) 58%,var(--blue) 100%);
+  will-change:transform;
+}
+#glow{
+  position:absolute;inset:0;
+  background:radial-gradient(46% 34% at 18% 74%,rgba(56,142,204,.34) 0%,rgba(56,142,204,0) 70%);
+  will-change:transform;
+}
+#vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(120% 78% at 62% 34%,rgba(0,0,0,0) 42%,rgba(4,17,29,.32) 100%);
+}
+
+/* cream panel + bottom wedge, matching the campaign key visuals */
+#cream{
+  position:absolute;left:0;right:0;bottom:0;height:0;
+  background:var(--cream);
+}
+#wedge{
+  position:absolute;left:0;bottom:0;width:100%;height:112px;
+  background:linear-gradient(90deg,#19669d 0%,#165482 54%,#123e62 100%);
+  clip-path:polygon(0% 100%,0% 6%,93% 100%);
+  opacity:0;
+}
+
+/* ---------- scenes ---------- */
+.scene{position:absolute;inset:0;visibility:hidden}
+.scene.on{visibility:visible}
+
+.blk{position:absolute;text-align:right;direction:rtl}
+.blk.center{text-align:center;direction:rtl}
+
+.line{
+  display:block;white-space:nowrap;
+  will-change:opacity,transform;
+  opacity:0;
+}
+.line.sp{height:.42em}
+
+/* navy area type */
+.st{color:#fff;font-weight:800;line-height:1.30;letter-spacing:-.005em}
+.kick{color:var(--gold);font-weight:600;line-height:1.35;letter-spacing:.012em}
+.label{color:var(--gold);font-weight:700;letter-spacing:.06em}
+.fig{color:#fff;font-weight:800;line-height:1.14;letter-spacing:-.015em}
+.cap{color:rgba(255,255,255,.72);font-weight:500;line-height:1.3}
+.tail{color:var(--gold);font-weight:800;line-height:1.28}
+
+/* cream area type */
+.dk{color:var(--navy-deep)}
+.dkcap{color:rgba(11,43,68,.72);font-weight:500}
+.dkfig{color:var(--navy-deep);font-weight:800;line-height:1.14;letter-spacing:-.015em}
+
+/* gold rule */
+.rule{
+  position:absolute;width:6px;background:var(--gold);border-radius:3px;
+  transform-origin:top center;transform:scaleY(0);will-change:transform,opacity;
+}
+.rule.dkrule{background:var(--gold)}
+
+/* portraits */
+.faces{position:absolute;display:flex;justify-content:center;gap:52px;direction:ltr}
+.face{width:172px;text-align:center;opacity:0;will-change:opacity,transform}
+.face img{
+  width:172px;height:172px;border-radius:50%;display:block;
+  box-shadow:0 0 0 3px rgba(11,43,68,.08),0 10px 26px rgba(11,43,68,.14);
+}
+.face span{
+  display:block;margin-top:18px;font-size:25px;font-weight:600;
+  color:var(--navy-deep);direction:rtl;white-space:nowrap;
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="glow"></div>
+  <div id="vignette"></div>
+  <div id="cream"></div>
+  <div id="wedge"></div>
+  <div id="scenes"></div>
+</div>
+
+<script src="script.js"></script>
+<script>
+(function(){
+'use strict';
+
+const L = window.LAYOUT;
+const S = window.SCENES;
+const BOX_W = L.padRight - L.padLeft;          // 770px of usable text width
+const FADE_IN  = 0.62;
+const STAGGER  = 0.10;
+const FADE_OUT = 0.36;
+const RISE     = 26;
+
+/* cream panel height per scene type */
+function creamH(sc){
+  switch(sc.type){
+    case 'data':   return sc.bottom ? 820 : 0;
+    case 'total':  return 820;
+    case 'split':  return sc.creamList ? 860 : 790;
+    case 'people': return 900;
+    default:       return 0;
+  }
+}
+
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const easeIO  = x => x < .5 ? 2*x*x : 1 - Math.pow(-2*x+2, 2)/2;
+const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
+
+/* ---------- build ---------- */
+const host = document.getElementById('scenes');
+const built = [];
+let clock = 0;
+
+function mkLines(parent, arr, cls, size, lh){
+  const out = [];
+  arr.forEach(txt => {
+    const el = document.createElement('span');
+    if(txt === ''){ el.className = 'line sp'; el.style.fontSize = size+'px'; parent.appendChild(el); return; }
+    el.className = 'line ' + cls;
+    el.style.fontSize = size+'px';
+    if(lh) el.style.lineHeight = lh;
+    el.textContent = txt;
+    parent.appendChild(el);
+    out.push(el);
+  });
+  return out;
+}
+
+S.forEach(sc => {
+  const sec = document.createElement('div');
+  sec.className = 'scene';
+  sec.dataset.id = sc.id;
+  host.appendChild(sec);
+
+  const ch = creamH(sc);
+  const navyBottom = ch ? (L.H - ch) : L.safeBottom;   // bottom of the navy content band
+  const anim = [];        // elements revealed with a stagger
+  const rules = [];
+
+  /* ---- navy block ---- */
+  const nav = document.createElement('div');
+  nav.className = 'blk';
+  nav.style.right = (L.W - L.padRight) + 'px';
+  nav.style.width = BOX_W + 'px';
+  sec.appendChild(nav);
+
+  if(sc.type === 'data'){
+    const lab = mkLines(nav, [sc.label], 'label', 42);
+    lab[0].style.marginBottom = '42px';
+    anim.push(lab[0]);
+    const f = mkLines(nav, [sc.top.figure], 'fig', 78);
+    anim.push(f[0]);
+    const c = mkLines(nav, [sc.top.caption], 'cap', 40);
+    c[0].style.marginTop = '10px';
+    anim.push(c[0]);
+  }
+  else if(sc.type === 'total'){
+    const k = mkLines(nav, [sc.kicker], 'kick', 44);
+    k[0].style.marginBottom = '34px';
+    anim.push(k[0]);
+    mkLines(nav, [].concat(sc.figure), 'fig', 124).forEach(e => anim.push(e));
+  }
+  else{
+    if(sc.kicker){
+      const k = mkLines(nav, [sc.kicker], 'kick', 38);
+      k[0].style.marginBottom = '46px';
+      anim.push(k[0]);
+    }
+    if(sc.lines) mkLines(nav, sc.lines, 'st', sc.size).forEach(e => anim.push(e));
+    if(sc.tail){
+      const t = mkLines(nav, [sc.tail], 'tail', sc.size);
+      t[0].style.marginTop = '54px';
+      anim.push(t[0]);
+    }
+  }
+
+  /* ---- cream block ---- */
+  let cre = null;
+  if(ch){
+    cre = document.createElement('div');
+    if(sc.type === 'data'){
+      // the two figures share one right edge so the eye compares them directly
+      cre.className = 'blk';
+      cre.style.right = (L.W - L.padRight) + 'px';
+      cre.style.width = BOX_W + 'px';
+    } else {
+      cre.className = 'blk center';
+      cre.style.left = '0px';
+      cre.style.width = L.W + 'px';
+    }
+    sec.appendChild(cre);
+
+    if(sc.type === 'data' && sc.bottom){
+      const f = mkLines(cre, [sc.bottom.figure], 'dkfig', 78);
+      anim.push(f[0]);
+      const c = mkLines(cre, [sc.bottom.caption], 'dkcap', 40);
+      c[0].style.marginTop = '10px';
+      anim.push(c[0]);
+    }
+    else if(sc.type === 'total'){
+      const c = mkLines(cre, [sc.caption], 'st dk', 52);
+      anim.push(c[0]);
+    }
+    else if(sc.type === 'split'){
+      if(sc.creamHeading){
+        mkLines(cre, [].concat(sc.creamHeading), 'st dk', 56).forEach(e => anim.push(e));
+      }
+      if(sc.creamList){
+        mkLines(cre, sc.creamList, 'st dk', 48, 1.38).forEach(e => anim.push(e));
+      }
+    }
+    else if(sc.type === 'people'){
+      const row = document.createElement('div');
+      row.className = 'faces';
+      row.style.left = '0px';
+      row.style.right = '0px';
+      row.style.position = 'static';
+      cre.appendChild(row);
+      sc.people.forEach(p => {
+        const f = document.createElement('div');
+        f.className = 'face';
+        const im = document.createElement('img'); im.src = p.img;
+        const sp = document.createElement('span'); sp.textContent = p.name;
+        f.appendChild(im); f.appendChild(sp);
+        row.appendChild(f);
+        anim.push(f);
+      });
+    }
+  }
+
+  /* ---- gold rules ---- */
+  const rule = document.createElement('div');
+  rule.className = 'rule';
+  rule.style.left = L.ruleX + 'px';
+  sec.appendChild(rule);
+  rules.push(rule);
+
+  let rule2 = null;
+  if(sc.type === 'data' && sc.bottom){
+    rule2 = document.createElement('div');
+    rule2.className = 'rule';
+    rule2.style.left = L.ruleX + 'px';
+    sec.appendChild(rule2);
+    rules.push(rule2);
+  }
+
+  built.push({ sc, sec, nav, cre, anim, rule, rule2, rules, ch, navyBottom,
+               start: clock, end: clock + sc.dur });
+  clock += sc.dur;
+});
+
+const TOTAL = clock;
+window.TOTAL = TOTAL;
+
+/* ---------- measure & place (once, after fonts) ---------- */
+function layout(){
+  built.forEach(b => {
+    b.sec.classList.add('on');
+    b.sec.style.opacity = 1;
+    // reveal for measurement
+    b.anim.forEach(e => { e.style.opacity = 1; e.style.transform = 'none'; });
+
+    /* auto fit: shrink a block as a whole so it stays inside its box.
+       text width is measured with a Range, since a block level .line
+       always reports its parent width via scrollWidth. */
+    const rng = document.createRange();
+    const textW = e => { rng.selectNodeContents(e); return rng.getBoundingClientRect().width; };
+    const fit = (blk, boxW, boxH) => {
+      if(!blk) return;
+      const els = Array.from(blk.querySelectorAll('.line'));
+      let scale = 1;
+      els.forEach(e => { const w = textW(e); if(w > boxW) scale = Math.min(scale, boxW / w); });
+      const apply = k => els.forEach(e => {
+        e.style.fontSize = (parseFloat(e.style.fontSize) * k).toFixed(2) + 'px';
+      });
+      if(scale < 1) apply(scale);
+      const h = blk.offsetHeight;
+      if(boxH && h > boxH) apply(boxH / h);
+    };
+    fit(b.nav, BOX_W, b.navyBottom - 60 - L.safeTop);
+    fit(b.cre, b.sc.type === 'data' ? BOX_W : 900,
+               L.safeBottom - (L.H - b.ch + 50));
+
+    /* vertical centring inside the navy band */
+    const nh = b.nav.offsetHeight;
+    let top = L.safeTop + (b.navyBottom - 90 - L.safeTop - nh) / 2;
+    top = Math.max(L.safeTop, top);
+    b.nav.style.top = Math.round(top) + 'px';
+
+    /* gold rule spans the statement block */
+    b.rule.style.top = Math.round(top - 6) + 'px';
+    b.rule.style.height = Math.round(nh + 12) + 'px';
+
+    /* cream block centring */
+    if(b.cre){
+      const ct = L.H - b.ch;
+      const chh = b.cre.offsetHeight;
+      let ctop = ct + 60 + (L.safeBottom - (ct + 60) - chh) / 2;
+      ctop = Math.max(ct + 50, ctop);
+      b.cre.style.top = Math.round(ctop) + 'px';
+
+      if(b.rule2){
+        b.rule2.style.top = Math.round(ctop - 6) + 'px';
+        b.rule2.style.height = Math.round(chh + 12) + 'px';
+      }
+    }
+
+    b.anim.forEach(e => { e.style.opacity = 0; });
+    b.sec.classList.remove('on');
+  });
+}
+
+/* ---------- timeline ---------- */
+const bg = document.getElementById('bg');
+const glow = document.getElementById('glow');
+const creamEl = document.getElementById('cream');
+const wedgeEl = document.getElementById('wedge');
+
+function setTime(t){
+  t = Math.max(0, Math.min(TOTAL - 0.001, t));
+
+  /* background: very slow, near subliminal drift */
+  const p = t / TOTAL;
+  bg.style.transform = 'scale(' + (1 + p * 0.045).toFixed(5) + ') translate3d(' +
+      (-p * 16).toFixed(2) + 'px,' + (-p * 10).toFixed(2) + 'px,0)';
+  glow.style.transform = 'translate3d(' +
+      (Math.sin(t * 0.19) * 46).toFixed(2) + 'px,' +
+      (Math.cos(t * 0.14) * 34).toFixed(2) + 'px,0)';
+
+  /* cream panel: eased morph across the scene boundary */
+  let idx = 0;
+  for(let i = 0; i < built.length; i++){ if(t >= built[i].start) idx = i; }
+  const cur = built[idx];
+  const prev = idx > 0 ? built[idx - 1] : null;
+  const local = t - cur.start;
+  const MORPH = 0.55;
+  let h = cur.ch;
+  if(prev && local < MORPH){
+    const k = easeIO(local / MORPH);
+    h = prev.ch + (cur.ch - prev.ch) * k;
+  }
+  creamEl.style.height = h.toFixed(1) + 'px';
+  wedgeEl.style.opacity = clamp01((h - 140) / 260).toFixed(3);
+
+  /* scenes */
+  built.forEach((b, i) => {
+    const active = (t >= b.start - 0.45) && (t < b.end + 0.02);
+    if(!active){ if(b.sec.classList.contains('on')) b.sec.classList.remove('on'); return; }
+    b.sec.classList.add('on');
+
+    const lt = t - b.start;
+    const outStart = b.sc.dur - FADE_OUT;
+
+    let gOut = 1, gShift = 0;
+    if(lt > outStart){
+      const k = easeIO(clamp01((lt - outStart) / FADE_OUT));
+      gOut = 1 - k;
+      gShift = -k * 12;
+    }
+
+    b.anim.forEach((el, j) => {
+      const d = j * STAGGER;
+      const k = easeOut(clamp01((lt - d) / FADE_IN));
+      el.style.opacity = (k * gOut).toFixed(4);
+      el.style.transform = 'translate3d(0,' + ((1 - k) * RISE + gShift).toFixed(2) + 'px,0)';
+    });
+
+    const rk = easeOut(clamp01((lt - 0.06) / 0.70));
+    b.rules.forEach((r, ri) => {
+      const k = easeOut(clamp01((lt - 0.06 - ri * 0.22) / 0.70));
+      r.style.transform = 'scaleY(' + k.toFixed(4) + ')';
+      r.style.opacity = gOut.toFixed(4);
+    });
+  });
+}
+
+window.setTime = setTime;
+window.ready = false;
+
+document.fonts.ready.then(async () => {
+  await Promise.all(Array.from(document.images).map(im =>
+    im.complete ? Promise.resolve() : new Promise(r => { im.onload = im.onerror = r; })));
+  layout();
+  setTime(0);
+  window.ready = true;
+});
+})();
+</script>
+</body>
+</html>
