@@ -71,20 +71,26 @@ html,body{
   will-change:opacity,transform;
   opacity:0;
 }
-.line.sp{height:.42em}
+.line.sp{height:.62em}
 
-/* navy area type */
-.st{color:#fff;font-weight:800;line-height:1.30;letter-spacing:-.005em}
-.kick{color:var(--gold);font-weight:600;line-height:1.35;letter-spacing:.012em}
-.label{color:var(--gold);font-weight:700;letter-spacing:.06em}
-.fig{color:#fff;font-weight:800;line-height:1.14;letter-spacing:-.015em}
-.cap{color:rgba(255,255,255,.72);font-weight:500;line-height:1.3}
-.tail{color:var(--gold);font-weight:800;line-height:1.28}
+/* ---- one type scale for the whole film ----
+   head 64 / 800   every statement and headline
+   sub  56 / 700   cream lists
+   fig  88 / 800   section figures     hero 104 / 800  the one total
+   kick 40 / 600   gold lead in        cap  40 / 500   muted caption
+   Sizes are assigned in JS from window.TYPE, never per scene. */
+.st{color:#fff;font-weight:800;line-height:1.42;letter-spacing:-.005em}
+.sub{font-weight:700;line-height:1.40;letter-spacing:-.004em}
+.kick{color:var(--gold);font-weight:600;line-height:1.35;letter-spacing:.014em}
+.label{color:var(--gold);font-weight:700;line-height:1.35;letter-spacing:.07em}
+.fig{color:#fff;font-weight:800;line-height:1.12;letter-spacing:-.02em}
+.cap{color:rgba(255,255,255,.74);font-weight:500;line-height:1.3}
+.tail{color:var(--gold);font-weight:800;line-height:1.42}
 
 /* cream area type */
 .dk{color:var(--navy-deep)}
-.dkcap{color:rgba(11,43,68,.72);font-weight:500}
-.dkfig{color:var(--navy-deep);font-weight:800;line-height:1.14;letter-spacing:-.015em}
+.dkcap{color:rgba(11,43,68,.74);font-weight:500;line-height:1.3}
+.dkfig{color:var(--navy-deep);font-weight:800;line-height:1.12;letter-spacing:-.02em}
 
 /* gold rule */
 .rule{
@@ -124,8 +130,21 @@ html,body{
 const L = window.LAYOUT;
 const S = window.SCENES;
 const BOX_W = L.padRight - L.padLeft;          // 770px of usable text width
+
+/* The one type scale. Nothing in the film may use a size outside this. */
+const TYPE = window.TYPE = {
+  hero:    104,   // the single total figure
+  fig:      88,   // section figures
+  head:     64,   // every statement and headline
+  sub:      56,   // cream lists
+  kicker:   40,   // gold lead in
+  caption:  40    // muted caption under a figure
+};
+/* vertical rhythm, in px */
+const GAP = { afterLabel: 46, afterKicker: 56, beforeCaption: 16, beforeTail: 64 };
+
 const FADE_IN  = 0.62;
-const STAGGER  = 0.10;
+const STAGGER  = 0.085;
 const FADE_OUT = 0.36;
 const RISE     = 26;
 
@@ -134,7 +153,7 @@ function creamH(sc){
   switch(sc.type){
     case 'data':   return sc.bottom ? 820 : 0;
     case 'total':  return 820;
-    case 'split':  return sc.creamList ? 860 : 790;
+    case 'split':  return sc.creamList ? 1000 : 790;
     case 'people': return 900;
     default:       return 0;
   }
@@ -183,31 +202,31 @@ S.forEach(sc => {
   sec.appendChild(nav);
 
   if(sc.type === 'data'){
-    const lab = mkLines(nav, [sc.label], 'label', 42);
-    lab[0].style.marginBottom = '42px';
+    const lab = mkLines(nav, [sc.label], 'label', TYPE.kicker);
+    lab[0].style.marginBottom = GAP.afterLabel + 'px';
     anim.push(lab[0]);
-    const f = mkLines(nav, [sc.top.figure], 'fig', 78);
+    const f = mkLines(nav, [sc.top.figure], 'fig', TYPE.fig);
     anim.push(f[0]);
-    const c = mkLines(nav, [sc.top.caption], 'cap', 40);
-    c[0].style.marginTop = '10px';
+    const c = mkLines(nav, [sc.top.caption], 'cap', TYPE.caption);
+    c[0].style.marginTop = GAP.beforeCaption + 'px';
     anim.push(c[0]);
   }
   else if(sc.type === 'total'){
-    const k = mkLines(nav, [sc.kicker], 'kick', 44);
-    k[0].style.marginBottom = '34px';
+    const k = mkLines(nav, [sc.kicker], 'kick', TYPE.kicker);
+    k[0].style.marginBottom = GAP.afterKicker + 'px';
     anim.push(k[0]);
-    mkLines(nav, [].concat(sc.figure), 'fig', 124).forEach(e => anim.push(e));
+    mkLines(nav, [].concat(sc.figure), 'fig', TYPE.hero).forEach(e => anim.push(e));
   }
   else{
     if(sc.kicker){
-      const k = mkLines(nav, [sc.kicker], 'kick', 38);
-      k[0].style.marginBottom = '46px';
+      const k = mkLines(nav, [sc.kicker], 'kick', TYPE.kicker);
+      k[0].style.marginBottom = GAP.afterKicker + 'px';
       anim.push(k[0]);
     }
-    if(sc.lines) mkLines(nav, sc.lines, 'st', sc.size).forEach(e => anim.push(e));
+    if(sc.lines) mkLines(nav, sc.lines, 'st', TYPE.head).forEach(e => anim.push(e));
     if(sc.tail){
-      const t = mkLines(nav, [sc.tail], 'tail', sc.size);
-      t[0].style.marginTop = '54px';
+      const t = mkLines(nav, [sc.tail], 'tail', TYPE.head);
+      t[0].style.marginTop = GAP.beforeTail + 'px';
       anim.push(t[0]);
     }
   }
@@ -229,22 +248,22 @@ S.forEach(sc => {
     sec.appendChild(cre);
 
     if(sc.type === 'data' && sc.bottom){
-      const f = mkLines(cre, [sc.bottom.figure], 'dkfig', 78);
+      const f = mkLines(cre, [sc.bottom.figure], 'dkfig', TYPE.fig);
       anim.push(f[0]);
-      const c = mkLines(cre, [sc.bottom.caption], 'dkcap', 40);
-      c[0].style.marginTop = '10px';
+      const c = mkLines(cre, [sc.bottom.caption], 'dkcap', TYPE.caption);
+      c[0].style.marginTop = GAP.beforeCaption + 'px';
       anim.push(c[0]);
     }
     else if(sc.type === 'total'){
-      const c = mkLines(cre, [sc.caption], 'st dk', 52);
+      const c = mkLines(cre, [sc.caption], 'st dk', TYPE.head);
       anim.push(c[0]);
     }
     else if(sc.type === 'split'){
       if(sc.creamHeading){
-        mkLines(cre, [].concat(sc.creamHeading), 'st dk', 56).forEach(e => anim.push(e));
+        mkLines(cre, [].concat(sc.creamHeading), 'st dk', TYPE.head).forEach(e => anim.push(e));
       }
       if(sc.creamList){
-        mkLines(cre, sc.creamList, 'st dk', 48, 1.38).forEach(e => anim.push(e));
+        mkLines(cre, sc.creamList, 'sub dk', TYPE.sub).forEach(e => anim.push(e));
       }
     }
     else if(sc.type === 'people'){
@@ -291,6 +310,7 @@ const TOTAL = clock;
 window.TOTAL = TOTAL;
 
 /* ---------- measure & place (once, after fonts) ---------- */
+const FITWARN = window.FITWARN = [];
 function layout(){
   built.forEach(b => {
     b.sec.classList.add('on');
@@ -311,9 +331,9 @@ function layout(){
       const apply = k => els.forEach(e => {
         e.style.fontSize = (parseFloat(e.style.fontSize) * k).toFixed(2) + 'px';
       });
-      if(scale < 1) apply(scale);
+      if(scale < 1){ apply(scale); FITWARN.push(b.sc.id + ' width x' + scale.toFixed(3)); }
       const h = blk.offsetHeight;
-      if(boxH && h > boxH) apply(boxH / h);
+      if(boxH && h > boxH){ apply(boxH / h); FITWARN.push(b.sc.id + ' height x' + (boxH/h).toFixed(3)); }
     };
     fit(b.nav, BOX_W, b.navyBottom - 60 - L.safeTop);
     fit(b.cre, b.sc.type === 'data' ? BOX_W : 900,

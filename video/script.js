@@ -1,6 +1,12 @@
 /* ------------------------------------------------------------------
    Harish budget explainer — scene script and timeline data
    Vertical 9:16 (1080x1920). All copy is written without dashes.
+
+   TYPOGRAPHY RULE: no scene may set its own font size.
+   Every element takes its size from window.TYPE in video.html.
+   Lines are hand broken so that nothing ever needs to be shrunk
+   to fit, which is what keeps the hierarchy identical end to end.
+   Keep every statement line at 22 characters or fewer.
    ------------------------------------------------------------------ */
 
 /* Safe area for Instagram Reels (1080x1920):
@@ -18,7 +24,7 @@ window.LAYOUT = {
 
 /* type:
      'statement'  full navy, right aligned block, gold rule
-     'kicker'     full navy, muted kicker + statement block
+     'kicker'     full navy, gold lead in + statement block
      'data'       split, gold section label + two figure blocks
      'total'      split, one dominant figure
      'split'      navy statement on top, list or heading on cream
@@ -26,143 +32,141 @@ window.LAYOUT = {
 */
 window.SCENES = [
 
-  { id: 'hook', dur: 5.0, type: 'statement', size: 58,
+  { id: 'hook', dur: 5.0, type: 'statement',
     lines: [
       'עדכון התקציב הזה',
-      'מעמיד בסימן שאלה',
-      'את היכולת של עיריית חריש',
-      'להמשיך לספק לאורך זמן',
-      'שירותים בסיסיים לתושבים.'
+      'מסכן את היכולת של חריש',
+      'לתת לתושבים',
+      'שירותים בסיסיים.'
     ] },
 
-  { id: 'direction', dur: 4.6, type: 'kicker', size: 52,
-    kicker: 'הכיוון שחוזר שוב ושוב בתקציב',
+  { id: 'direction', dur: 4.6, type: 'kicker',
+    kicker: 'מה חוזר שוב ושוב בתקציב',
     lines: [
-      'פחות כסף לאנשים שעובדים',
-      'בתוך העירייה עצמה.',
+      'פחות כסף לעובדי העירייה.',
       '',
-      'יותר כסף לקבלנים, יועצים',
-      'וספקים חיצוניים.'
+      'יותר כסף לקבלנים,',
+      'ליועצים ולספקים מבחוץ.'
     ] },
 
   { id: 'eng-data', dur: 4.4, type: 'data', label: 'הנדסה',
-    top:    { figure: '1.325 מיליון ש״ח פחות', caption: 'בשכר עובדי העירייה' },
-    bottom: { figure: '970 אלף ש״ח יותר',       caption: 'לייעוץ ולפיקוח חיצוני' } },
+    top:    { figure: '1.325 מיליון ש״ח', caption: 'פחות בשכר עובדי העירייה' },
+    bottom: { figure: '970 אלף ש״ח',      caption: 'יותר לייעוץ ולפיקוח מבחוץ' } },
 
-  { id: 'eng-why', dur: 4.0, type: 'statement', size: 50,
+  { id: 'eng-why', dur: 4.2, type: 'statement',
     lines: [
-      'עובדי ההנדסה הם האנשים',
-      'שמכירים לאורך זמן את התכניות,',
-      'הפרויקטים, התשתיות, השכונות',
-      'והקבלנים של העיר.'
+      'עובדי ההנדסה מכירים',
+      'את התכניות של העיר,',
+      'את התשתיות, את השכונות',
+      'ואת הקבלנים.'
     ] },
 
-  { id: 'eng-why2', dur: 3.6, type: 'statement', size: 52,
+  { id: 'eng-why2', dur: 3.8, type: 'statement',
     lines: [
-      'הם עובדים בתוך העירייה.',
-      'כפופים ישירות למנהלים שלה.',
-      'והידע שהם צוברים',
-      'נשאר בתוך המערכת.'
+      'הם עובדים בעירייה.',
+      'הם כפופים למנהלים שלה.',
+      'והידע שלהם',
+      'נשאר בעירייה.'
     ] },
 
   { id: 'san-data', dur: 4.2, type: 'data', label: 'תברואה',
-    top:    { figure: '421 אלף ש״ח פחות',   caption: 'בשכר עובדי העירייה' },
-    bottom: { figure: '2.43 מיליון ש״ח יותר', caption: 'לקבלנים' } },
+    top:    { figure: '421 אלף ש״ח',     caption: 'פחות בשכר עובדי העירייה' },
+    bottom: { figure: '2.43 מיליון ש״ח', caption: 'יותר לקבלנים' } },
 
-  { id: 'san-when', dur: 3.4, type: 'statement', size: 54,
+  { id: 'san-when', dur: 3.6, type: 'statement',
     lines: [
-      'כשפינוי לא מתבצע.',
+      'כשהאשפה לא מפונה.',
       'כשיש מפגע ברחוב.',
-      'כשקבלן לא עומד',
-      'במה שהתחייב.'
+      'כשקבלן לא עושה',
+      'את מה שהתחייב.'
     ] },
 
-  { id: 'san-need', dur: 4.0, type: 'statement', size: 50,
+  { id: 'san-need', dur: 4.0, type: 'statement',
     lines: [
-      'צריך בתוך העירייה אנשים',
+      'צריך בעירייה אנשים',
       'שמכירים את השטח,',
-      'יודעים מה הוזמן,',
-      'יודעים מה אמור להתבצע',
-      'ויודעים לדרוש תיקון.'
+      'שיודעים מה הוזמן',
+      'ושיודעים לדרוש תיקון.'
     ] },
 
-  { id: 'col-data', dur: 3.2, type: 'data', label: 'גבייה',
-    top:    { figure: '900 אלף ש״ח נוספים', caption: 'לקבלנים חיצוניים' } },
+  { id: 'col-data', dur: 3.4, type: 'data', label: 'גבייה',
+    top: { figure: '900 אלף ש״ח', caption: 'יותר לקבלנים מבחוץ' } },
 
-  { id: 'col-list', dur: 3.8, type: 'split', size: 50,
-    lines: ['ארנונה.', 'חיובים.', 'טעויות.', 'בירורים מול תושבים.', 'מידע שנצבר לאורך שנים.'],
-    creamHeading: ['יותר מהעבודה הזו', 'עוברת החוצה.'] },
+  { id: 'col-list', dur: 4.0, type: 'split',
+    lines: ['ארנונה.', 'חיובים.', 'טעויות.', 'בירורים מול תושבים.', 'מידע שנאסף במשך שנים.'],
+    creamHeading: ['יותר ויותר מהעבודה הזו', 'עוברת לגורמים מבחוץ.'] },
 
-  { id: 'total', dur: 4.2, type: 'total',
+  { id: 'total', dur: 4.4, type: 'total',
     kicker: 'בסך הכול',
     figure: ['3.2 מיליון ש״ח', 'פחות'],
-    caption: 'בסעיפי השכר של עובדי העירייה' },
+    caption: 'בשכר של עובדי העירייה' },
 
-  { id: 'employees', dur: 5.2, type: 'kicker', size: 46,
-    kicker: 'עובדי עירייה הם האנשים שנשארים בתוך המערכת',
+  { id: 'employees', dur: 5.0, type: 'kicker',
+    kicker: 'מי הם עובדי העירייה',
     lines: [
-      'הם כפופים ישירות לעירייה.',
+      'הם נשארים בעירייה',
+      'לאורך שנים.',
       'הם צוברים ניסיון.',
       'הם מכירים את העיר.',
-      'הם יודעים מה נעשה בעבר.',
-      'והידע שלהם נשאר גם',
-      'כשהקבלן או הספק מתחלף.'
+      'והידע שלהם נשאר',
+      'גם כשהקבלן מתחלף.'
     ] },
 
-  { id: 'growth', dur: 4.0, type: 'split', size: 62,
+  { id: 'growth', dur: 4.2, type: 'split',
     lines: ['וחריש עדיין גדלה.'],
     creamList: ['יותר שכונות.', 'יותר בתי ספר.', 'יותר כבישים.',
-                'יותר תשתיות.', 'יותר תושבים.', 'יותר שירותים שצריך לנהל.'] },
+                'יותר תשתיות.', 'יותר תושבים.', 'יותר שירותים לנהל.'] },
 
-  { id: 'meaning', dur: 4.8, type: 'statement', size: 46,
+  { id: 'meaning', dur: 4.6, type: 'statement',
     lines: [
-      'וככל שיותר עבודה עוברת',
-      'לקבלנים ולספקים חיצוניים,',
-      'צריך דווקא יותר אנשים מקצועיים',
-      'ומנוסים בתוך העירייה',
-      'שיידעו לנהל אותם, לבדוק אותם',
+      'ככל שיותר עבודה',
+      'עוברת לגורמים מבחוץ,',
+      'צריך יותר אנשי מקצוע',
+      'בעירייה שיידעו לנהל',
       'ולפקח עליהם.'
     ] },
 
-  { id: 'shrink', dur: 3.6, type: 'statement', size: 48,
+  { id: 'shrink', dur: 3.8, type: 'statement',
     lines: [
-      'כשמצמצמים את האנשים',
-      'שמחזיקים את הידע בתוך העירייה',
-      'ובמקביל מעבירים',
-      'עוד ועוד עבודה החוצה,'
+      'כשמקצצים בעובדים',
+      'שמחזיקים את הידע,',
+      'ומעבירים עוד ועוד',
+      'עבודה החוצה,'
     ] },
 
-  { id: 'fewer', dur: 4.2, type: 'statement', size: 48,
+  { id: 'fewer', dur: 4.4, type: 'statement',
     lines: [
       'נשארים פחות אנשים',
-      'שמכירים את המערכת מבפנים.',
+      'שמכירים את העירייה.',
       'פחות אנשים שמפקחים.',
-      'פחות אנשים שיודעים לזהות',
-      'בזמן שמשהו לא עובד.'
+      'פחות אנשים שיודעים',
+      'לזהות בזמן שמשהו נשבר.'
     ] },
 
-  { id: 'not-budget', dur: 4.4, type: 'split', size: 56,
-    lines: ['זו כבר לא רק שאלה של תקציב.', '', 'זו היכולת של עירייה', 'לתת שירות.'],
+  { id: 'not-budget', dur: 4.6, type: 'split',
+    lines: ['זו כבר לא שאלה', 'של תקציב.', '', 'זו היכולת של העירייה', 'לתת שירות.'],
     creamList: ['לילדים.', 'למשפחות.', 'למבוגרים.',
                 'למשרתי מילואים.', 'לעסקים.', 'לכל מי שחי כאן.'] },
 
-  { id: 'systems', dur: 4.8, type: 'kicker', size: 48,
-    kicker: 'מי שמבין בניהול מערכות יודע',
+  { id: 'systems', dur: 4.8, type: 'kicker',
+    kicker: 'מי שמבין בניהול יודע',
     lines: [
-      'עירייה שמאבדת את האנשים,',
-      'הידע והיכולת לנהל את עצמה',
-      'לא יכולה לאורך זמן להמשיך',
-      'לספק את השירותים',
-      'שהיא מחויבת לתת.'
+      'עירייה שמאבדת',
+      'את האנשים ואת הידע שלה',
+      'לא תוכל לאורך זמן',
+      'לתת לתושבים',
+      'את השירותים',
+      'שהיא חייבת לתת.'
     ] },
 
-  { id: 'people', dur: 4.6, type: 'people', size: 44,
+  { id: 'people', dur: 4.8, type: 'people',
     lines: [
-      'זה הזמן לשים את טובת העיר',
+      'זה הזמן לשים',
+      'את טובת העיר',
       'מעל כל שיקול פוליטי.',
       '',
-      'להתנגד בתוקף לדרך ולהשלכות',
-      'של תיקון התקציב הזה.'
+      'להתנגד בתוקף לתיקון',
+      'התקציב הזה.'
     ],
     people: [
       { img: 'assets/itzik-lev.png',        name: 'איציק לב' },
@@ -171,13 +175,14 @@ window.SCENES = [
       { img: 'assets/moshe-ben-zikri.png',  name: 'משה בן זיקרי' }
     ] },
 
-  { id: 'final', dur: 5.2, type: 'statement', size: 48,
+  { id: 'final', dur: 5.4, type: 'statement',
     lines: [
-      'אם המהלך הזה לא ייעצר,',
-      'עיריית חריש לא תוכל לאורך זמן',
-      'להמשיך לספק לתושבים',
-      'את השירותים שהיא מחויבת לתת.'
+      'אם זה לא ייעצר,',
+      'עיריית חריש לא תוכל',
+      'לתת לתושבים',
+      'את השירותים',
+      'שהיא חייבת לתת.'
     ],
-    tail: 'זה מה שעומד עכשיו על הפרק.' }
+    tail: 'זה מה שעומד על הפרק.' }
 
 ];
