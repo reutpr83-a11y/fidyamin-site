@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <title>עדכון התקציב חריש</title>
 <style>
+/* Ploni is not available in this environment, so Heebo is the single
+   family used throughout. No second family is mixed in. */
 @font-face{
   font-family:'HeeboV';
   src:url('fonts/Heebo.ttf') format('truetype');
@@ -18,7 +20,6 @@
   --cream:#fbfaf6;
   --gold:#f5b04a;
   --blue-deep:#12456e;
-  --muted:rgba(255,255,255,.60);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -40,21 +41,19 @@ html,body{
 }
 #glow{
   position:absolute;inset:0;
-  background:radial-gradient(46% 34% at 18% 74%,rgba(56,142,204,.34) 0%,rgba(56,142,204,0) 70%);
+  background:radial-gradient(46% 34% at 18% 74%,rgba(56,142,204,.32) 0%,rgba(56,142,204,0) 70%);
   will-change:transform;
 }
 #vignette{
   position:absolute;inset:0;
   background:radial-gradient(120% 78% at 62% 34%,rgba(0,0,0,0) 42%,rgba(4,17,29,.32) 100%);
 }
-
-/* cream panel + bottom wedge, matching the campaign key visuals */
 #cream{
-  position:absolute;left:0;right:0;bottom:0;height:0;
+  position:absolute;left:0;right:0;top:1740px;height:0;
   background:var(--cream);
 }
 #wedge{
-  position:absolute;left:0;bottom:0;width:100%;height:112px;
+  position:absolute;left:0;top:1628px;width:100%;height:112px;
   background:linear-gradient(90deg,#19669d 0%,#165482 54%,#123e62 100%);
   clip-path:polygon(0% 100%,0% 6%,93% 100%);
   opacity:0;
@@ -64,52 +63,45 @@ html,body{
 .scene{position:absolute;inset:0;visibility:hidden}
 .scene.on{visibility:visible}
 
-.blk{position:absolute;text-align:right;direction:rtl}
-.blk.center{text-align:center;direction:rtl}
+/* a group is the unit of animation. lines inside a group move together,
+   which is what keeps this from reading like a slide deck. */
+.grp{position:absolute;opacity:0;will-change:opacity,transform}
+.grp.r{text-align:right;direction:rtl}
+.grp.c{text-align:center;direction:rtl}
 
-.line{
-  display:block;white-space:nowrap;
-  will-change:opacity,transform;
-  opacity:0;
-}
-.line.sp{height:.62em}
+.line{display:block;white-space:nowrap}
+.line.sp{height:.46em}
 
-/* ---- one type scale for the whole film ----
-   head 64 / 800   every statement and headline
-   sub  58 / 700   cream paragraphs
-   fig  88 / 800   section figures     hero 104 / 800  the one total
-   kick 48 / 600   gold lead in        cap  44 / 500   muted caption
-   Sizes are assigned in JS from window.TYPE, never per scene. */
-.st{color:#fff;font-weight:800;line-height:1.42;letter-spacing:-.005em}
-.sub{font-weight:700;line-height:1.46;letter-spacing:-.004em}
-.sub.dk{color:var(--blue-deep)}
-.kick{color:var(--gold);font-weight:600;line-height:1.35;letter-spacing:.014em}
-.label{color:var(--gold);font-weight:700;line-height:1.35;letter-spacing:.07em}
-.fig{color:#fff;font-weight:800;line-height:1.12;letter-spacing:-.02em}
-.cap{color:rgba(255,255,255,.74);font-weight:500;line-height:1.3}
-.tail{color:var(--gold);font-weight:800;line-height:1.42}
+/* ---- the whole type scale, three sizes and two weights per frame ----
+   hero 128 / 700   the single central figure
+   fig  110 / 700   section figures
+   head  84 / 700   every message and headline
+   exp   54 / 500   explanation under a figure, cream paragraphs
+   label 42 / 700   gold section label
+   name  32 / 500   council member names                              */
+.head{color:#fff;font-weight:700;line-height:1.08;letter-spacing:-.01em}
+.fig {color:#fff;font-weight:700;line-height:1.02;letter-spacing:-.022em}
+.exp {color:rgba(255,255,255,.76);font-weight:500;line-height:1.22}
+.label{color:var(--gold);font-weight:700;line-height:1.2;letter-spacing:.07em}
+.tail{color:var(--gold);font-weight:700;line-height:1.08;letter-spacing:-.01em}
 
-/* cream area type */
-.dk{color:var(--navy-deep)}
-.dkcap{color:rgba(11,43,68,.74);font-weight:500;line-height:1.3}
-.dkfig{color:var(--navy-deep);font-weight:800;line-height:1.12;letter-spacing:-.02em}
+.dkfig{color:var(--navy-deep);font-weight:700;line-height:1.02;letter-spacing:-.022em}
+.dkexp{color:var(--blue-deep);font-weight:500;line-height:1.22}
 
-/* gold rule */
 .rule{
   position:absolute;width:6px;background:var(--gold);border-radius:3px;
   transform-origin:top center;transform:scaleY(0);will-change:transform,opacity;
 }
-.rule.dkrule{background:var(--gold)}
 
-/* portraits */
-.faces{position:absolute;display:flex;justify-content:center;gap:52px;direction:ltr}
-.face{width:172px;text-align:center;opacity:0;will-change:opacity,transform}
+/* portraits: one crop, one eye line, one spacing */
+.faces{display:flex;justify-content:center;gap:42px;direction:ltr}
+.face{width:192px;text-align:center}
 .face img{
-  width:172px;height:172px;border-radius:50%;display:block;
-  box-shadow:0 0 0 3px rgba(11,43,68,.08),0 10px 26px rgba(11,43,68,.14);
+  width:192px;height:192px;border-radius:50%;display:block;
+  box-shadow:0 0 0 2px rgba(11,43,68,.12),0 12px 30px rgba(11,43,68,.16);
 }
 .face span{
-  display:block;margin-top:18px;font-size:25px;font-weight:600;
+  display:block;margin-top:22px;font-size:32px;font-weight:500;
   color:var(--navy-deep);direction:rtl;white-space:nowrap;
 }
 </style>
@@ -131,58 +123,42 @@ html,body{
 
 const L = window.LAYOUT;
 const S = window.SCENES;
-const BOX_W = L.padRight - L.padLeft;          // 770px of usable text width
+const BOX_W = L.padRight - L.padLeft;      // 790px column, inside the 760 to 850 band
 
-/* The one type scale. Nothing in the film may use a size outside this. */
 const TYPE = window.TYPE = {
-  hero:    104,   // the single total figure
-  fig:      88,   // section figures
-  head:     64,   // every statement and headline
-  sub:      58,   // cream paragraphs on the cream panel
-  kicker:   48,   // gold lead in
-  caption:  44    // muted caption under a figure
+  hero: 128, fig: 110, head: 84, exp: 54, label: 42, name: 32
 };
-/* vertical rhythm, in px */
-const GAP = { afterLabel: 46, afterKicker: 56, beforeCaption: 16, beforeTail: 64 };
+const GAP = { label: 44, caption: 16, tail: 56 };
 
-const FADE_IN  = 0.62;
-const STAGGER  = 0.085;
-const FADE_OUT = 0.36;
-const RISE     = 26;
-
-/* cream panel height per scene type */
-function creamH(sc){
-  switch(sc.type){
-    case 'data':   return sc.bottom ? 820 : 0;
-    case 'total':  return 820;
-    case 'split':  return 820;
-    case 'people': return 900;
-    default:       return 0;
-  }
-}
+/* motion. everything short, nothing springy. */
+const RISE      = 18;      // px a group travels on entry
+const RISE_FIG  = 12;      // figures move less and land sooner
+const PAIR      = 150;     // ms between the two halves of a comparison
+const EXIT      = 260;     // ms
 
 const easeOut = x => 1 - Math.pow(1 - x, 3);
 const easeIO  = x => x < .5 ? 2*x*x : 1 - Math.pow(-2*x+2, 2)/2;
 const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
 
-/* ---------- build ---------- */
 const host = document.getElementById('scenes');
 const built = [];
+const FITWARN = window.FITWARN = [];
 let clock = 0;
 
-function mkLines(parent, arr, cls, size, lh){
-  const out = [];
-  arr.forEach(txt => {
-    const el = document.createElement('span');
-    if(txt === ''){ el.className = 'line sp'; el.style.fontSize = size+'px'; parent.appendChild(el); return; }
-    el.className = 'line ' + cls;
-    el.style.fontSize = size+'px';
-    if(lh) el.style.lineHeight = lh;
-    el.textContent = txt;
-    parent.appendChild(el);
-    out.push(el);
-  });
-  return out;
+function mkLine(parent, txt, cls, size){
+  const el = document.createElement('span');
+  if(txt === ''){ el.className = 'line sp'; el.style.fontSize = size+'px'; parent.appendChild(el); return null; }
+  el.className = 'line ' + cls;
+  el.style.fontSize = size+'px';
+  el.textContent = txt;
+  parent.appendChild(el);
+  return el;
+}
+function mkGroup(sec, align, delay, rise){
+  const g = document.createElement('div');
+  g.className = 'grp ' + align;
+  sec.appendChild(g);
+  return { el: g, delay: delay || 0, rise: rise === undefined ? RISE : rise };
 }
 
 S.forEach(sc => {
@@ -191,183 +167,147 @@ S.forEach(sc => {
   sec.dataset.id = sc.id;
   host.appendChild(sec);
 
-  const ch = creamH(sc);
-  const navyBottom = ch ? (L.H - ch) : L.safeBottom;   // bottom of the navy content band
-  const anim = [];        // elements revealed with a stagger
-  const rules = [];
+  const groups = [];
 
-  /* ---- navy block ---- */
-  const nav = document.createElement('div');
-  nav.className = 'blk';
-  nav.style.right = (L.W - L.padRight) + 'px';
-  nav.style.width = BOX_W + 'px';
-  sec.appendChild(nav);
+  /* ---------- navy ---------- */
+  const navG = mkGroup(sec, 'r', 0, sc.type === 'data' ? RISE_FIG : RISE);
+  navG.el.style.right = (L.W - L.padRight) + 'px';
+  navG.el.style.width = BOX_W + 'px';
+  groups.push(navG);
 
   if(sc.type === 'data'){
-    const lab = mkLines(nav, [sc.label], 'label', TYPE.kicker);
-    lab[0].style.marginBottom = GAP.afterLabel + 'px';
-    anim.push(lab[0]);
-    const f = mkLines(nav, [sc.top.figure], 'fig', TYPE.fig);
-    anim.push(f[0]);
-    const c = mkLines(nav, [sc.top.caption], 'cap', TYPE.caption);
-    c[0].style.marginTop = GAP.beforeCaption + 'px';
-    anim.push(c[0]);
-  }
-  else if(sc.type === 'total'){
-    const k = mkLines(nav, [sc.kicker], 'kick', TYPE.kicker);
-    k[0].style.marginBottom = GAP.afterKicker + 'px';
-    anim.push(k[0]);
-    mkLines(nav, [].concat(sc.figure), 'fig', TYPE.hero).forEach(e => anim.push(e));
-  }
-  else{
-    if(sc.kicker){
-      const k = mkLines(nav, [sc.kicker], 'kick', TYPE.kicker);
-      k[0].style.marginBottom = GAP.afterKicker + 'px';
-      anim.push(k[0]);
-    }
-    if(sc.lines) mkLines(nav, sc.lines, 'st', TYPE.head).forEach(e => anim.push(e));
-    if(sc.tail){
-      const t = mkLines(nav, [sc.tail], 'tail', TYPE.head);
-      t[0].style.marginTop = GAP.beforeTail + 'px';
-      anim.push(t[0]);
-    }
+    const lab = mkLine(navG.el, sc.label, 'label', TYPE.label);
+    lab.style.marginBottom = GAP.label + 'px';
+    mkLine(navG.el, sc.top.figure, 'fig', sc.top.hero ? TYPE.hero : TYPE.fig);
+    const cap = mkLine(navG.el, sc.top.caption, 'exp', TYPE.exp);
+    cap.style.marginTop = GAP.caption + 'px';
+  } else {
+    (sc.lines || []).forEach(t => mkLine(navG.el, t, 'head', TYPE.head));
   }
 
-  /* ---- cream block ---- */
-  let cre = null;
-  if(ch){
-    cre = document.createElement('div');
-    if(sc.type === 'data'){
-      // the two figures share one right edge so the eye compares them directly
-      cre.className = 'blk';
-      cre.style.right = (L.W - L.padRight) + 'px';
-      cre.style.width = BOX_W + 'px';
+  /* the tail is its own beat, a moment after the message lands */
+  let tailG = null;
+  if(sc.tail){
+    tailG = mkGroup(sec, 'r', (sc.enter || 300) + 260);
+    tailG.el.style.right = (L.W - L.padRight) + 'px';
+    tailG.el.style.width = BOX_W + 'px';
+    mkLine(tailG.el, sc.tail, 'tail', TYPE.head);
+    tailG.isTail = true;
+    groups.push(tailG);
+  }
+
+  /* ---------- cream ---------- */
+  const hasCream = !!(sc.bottom || sc.creamLines || sc.people);
+  let creG = null;
+  if(hasCream){
+    creG = mkGroup(sec, sc.bottom ? 'r' : 'c', PAIR, sc.bottom ? RISE_FIG : RISE);
+    if(sc.bottom){
+      creG.el.style.right = (L.W - L.padRight) + 'px';
+      creG.el.style.width = BOX_W + 'px';
+      mkLine(creG.el, sc.bottom.figure, 'dkfig', TYPE.fig);
+      const c = mkLine(creG.el, sc.bottom.caption, 'dkexp', TYPE.exp);
+      c.style.marginTop = GAP.caption + 'px';
     } else {
-      cre.className = 'blk center';
-      cre.style.left = '0px';
-      cre.style.width = L.W + 'px';
-    }
-    sec.appendChild(cre);
-
-    if(sc.type === 'data' && sc.bottom){
-      const f = mkLines(cre, [sc.bottom.figure], 'dkfig', TYPE.fig);
-      anim.push(f[0]);
-      const c = mkLines(cre, [sc.bottom.caption], 'dkcap', TYPE.caption);
-      c[0].style.marginTop = GAP.beforeCaption + 'px';
-      anim.push(c[0]);
-    }
-    else if(sc.type === 'total'){
-      const c = mkLines(cre, [sc.caption], 'st dk', TYPE.head);
-      anim.push(c[0]);
-    }
-    else if(sc.type === 'split'){
-      if(sc.creamHeading){
-        mkLines(cre, [].concat(sc.creamHeading), 'st dk', TYPE.head).forEach(e => anim.push(e));
-      }
-      if(sc.creamList){
-        mkLines(cre, sc.creamList, 'sub dk', TYPE.sub).forEach(e => anim.push(e));
+      creG.el.style.left = '0px';
+      creG.el.style.width = L.W + 'px';
+      if(sc.creamLines) sc.creamLines.forEach(t => mkLine(creG.el, t, 'dkexp', TYPE.exp));
+      if(sc.people){
+        const row = document.createElement('div');
+        row.className = 'faces';
+        creG.el.appendChild(row);
+        sc.people.forEach(p => {
+          const f = document.createElement('div'); f.className = 'face';
+          const im = document.createElement('img'); im.src = p.img;
+          const sp = document.createElement('span'); sp.textContent = p.name;
+          f.appendChild(im); f.appendChild(sp); row.appendChild(f);
+        });
       }
     }
-    else if(sc.type === 'people'){
-      const row = document.createElement('div');
-      row.className = 'faces';
-      row.style.left = '0px';
-      row.style.right = '0px';
-      row.style.position = 'static';
-      cre.appendChild(row);
-      sc.people.forEach(p => {
-        const f = document.createElement('div');
-        f.className = 'face';
-        const im = document.createElement('img'); im.src = p.img;
-        const sp = document.createElement('span'); sp.textContent = p.name;
-        f.appendChild(im); f.appendChild(sp);
-        row.appendChild(f);
-        anim.push(f);
-      });
-    }
+    groups.push(creG);
   }
 
-  /* ---- gold rules ---- */
   const rule = document.createElement('div');
   rule.className = 'rule';
   rule.style.left = L.ruleX + 'px';
   sec.appendChild(rule);
-  rules.push(rule);
 
   let rule2 = null;
-  if(sc.type === 'data' && sc.bottom){
+  if(sc.bottom){
     rule2 = document.createElement('div');
     rule2.className = 'rule';
     rule2.style.left = L.ruleX + 'px';
     sec.appendChild(rule2);
-    rules.push(rule2);
   }
 
-  built.push({ sc, sec, nav, cre, anim, rule, rule2, rules, ch, navyBottom,
+  built.push({ sc, sec, navG, creG, tailG, groups, rule, rule2, hasCream,
+               enter: sc.enter || 300, lead: sc.lead || 0,
                start: clock, end: clock + sc.dur });
   clock += sc.dur;
 });
 
-const TOTAL = clock;
-window.TOTAL = TOTAL;
+const TOTAL = window.TOTAL = clock;
 
-/* ---------- measure & place (once, after fonts) ---------- */
-const FITWARN = window.FITWARN = [];
+/* ---------- measure and place ---------- */
 function layout(){
+  const rng = document.createRange();
+  const textW = e => { rng.selectNodeContents(e); return rng.getBoundingClientRect().width; };
+
   built.forEach(b => {
     b.sec.classList.add('on');
-    b.sec.style.opacity = 1;
-    // reveal for measurement
-    b.anim.forEach(e => { e.style.opacity = 1; e.style.transform = 'none'; });
+    b.groups.forEach(g => { g.el.style.opacity = 1; g.el.style.transform = 'none'; });
 
-    /* auto fit: shrink a block as a whole so it stays inside its box.
-       text width is measured with a Range, since a block level .line
-       always reports its parent width via scrollWidth. */
-    const rng = document.createRange();
-    const textW = e => { rng.selectNodeContents(e); return rng.getBoundingClientRect().width; };
-    const fit = (blk, boxW, boxH) => {
-      if(!blk) return;
-      const els = Array.from(blk.querySelectorAll('.line'));
-      let scale = 1;
-      els.forEach(e => { const w = textW(e); if(w > boxW) scale = Math.min(scale, boxW / w); });
-      const apply = k => els.forEach(e => {
-        e.style.fontSize = (parseFloat(e.style.fontSize) * k).toFixed(2) + 'px';
+    /* width guard. copy is hand broken so this must never fire. */
+    b.groups.forEach(g => {
+      const box = g.el.classList.contains('c') ? 860 : BOX_W;
+      Array.from(g.el.querySelectorAll('.line')).forEach(e => {
+        const w = textW(e);
+        if(w > box + 0.5) FITWARN.push(b.sc.id + ' overflow ' + Math.round(w) + '/' + box + ': ' + e.textContent);
       });
-      if(scale < 1){ apply(scale); FITWARN.push(b.sc.id + ' width x' + scale.toFixed(3)); }
-      const h = blk.offsetHeight;
-      if(boxH && h > boxH){ apply(boxH / h); FITWARN.push(b.sc.id + ' height x' + (boxH/h).toFixed(3)); }
-    };
-    fit(b.nav, BOX_W, b.navyBottom - 60 - L.safeTop);
-    fit(b.cre, b.sc.type === 'data' ? BOX_W : 860,
-               L.safeBottom - (L.H - b.ch + 50));
+    });
 
-    /* vertical centring inside the navy band */
-    const nh = b.nav.offsetHeight;
-    let top = L.safeTop + (b.navyBottom - 90 - L.safeTop - nh) / 2;
-    top = Math.max(L.safeTop, top);
-    b.nav.style.top = Math.round(top) + 'px';
+    /* the cream panel is only as tall as what it holds, plus one padding
+       above and the untouchable 240px of platform interface below. */
+    let ch = 0, creH = 0, panelTop = L.creamBandBottom;
+    if(b.hasCream){
+      creH = b.creG.el.offsetHeight;
+      panelTop = L.creamTextBottom - creH - L.creamPadTop;
+      ch = L.creamBandBottom - panelTop;
+    }
+    b.ch = ch;
 
-    /* gold rule spans the statement block */
-    b.rule.style.top = Math.round(top - 6) + 'px';
-    b.rule.style.height = Math.round(nh + 12) + 'px';
+    const navBandBottom = ch ? panelTop - 80 : L.safeBottom;
 
-    /* cream block centring */
-    if(b.cre){
-      const ct = L.H - b.ch;
-      const chh = b.cre.offsetHeight;
-      let ctop = ct + 60 + (L.safeBottom - (ct + 60) - chh) / 2;
-      ctop = Math.max(ct + 50, ctop);
-      b.cre.style.top = Math.round(ctop) + 'px';
+    const navH = b.navG.el.offsetHeight +
+                 (b.tailG ? GAP.tail + b.tailG.el.offsetHeight : 0);
+    /* with a cream band present the message sits lower, so the two halves
+       of a comparison stay close enough to read as one thought */
+    const bias = ch ? 0.68 : 0.5;
+    let top = L.safeTop + (navBandBottom - L.safeTop - navH) * bias;
+    top = Math.max(L.safeTop, Math.round(top));
+    b.navG.el.style.top = top + 'px';
+    if(b.tailG) b.tailG.el.style.top = (top + b.navG.el.offsetHeight + GAP.tail) + 'px';
 
+    b.rule.style.top = (top - 8) + 'px';
+    b.rule.style.height = (navH + 16) + 'px';
+
+    if(b.hasCream){
+      const ctop = panelTop + L.creamPadTop;
+      b.creG.el.style.top = Math.round(ctop) + 'px';
       if(b.rule2){
-        b.rule2.style.top = Math.round(ctop - 6) + 'px';
-        b.rule2.style.height = Math.round(chh + 12) + 'px';
+        b.rule2.style.top = Math.round(ctop - 8) + 'px';
+        b.rule2.style.height = Math.round(creH + 16) + 'px';
       }
     }
 
-    b.anim.forEach(e => { e.style.opacity = 0; });
+    b.navTop = top; b.navBot = top + navH;
+    b.creTop = b.hasCream ? panelTop + L.creamPadTop : null;
+    b.creBot = b.hasCream ? panelTop + L.creamPadTop + creH : null;
+
+    b.groups.forEach(g => { g.el.style.opacity = 0; });
     b.sec.classList.remove('on');
   });
+  window.BOUNDS = built.map(b => ({ id: b.sc.id, nav:[b.navTop,b.navBot],
+                                    cream: b.creTop === null ? null : [b.creTop,b.creBot], ch: b.ch }));
 }
 
 /* ---------- timeline ---------- */
@@ -379,61 +319,55 @@ const wedgeEl = document.getElementById('wedge');
 function setTime(t){
   t = Math.max(0, Math.min(TOTAL - 0.001, t));
 
-  /* background: very slow, near subliminal drift */
   const p = t / TOTAL;
-  bg.style.transform = 'scale(' + (1 + p * 0.045).toFixed(5) + ') translate3d(' +
-      (-p * 16).toFixed(2) + 'px,' + (-p * 10).toFixed(2) + 'px,0)';
+  bg.style.transform = 'scale(' + (1 + p * 0.04).toFixed(5) + ') translate3d(' +
+      (-p * 14).toFixed(2) + 'px,' + (-p * 9).toFixed(2) + 'px,0)';
   glow.style.transform = 'translate3d(' +
-      (Math.sin(t * 0.19) * 46).toFixed(2) + 'px,' +
-      (Math.cos(t * 0.14) * 34).toFixed(2) + 'px,0)';
+      (Math.sin(t * 0.21) * 42).toFixed(2) + 'px,' +
+      (Math.cos(t * 0.16) * 30).toFixed(2) + 'px,0)';
 
-  /* cream panel: eased morph across the scene boundary */
   let idx = 0;
   for(let i = 0; i < built.length; i++){ if(t >= built[i].start) idx = i; }
   const cur = built[idx];
   const prev = idx > 0 ? built[idx - 1] : null;
   const local = t - cur.start;
-  const MORPH = 0.55;
-  let h = cur.ch;
-  if(prev && local < MORPH){
-    const k = easeIO(local / MORPH);
-    h = prev.ch + (cur.ch - prev.ch) * k;
-  }
-  creamEl.style.height = h.toFixed(1) + 'px';
-  wedgeEl.style.opacity = clamp01((h - 140) / 260).toFixed(3);
 
-  /* scenes */
-  built.forEach((b, i) => {
-    const active = (t >= b.start - 0.45) && (t < b.end + 0.02);
+  const MORPH = 0.34;
+  let h = cur.ch;
+  if(prev && local < MORPH) h = prev.ch + (cur.ch - prev.ch) * easeIO(local / MORPH);
+  creamEl.style.top = (L.creamBandBottom - h).toFixed(1) + 'px';
+  creamEl.style.height = h.toFixed(1) + 'px';
+  wedgeEl.style.opacity = clamp01((h - 120) / 200).toFixed(3);
+
+  built.forEach(b => {
+    const active = (t >= b.start - 0.4) && (t < b.end + 0.02);
     if(!active){ if(b.sec.classList.contains('on')) b.sec.classList.remove('on'); return; }
     b.sec.classList.add('on');
 
-    const lt = t - b.start;
-    const outStart = b.sc.dur - FADE_OUT;
+    const lt = (t - b.start) * 1000;              // ms into the scene
+    const outAt = b.sc.dur * 1000 - EXIT;
 
     let gOut = 1, gShift = 0;
-    if(lt > outStart){
-      const k = easeIO(clamp01((lt - outStart) / FADE_OUT));
+    if(lt > outAt){
+      const k = easeIO(clamp01((lt - outAt) / EXIT));
       gOut = 1 - k;
-      gShift = -k * 12;
+      gShift = -k * 8;
     }
 
-    b.anim.forEach((el, j) => {
-      const d = j * STAGGER;
-      const k = easeOut(clamp01((lt - d) / FADE_IN));
-      el.style.opacity = (k * gOut).toFixed(4);
-      el.style.transform = 'translate3d(0,' + ((1 - k) * RISE + gShift).toFixed(2) + 'px,0)';
+    b.groups.forEach(g => {
+      const k = easeOut(clamp01((lt - b.lead - g.delay) / b.enter));
+      g.el.style.opacity = (k * gOut).toFixed(4);
+      g.el.style.transform = 'translate3d(0,' + ((1 - k) * g.rise + gShift).toFixed(2) + 'px,0)';
     });
 
-    const rk = easeOut(clamp01((lt - 0.06) / 0.70));
-    b.rules.forEach((r, ri) => {
-      const k = easeOut(clamp01((lt - 0.06 - ri * 0.22) / 0.70));
+    [b.rule, b.rule2].forEach((r, i) => {
+      if(!r) return;
+      const k = easeOut(clamp01((lt - b.lead - (i ? PAIR : 0)) / (b.enter + 220)));
       r.style.transform = 'scaleY(' + k.toFixed(4) + ')';
       r.style.opacity = gOut.toFixed(4);
     });
   });
 }
-
 window.setTime = setTime;
 window.ready = false;
 

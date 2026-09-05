@@ -51,17 +51,13 @@ const FF = process.env.FFMPEG || '/tmp/ffdl/imageio_ffmpeg/binaries/ffmpeg-linux
   }
 
   // full render
-  const outFile = path.join(OUT, 'harish-budget-reels-1080x1920.mp4');
+  const outFile = path.join(OUT, 'video-only.mp4');
   const args = [
     '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-i', 'pipe:0',
-    '-f', 'lavfi', '-i', 'anullsrc=channel_layout=stereo:sample_rate=48000',
-    '-shortest',
-    '-c:v', 'libx264', '-profile:v', 'high', '-level', '4.1',
-    '-preset', 'slow', '-crf', '18',
+    '-c:v', 'libx264', '-profile:v', 'high', '-level', '4.2',
+    '-preset', 'slow', '-b:v', '14M', '-maxrate', '20M', '-bufsize', '28M',
     '-pix_fmt', 'yuv420p', '-r', String(FPS),
     '-x264-params', 'keyint=60:min-keyint=30:scenecut=0',
-    '-c:a', 'aac', '-b:a', '128k',
-    '-movflags', '+faststart',
     outFile
   ];
   const ff = spawn(FF, args, { stdio: ['pipe', 'inherit', 'pipe'] });
