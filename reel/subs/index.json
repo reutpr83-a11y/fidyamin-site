@@ -1,0 +1,56 @@
+{
+ "shotA": [
+  {
+   "start": 0.0,
+   "end": 2.15,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotA_00.png"
+  },
+  {
+   "start": 2.15,
+   "end": 4.35,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotA_01.png"
+  },
+  {
+   "start": 4.95,
+   "end": 6.15,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotA_02.png"
+  }
+ ],
+ "shotB": [
+  {
+   "start": 0.0,
+   "end": 2.8,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotB_00.png"
+  },
+  {
+   "start": 3.19,
+   "end": 6.51,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotB_01.png"
+  },
+  {
+   "start": 6.75,
+   "end": 7.86,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotB_02.png"
+  },
+  {
+   "start": 8.27,
+   "end": 9.91,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotB_03.png"
+  },
+  {
+   "start": 10.17,
+   "end": 11.86,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotB_04.png"
+  },
+  {
+   "start": 11.86,
+   "end": 13.66,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotB_05.png"
+  },
+  {
+   "start": 13.66,
+   "end": 14.91,
+   "png": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/subs/shotB_06.png"
+  }
+ ]
+}
