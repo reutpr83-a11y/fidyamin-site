@@ -10,7 +10,8 @@
        { "start": 2.4, "end": 5.0, "text": "משפט נושא", "style": "emphasis" },
        { "start": 5.0, "end": 7.2, "text": "ועוד *1.3 מיליון* בשורה" } ]
 
-   style is "plain" by default. *כוכביות* put one word in gold.
+   style is "plain" by default. Captions carry no colour: emphasis comes
+   from size, weight and position, never from a tinted word.
 
    Writes:
      out/caps/scrim.png        the permanent gradient under the caption area
@@ -54,7 +55,12 @@ const STYLE = {
 
 const SPEC = {
   color: '#ffffff',
-  gold: '#f5b04a',
+  /* The campaign gold is #f5b04a and it is right on flat navy. Over this
+     footage, against warm skin and a terracotta shirt, the identical value
+     reads orange and cheap. So captions carry no colour at all: the rule is
+     white and no word is tinted. The gold stays on the typographic screens
+     where it belongs. Emphasis here comes from size, weight and position. */
+  ruleColor: '#ffffff',
   lastBaseline: 1620,     // every caption shares this, so the block never jumps
   maxLines: 2,
   padRight: 880,          // right edge of the RTL column, as everywhere else
@@ -67,13 +73,14 @@ const SPEC = {
 
 const DASHES = /[-־‐‑‒–—―]/;
 
-/* one word may be marked with *asterisks* to take the gold */
+/* asterisks are still stripped, so older caption files keep working, but
+   nothing is tinted. no colour on captions over video. */
 const GOLD = /\*([^*]+)\*/g;
 const plain = t => t.replace(GOLD, '$1');
 
 function lint(caps) {
   const bad = [];
-  let emph = 0, lastGold = -2;
+  let emph = 0;
   caps.forEach((c, i) => {
     const st = STYLE[c.style || 'plain'];
     if (!st) { bad.push(`#${i} unknown style ${c.style}`); return; }
@@ -85,10 +92,6 @@ function lint(caps) {
       if (l.length > st.maxChars)
         bad.push(`#${i} line of ${l.length} chars, ${c.style || 'plain'} allows ${st.maxChars}: ${l}`);
     });
-    const golds = (String(c.text).match(GOLD) || []).length;
-    if (golds > 1) bad.push(`#${i} has ${golds} gold words, only one is allowed`);
-    if (golds && i === lastGold + 1) bad.push(`#${i} gold in two captions running`);
-    if (golds) lastGold = i;
     if (!(c.end > c.start)) bad.push(`#${i} bad timing`);
     if (c.end - c.start < 0.8) bad.push(`#${i} on screen only ${(c.end - c.start).toFixed(2)}s`);
   });
@@ -132,7 +135,7 @@ ${extra}
   await p.screenshot({ path: path.join(OUT, 'scrim.png'), omitBackground: true });
 
   const esc = s => s.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
-  const markup = l => esc(l).replace(GOLD, `<b style="color:${SPEC.gold};font-weight:inherit">$1</b>`);
+  const markup = l => esc(plain(l));
 
   for (let i = 0; i < caps.length; i++) {
     const c = caps[i];
@@ -149,7 +152,7 @@ ${extra}
 
     const rule = st.rule
       ? `<div id="r" style="position:absolute;left:${SPEC.ruleX}px;top:${Math.round(top) - 8}px;
-           width:6px;height:${h + 16}px;background:${SPEC.gold};border-radius:3px"></div>`
+           width:6px;height:${h + 16}px;background:${SPEC.ruleColor};border-radius:3px"></div>`
       : '';
 
     await p.setContent(page(
