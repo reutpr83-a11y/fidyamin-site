@@ -6,7 +6,11 @@
    rendered there as transparent PNGs and simply overlaid.
 
    Reads captions.json:
-     [ { "start": 0.0, "end": 2.4, "text": "שורה ראשונה\nשורה שנייה" }, ... ]
+     [ { "start": 0.0, "end": 2.4, "text": "שורה ראשונה\nשורה שנייה" },
+       { "start": 2.4, "end": 5.0, "text": "משפט נושא", "style": "emphasis" },
+       { "start": 5.0, "end": 7.2, "text": "ועוד *1.3 מיליון* בשורה" } ]
+
+   style is "plain" by default. *כוכביות* put one word in gold.
 
    Writes:
      out/caps/scrim.png        the permanent gradient under the caption area
@@ -21,9 +25,8 @@
    The filter script form matters on Windows, where a long -filter_complex
    would blow past the command line length limit.
 
-   Spec comes from BRAND.md and is enforced below: 60px, weight 700, white,
-   at most two lines of at most 32 characters, last baseline at 1620, and
-   no dashes anywhere. */
+   Spec comes from BRAND.md and is enforced below. The run fails with a list
+   of offending captions rather than quietly producing wrong output. */
 
 const { chromium } = require('playwright');
 const fs = require('fs');
@@ -33,33 +36,64 @@ const DIR = __dirname;
 const OUT = path.join(DIR, 'out', 'caps');
 const W = 1080, H = 1920;
 
+/* Two treatments, deliberately unequal.
+   Most captions are quiet and functional. A handful carry the argument and
+   get the film's own right aligned block with the gold rule beside it, the
+   same shape as every data screen. That contrast is what makes the cut read
+   as designed rather than auto generated: not everything is a hero. */
+const STYLE = {
+  plain: {
+    size: 68, weight: 600, align: 'center',
+    maxChars: 24, lineHeight: 1.22
+  },
+  emphasis: {
+    size: 84, weight: 800, align: 'right',
+    maxChars: 18, lineHeight: 1.14, rule: true
+  }
+};
+
 const SPEC = {
-  size: 60,
-  weight: 700,
   color: '#ffffff',
-  lineHeight: 1.25,
-  lastBaseline: 1620,     // px from the top of the frame
+  gold: '#f5b04a',
+  lastBaseline: 1620,     // every caption shares this, so the block never jumps
   maxLines: 2,
-  maxChars: 32,
-  scrimFrom: 1400,        // gradient starts here, fully transparent
-  scrimTo: 1700,          // and reaches its darkest here
-  scrimAlpha: 0.62
+  padRight: 880,          // right edge of the RTL column, as everywhere else
+  ruleX: 912,
+  scrimFrom: 1380,        // gradient starts here, fully transparent
+  scrimTo: 1660,          // and reaches its darkest here
+  scrimAlpha: 0.66,
+  maxEmphasis: 5          // more than this and emphasis stops meaning anything
 };
 
 const DASHES = /[-־‐‑‒–—―]/;
 
+/* one word may be marked with *asterisks* to take the gold */
+const GOLD = /\*([^*]+)\*/g;
+const plain = t => t.replace(GOLD, '$1');
+
 function lint(caps) {
   const bad = [];
+  let emph = 0, lastGold = -2;
   caps.forEach((c, i) => {
-    const lines = String(c.text).split('\n');
+    const st = STYLE[c.style || 'plain'];
+    if (!st) { bad.push(`#${i} unknown style ${c.style}`); return; }
+    if (c.style === 'emphasis') emph++;
+    const lines = plain(String(c.text)).split('\n');
     if (DASHES.test(c.text)) bad.push(`#${i} contains a dash: ${c.text}`);
     if (lines.length > SPEC.maxLines) bad.push(`#${i} has ${lines.length} lines`);
     lines.forEach(l => {
-      if (l.length > SPEC.maxChars) bad.push(`#${i} line of ${l.length} chars: ${l}`);
+      if (l.length > st.maxChars)
+        bad.push(`#${i} line of ${l.length} chars, ${c.style || 'plain'} allows ${st.maxChars}: ${l}`);
     });
+    const golds = (String(c.text).match(GOLD) || []).length;
+    if (golds > 1) bad.push(`#${i} has ${golds} gold words, only one is allowed`);
+    if (golds && i === lastGold + 1) bad.push(`#${i} gold in two captions running`);
+    if (golds) lastGold = i;
     if (!(c.end > c.start)) bad.push(`#${i} bad timing`);
     if (c.end - c.start < 0.8) bad.push(`#${i} on screen only ${(c.end - c.start).toFixed(2)}s`);
   });
+  if (emph > SPEC.maxEmphasis)
+    bad.push(`${emph} emphasis captions, at most ${SPEC.maxEmphasis} or it stops meaning anything`);
   return bad;
 }
 
@@ -97,19 +131,36 @@ ${extra}
   await p.evaluate(() => document.fonts.ready);
   await p.screenshot({ path: path.join(OUT, 'scrim.png'), omitBackground: true });
 
-  const lh = SPEC.size * SPEC.lineHeight;
+  const esc = s => s.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
+  const markup = l => esc(l).replace(GOLD, `<b style="color:${SPEC.gold};font-weight:inherit">$1</b>`);
+
   for (let i = 0; i < caps.length; i++) {
-    const lines = String(caps[i].text).split('\n');
-    /* anchor the block so the last line always sits on the same baseline */
-    const top = SPEC.lastBaseline - lh * lines.length + (lh - SPEC.size) / 2;
+    const c = caps[i];
+    const st = STYLE[c.style || 'plain'];
+    const lines = String(c.text).split('\n');
+    const lh = st.size * st.lineHeight;
+    /* every caption shares one last baseline, so the block never jumps */
+    const top = SPEC.lastBaseline - lh * lines.length + (lh - st.size) / 2;
+    const h = Math.round(lh * lines.length);
+
+    const box = st.align === 'right'
+      ? `right:${W - SPEC.padRight}px;width:${SPEC.padRight - 90}px;text-align:right`
+      : `left:0;right:0;text-align:center`;
+
+    const rule = st.rule
+      ? `<div id="r" style="position:absolute;left:${SPEC.ruleX}px;top:${Math.round(top) - 8}px;
+           width:6px;height:${h + 16}px;background:${SPEC.gold};border-radius:3px"></div>`
+      : '';
+
     await p.setContent(page(
-      `<div id="c">${lines.map(l => `<div class="l"></div>`).join('')}</div>`,
-      `#c{position:absolute;left:0;right:0;top:${Math.round(top)}px;text-align:center;direction:rtl}
-       .l{font-size:${SPEC.size}px;font-weight:${SPEC.weight};color:${SPEC.color};
-          line-height:${SPEC.lineHeight};text-shadow:0 2px 12px rgba(11,43,68,.55)}`));
+      rule + `<div id="c">${lines.map(() => '<div class="l"></div>').join('')}</div>`,
+      `#c{position:absolute;top:${Math.round(top)}px;${box};direction:rtl}
+       .l{font-size:${st.size}px;font-weight:${st.weight};color:${SPEC.color};
+          line-height:${st.lineHeight};letter-spacing:-.008em;
+          text-shadow:0 2px 14px rgba(11,43,68,.60)}`));
     await p.evaluate(ls => {
-      document.querySelectorAll('.l').forEach((el, k) => { el.textContent = ls[k]; });
-    }, lines);
+      document.querySelectorAll('.l').forEach((el, k) => { el.innerHTML = ls[k]; });
+    }, lines.map(markup));
     await p.evaluate(() => document.fonts.ready);
     await p.screenshot({
       path: path.join(OUT, 'cap' + String(i).padStart(4, '0') + '.png'),
