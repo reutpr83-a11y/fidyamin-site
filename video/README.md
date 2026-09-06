@@ -124,14 +124,41 @@ Upscale, מתקיימת במלואה. אם בכל זאת רוצים את המס�
 
 ## הרצה מחדש
 
+### לינוקס ומק
+
 ```bash
-export NODE_PATH=/opt/node22/lib/node_modules
 node check.js          # שער QA. נכשל אם משהו חורג
 node render.js sheet   # פריים אחד לכל מסך, ל out/sheet
 node render.js frames  # רינדור וידאו ל out/video-only.mp4
 python3 sound.py       # יצירת הפסקול ל out/score.wav
 ./master.sh            # מיסטור ומיזוג לקובץ הסופי
 ```
+
+### ווינדוס, פאוורשל
+
+התקנה חד פעמית:
+
+```powershell
+winget install Gyan.FFmpeg
+winget install OpenJS.NodeJS
+winget install Python.Python.3.12
+npm install playwright
+npx playwright install chromium
+pip install numpy pillow
+```
+
+לסגור ולפתוח את הפאוורשל, ולוודא ש `ffmpeg -version` עונה. ואז:
+
+```powershell
+node check.js
+node render.js sheet
+node render.js frames
+python sound.py
+.\master.ps1
+```
+
+`render.js` מאתר את ffmpeg לבד: קודם משתנה הסביבה `FFMPEG`, אחר כך הבילד
+של הקונטיינר, ואם אין אז מה שנמצא ב PATH. בווינדוס זה האחרון.
 
 `check.js` בודק לפני כל יצוא: אין שורה שחורגת מהעמודה, אין יותר משלושה
 גדלים ושני משקלים בפריים, אין טקסט מתחת ל־30px, אין תוכן מחוץ לאזור

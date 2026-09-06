@@ -10,7 +10,15 @@ const path = require('path');
 const DIR = __dirname;
 const OUT = path.join(DIR, 'out');
 const FPS = 30;
-const FF = process.env.FFMPEG || '/tmp/ffdl/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2';
+/* ffmpeg: an explicit FFMPEG env var wins, then the pinned build used in the
+   cloud container, then whatever is on PATH. That last case is Windows and
+   any normal workstation. */
+const FF = (() => {
+  if (process.env.FFMPEG) return process.env.FFMPEG;
+  const pinned = '/tmp/ffdl/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2';
+  if (fs.existsSync(pinned)) return pinned;
+  return 'ffmpeg';
+})();
 const PAGE = process.env.PAGE || 'video.html';
 const NAME = process.env.NAME || 'video-only';
 
