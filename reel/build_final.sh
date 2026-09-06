@@ -4,7 +4,7 @@ set -euo pipefail
 S="$(cd "$(dirname "$0")" && pwd)"
 V2026="$1"; V2018="$2"; OUT="$3"
 T="$S/work"; rm -rf "$T"; mkdir -p "$T"
-FPS=30; W=1080; H=1920; SUBY=1140
+FPS=30; W=1080; H=1920; SUBY=1120
 FONT="/usr/share/fonts/truetype/karantina/buExpo24ccnh31GVMABxTC8f-A.ttf"
 MASK="$S/mask.png"; C="$S/cards"
 

@@ -52,14 +52,15 @@ def line_w(d, toks, font):
     w += sp * sum(1 for i, (_, _, s) in enumerate(toks) if s and i < len(toks) - 1)
     return w
 
-def draw_line_rtl(d, toks, font, cx, y, default=WHITE):
+def draw_line_rtl(d, toks, font, cx, y, default=WHITE, stroke=0, stroke_fill=None):
     """Draws a single line centred on cx, laid out right-to-left."""
     sp = d.textlength(" ", font=font)
     x = cx + line_w(d, toks, font) / 2
     for i, (t, col, space) in enumerate(toks):
         w = tw(d, t, font)
         d.text((x - w, y), t, font=font, fill=col or default,
-               direction="ltr" if is_num(t) else "rtl")
+               direction="ltr" if is_num(t) else "rtl",
+               stroke_width=stroke, stroke_fill=stroke_fill)
         x -= w
         if space and i < len(toks) - 1:
             x -= sp

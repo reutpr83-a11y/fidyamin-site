@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT  = os.path.join(HERE, "subs"); os.makedirs(OUT, exist_ok=True)
-W, SUB_H, SIZE = 1080, 150, 66
+W, SUB_H, SIZE = 1080, 190, 88
 
 def render(segs, path):
     img = Image.new("RGBA", (W, SUB_H), (0, 0, 0, 0))
@@ -17,31 +17,33 @@ def render(segs, path):
     f = F(BOLD, SIZE)
     # shrink to fit one line
     size = SIZE
-    while line_w(d, tokenize(segs), F(BOLD, size), ) > W - 110 and size > 40:
+    while line_w(d, tokenize(segs), F(BOLD, size)) > W - 70 and size > 56:
         size -= 2
         f = F(BOLD, size)
     y = (SUB_H - int(size * 1.2)) // 2
-    # soft dark shadow for legibility, then the text
+    # drop shadow to lift the line off the picture
     sh = Image.new("RGBA", (W, SUB_H), (0, 0, 0, 0))
     ds = ImageDraw.Draw(sh)
-    for l in wrap(ds, segs, f, W - 110)[:1]:
-        draw_line_rtl(ds, l, f, W / 2, y, default=(0, 0, 0, 230))
-    img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(7)))
-    img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(3)))
-    for l in wrap(d, segs, f, W - 110)[:1]:
-        draw_line_rtl(d, l, f, W / 2, y, default=WHITE)
+    for l in wrap(ds, segs, f, W - 70)[:1]:
+        draw_line_rtl(ds, l, f, W / 2, y + 4, default=(0, 0, 0, 235))
+    img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(9)))
+    img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(4)))
+    # hard outline, then the fill
+    for l in wrap(d, segs, f, W - 70)[:1]:
+        draw_line_rtl(d, l, f, W / 2, y, default=WHITE,
+                      stroke=6, stroke_fill=(0, 0, 0, 255))
     img.save(path)
 
 B = BLUE
 CUES = {
  "shotA": [
    (0.00, 2.15, [("לא יהיה ", None), ("פטור", B), (", לא לאברך אחד", None)]),
-   (2.15, 4.35, [("ולא לרבע אברך — ", None), ("מאה אחוז גיוס", B)]),
+   (2.15, 4.35, [("ולא לרבע אברך. ", None), ("מאה אחוז גיוס", B)]),
    (4.95, 6.15, [("שום ", None), ("פשרה", B)]),
  ],
  "shotB": [
    (0.00,  2.80, [("כל צעיר בן שמונה עשרה ", None), ("מתייצב", B), (" בבקו״ם", None)]),
-   (3.19,  6.51, [("וכל צעיר — זה יהודי, נוצרי", None)]),
+   (3.19,  6.51, [("וכל צעיר, זה יהודי, נוצרי", None)]),
    (6.75,  7.86, [("צ׳רקסי", None)]),
    (8.27,  9.91, [("שני מסלולים", B), (": או מסלול צבאי", None)]),
    (10.17,11.86, [("והשאר למסלול", None)]),

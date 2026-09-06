@@ -12,8 +12,8 @@ statement_card("card_01_2018", [
 
 # ---- 11-18s
 statement_card("card_02_setup", [
-    [("נשווה שני מתווים —", None)],
-    [("זה שליברמן ניסח ב-", None), ("2018", B), (",", None)],
+    [("נשווה שני מתווים:", None)],
+    [("זה שליברמן ניסח בשנת ", None), ("2018", B), (",", None)],
     [("וזה שהוא תוקף היום.", None)],
 ], size=84)
 
@@ -23,7 +23,7 @@ comparison_card("card_03_cmp_personal",
     r_head=[("המתווה שלו, ", None), ("2018", B)],
     r_body=[[("אפס", B)], [("חסינות אישית מלאה לבחור הישיבה", None)]],
     l_head=[("המתווה שהוא תוקף, ", None), ("2026", B)],
-    l_body=[[("סנקציות אישיות", None)], [("בנוסח ביסמוט — עד גיל ", None), ("26", B)]])
+    l_body=[[("סנקציות אישיות", None)], [("בנוסח ביסמוט,", None)], [("עד גיל ", None), ("26", B)]])
 
 # ---- 46-54s comparison 3 (timeline)
 comparison_card("card_05_cmp_timeline",
@@ -37,7 +37,7 @@ comparison_card("card_05_cmp_timeline",
 statement_card("card_06_year_after", [
     [("שנה אחרי שהתפטר", None)],
     [("הוא עוד נלחם על אותו מתווה.", None)],
-    [("רק כשזה נכשל — הוא החליף עמדה.", None)],
+    [("רק כשזה נכשל, הוא החליף עמדה.", None)],
 ], size=82)
 
 # ---- 76-86s bottom line
@@ -52,21 +52,21 @@ print("cards rendered")
 from render_cards import (new_card, save, F, BOLD, REG, block, DIM, W, H)
 from PIL import ImageDraw
 img = new_card(); d = ImageDraw.Draw(img)
-y = block(d, [("מקורות", None)], F(BOLD, 76), W/2, 560, W-150, 92)
+y = block(d, [("מקורות", None)], F(BOLD, 88), W/2, 520, W-150, 106)
 y += 60
 rows = [
-    [("סנקציות אישיות עד גיל ", None), ("26", B), (" — נוסח ביסמוט", None)],
+    [("סנקציות אישיות עד גיל ", None), ("26", B), (", נוסח ביסמוט", None)],
     [("הארץ, ", None), ("27.11.2025", B)],
     [("המלצות ועדת ליברמן, משרד הביטחון", None)],
     [("יוני ", None), ("2018", B)],
-    [("“ככתבו וכלשונו” — תנאי סף קואליציוני", None)],
+    [("“ככתבו וכלשונו”, תנאי סף קואליציוני", None)],
     [("מעריב, נובמבר ", None), ("2019", B)],
 ]
-f_a, f_b = F(BOLD, 50), F(REG, 44)
+f_a, f_b = F(BOLD, 60), F(REG, 50)
 for i, r in enumerate(rows):
     if i % 2 == 0:
-        y = block(d, r, f_a, W/2, y, W-160, 60)
+        y = block(d, r, f_a, W/2, y, W-140, 72)
     else:
-        y = block(d, r, f_b, W/2, y, W-160, 54, default=DIM) + 46
+        y = block(d, r, f_b, W/2, y, W-140, 62, default=DIM) + 54
 save(img, "card_08_sources")
 print("sources card done")
