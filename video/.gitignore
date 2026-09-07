@@ -15,3 +15,10 @@ out/presenter-with-endcard.mp4
 
 # small share copies, regenerate from the masters when one is needed
 out/preview-*.mp4
+
+# ReelKit intermediates for the clean cut. The transcripts, cues and the
+# speaker segments they describe live on the raw-upload branch; there is no
+# reason to carry 220MB of them on every branch that builds from them.
+work/
+workA/
+workC/
