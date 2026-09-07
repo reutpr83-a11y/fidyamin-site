@@ -12,6 +12,7 @@
 #
 # Env: CUT (seconds), TRANS (dissolve seconds, 0 for a straight cut),
 #      AFADE (audio fade seconds), CRF (quality, lower is bigger), OUT,
+#      DROP ("start-end", a span lifted out of the middle),
 #      GRADE (a filter chain applied to the source before the card, for
 #      matching a tail shot that was lit differently, e.g.
 #      GRADE="colorchannelmixer=rr=.96:gg=.92:bb=.88:enable='gte(t,83.5)'").
@@ -52,18 +53,47 @@ fi
 # A hand placed CUT still has to land inside the clip.
 awk -v c="$CUT" -v s="$SRC_DUR" 'BEGIN{if(c<=0||c>s){print "CUT "c"s is outside 0 to "s"s" > "/dev/stderr"; exit 1}}'
 
-TOTAL=$(awk -v c="$CUT" -v k="$CARD_DUR" -v t="$TRANS" 'BEGIN{printf "%.3f", c+k-t}')
-XSTART=$(awk -v c="$CUT" -v t="$TRANS" 'BEGIN{printf "%.3f", c-t}')
+# DROP="start-end" lifts one span out of the middle, for a word or a
+# stumble that has to go. Both edges should sit inside a pause: find them
+# with silencedetect rather than by eye, or the cut clips a syllable.
+# GRADE is applied before the split so its enable= times stay in source
+# time and do not have to be shifted by the length of the drop.
+D0="${CUT}"; D1="${CUT}"; DROPLEN=0
+if [ -n "${DROP:-}" ]; then
+  D0="${DROP%%-*}"; D1="${DROP##*-}"
+  DROPLEN=$(awk -v a="$D0" -v b="$D1" 'BEGIN{printf "%.3f", b-a}')
+  awk -v a="$D0" -v b="$D1" -v c="$CUT" 'BEGIN{if(!(0<a && a<b && b<c)){print "DROP "a"-"b" is not inside 0.."c > "/dev/stderr"; exit 1}}'
+  echo "dropping ${DROPLEN}s from ${D0}s to ${D1}s"
+fi
+
+# The two halves are dissolved rather than butted together. Both edges sit
+# in a pause so the sound would cut cleanly either way, but the camera
+# drifts a little between them and a straight join shows as a jump. 120ms
+# is the same short fade the caption spec allows, short enough that it
+# reads as a cut and long enough to hide the drift. Audio crossfades over
+# the same span so the two stay in step.
+JOINX="${JOINX:-0.12}"
+[ -n "${DROP:-}" ] || JOINX=0
+JOFF=$(awk -v a="$D0" -v j="$JOINX" 'BEGIN{printf "%.3f", a-j}')
+BODY=$(awk -v c="$CUT" -v d="$DROPLEN" -v j="$JOINX" 'BEGIN{printf "%.3f", c-d-j}')
+TOTAL=$(awk -v b="$BODY" -v k="$CARD_DUR" -v t="$TRANS" 'BEGIN{printf "%.3f", b+k-t}')
+XSTART=$(awk -v b="$BODY" -v t="$TRANS" 'BEGIN{printf "%.3f", b-t}')
 ASTART=$(awk -v T="$TOTAL" -v f="$AFADE" 'BEGIN{printf "%.3f", (T-f<0?0:T-f)}')
-echo "cut ${CUT}s + card ${CARD_DUR}s - dissolve ${TRANS}s = ${TOTAL}s"
+echo "body ${BODY}s + card ${CARD_DUR}s - dissolve ${TRANS}s = ${TOTAL}s"
 
 # The source may be shorter than the finished film once the frozen tail is
 # gone, so the audio is padded with silence before the fade is applied.
 ffmpeg -nostdin -y -v warning -stats -i "$IN" -i "$CARD" -filter_complex "
-  [0:v]trim=0:${CUT},setpts=PTS-STARTPTS,${GRADE:+${GRADE},}format=yuv420p,fps=30[v0];
+  [0:v]${GRADE:+${GRADE},}split=2[s0][s1];
+  [s0]trim=0:${D0},setpts=PTS-STARTPTS[p0];
+  [s1]trim=${D1}:${CUT},setpts=PTS-STARTPTS[p1];
+  [p0][p1]xfade=transition=fade:duration=${JOINX}:offset=${JOFF},format=yuv420p,fps=30[v0];
   [1:v]setpts=PTS-STARTPTS,format=yuv420p,fps=30[v1];
   [v0][v1]xfade=transition=fade:duration=${TRANS}:offset=${XSTART}[v];
-  [0:a]atrim=0:${TOTAL},asetpts=PTS-STARTPTS,
+  [0:a]asplit=2[q0][q1];
+  [q0]atrim=0:${D0},asetpts=PTS-STARTPTS[r0];
+  [q1]atrim=${D1},asetpts=PTS-STARTPTS[r1];
+  [r0][r1]acrossfade=d=${JOINX}:c1=tri:c2=tri,
        apad=whole_dur=${TOTAL},afade=t=out:st=${ASTART}:d=${AFADE}[a]" \
   -map "[v]" -map "[a]" \
   -c:v libx264 -profile:v high -level 4.2 -preset slow \
