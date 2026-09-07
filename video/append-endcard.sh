@@ -11,7 +11,12 @@
 #   CUT=41.8 ./append-endcard.sh in.mp4
 #
 # Env: CUT (seconds), TRANS (dissolve seconds, 0 for a straight cut),
-#      AFADE (audio fade seconds), OUT (output path).
+#      AFADE (audio fade seconds), CRF (quality, lower is bigger), OUT.
+#
+# Quality rather than a fixed bitrate: render.js targets 14M because flat
+# typography needs it, but that triples the size of camera footage for no
+# visible gain. CRF 19 lands close to the source and stays there whatever
+# the clip length.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -59,7 +64,7 @@ ffmpeg -nostdin -y -v warning -stats -i "$IN" -i "$CARD" -filter_complex "
        apad=whole_dur=${TOTAL},afade=t=out:st=${ASTART}:d=${AFADE}[a]" \
   -map "[v]" -map "[a]" \
   -c:v libx264 -profile:v high -level 4.2 -preset slow \
-  -b:v 14M -maxrate 20M -bufsize 28M -pix_fmt yuv420p -r 30 \
+  -crf "${CRF:-19}" -maxrate 16M -bufsize 24M -pix_fmt yuv420p -r 30 \
   -x264-params keyint=60:min-keyint=30:scenecut=0 \
   -c:a aac -b:a 256k -ar 48000 \
   -t "$TOTAL" "$OUT"
