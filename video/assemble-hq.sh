@@ -18,6 +18,11 @@
 #   JOINX    dissolve over the drop join, default 0.12
 #   TRANS    dissolve into the card, default 0.5
 #   AFADE    audio fade at the end, default 1.6
+#   PREGRAPH a filter graph fragment taking [0:v] and producing [src], for
+#            work that needs more than a linear chain. Used to paint over a
+#            wrong letter in a burned in caption by copying clean background
+#            from the same frame. Only useful for edits that fall inside the
+#            encoded tail; anything earlier is in the copied part.
 #   CRF      quality of the encoded tail only, default 17
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -57,7 +62,8 @@ echo "copy 0 to ${KF}s · encode ${KF}s onward · tail ${TOTAL}s · total $(awk 
 ffmpeg -nostdin -y -v error -i "$IN" -t "$KF" -c copy -avoid_negative_ts make_zero "$WORK/head.mp4"
 
 ffmpeg -nostdin -y -v warning -stats -i "$IN" -i "$CARD" -filter_complex "
-  [0:v]${GRADE:+${GRADE},}split=2[s0][s1];
+  ${PREGRAPH:-[0:v]null[src]};
+  [src]${GRADE:+${GRADE},}split=2[s0][s1];
   [s0]trim=${KF}:${D0},setpts=PTS-STARTPTS[p0];
   [s1]trim=${D1}:${CUT},setpts=PTS-STARTPTS[p1];
   [p0][p1]xfade=transition=fade:duration=${JOINX}:offset=${JOFF},format=yuv420p,fps=30[v0];
