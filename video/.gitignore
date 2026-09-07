@@ -13,5 +13,5 @@ check-endcard.js
 out/endcard.mp4
 out/presenter-with-endcard.mp4
 
-# small share copy, regenerate from the master when one is needed
-out/preview-720.mp4
+# small share copies, regenerate from the masters when one is needed
+out/preview-*.mp4
