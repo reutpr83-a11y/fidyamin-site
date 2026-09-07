@@ -11,7 +11,10 @@
 #   CUT=41.8 ./append-endcard.sh in.mp4
 #
 # Env: CUT (seconds), TRANS (dissolve seconds, 0 for a straight cut),
-#      AFADE (audio fade seconds), CRF (quality, lower is bigger), OUT.
+#      AFADE (audio fade seconds), CRF (quality, lower is bigger), OUT,
+#      GRADE (a filter chain applied to the source before the card, for
+#      matching a tail shot that was lit differently, e.g.
+#      GRADE="colorchannelmixer=rr=.96:gg=.92:bb=.88:enable='gte(t,83.5)'").
 #
 # Quality rather than a fixed bitrate: render.js targets 14M because flat
 # typography needs it, but that triples the size of camera footage for no
@@ -57,7 +60,7 @@ echo "cut ${CUT}s + card ${CARD_DUR}s - dissolve ${TRANS}s = ${TOTAL}s"
 # The source may be shorter than the finished film once the frozen tail is
 # gone, so the audio is padded with silence before the fade is applied.
 ffmpeg -nostdin -y -v warning -stats -i "$IN" -i "$CARD" -filter_complex "
-  [0:v]trim=0:${CUT},setpts=PTS-STARTPTS,format=yuv420p,fps=30[v0];
+  [0:v]trim=0:${CUT},setpts=PTS-STARTPTS,${GRADE:+${GRADE},}format=yuv420p,fps=30[v0];
   [1:v]setpts=PTS-STARTPTS,format=yuv420p,fps=30[v1];
   [v0][v1]xfade=transition=fade:duration=${TRANS}:offset=${XSTART}[v];
   [0:a]atrim=0:${TOTAL},asetpts=PTS-STARTPTS,
