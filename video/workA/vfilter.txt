@@ -1,0 +1,13 @@
+[0:v][4:v]overlay=0:1100:format=auto[b0];
+[1:v]setpts=PTS+22.35/TB[s0];
+[b0][s0]overlay=0:0:enable='between(t,22.35,29.4)'[b1];
+[2:v]setpts=PTS+31.08/TB[s1];
+[b1][s1]overlay=0:0:enable='between(t,31.08,36.1)'[b2];
+[3:v]setpts=PTS+55.73/TB[s2];
+[b2][s2]overlay=0:0:enable='between(t,55.73,60.35)'[b3];
+[b3]format=yuv420p[vout];
+[6:a]volume=0.34[sc];
+[5:a]asplit=2[vmain][vkey];
+[sc][vkey]sidechaincompress=threshold=0.02:ratio=9:attack=15:release=400:makeup=1:level_sc=1[scd];
+[vmain][scd]amix=inputs=2:normalize=0:duration=first[mx];
+[mx]loudnorm=I=-14:TP=-1.5:LRA=11[aout]
