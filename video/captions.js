@@ -44,13 +44,18 @@ const W = 1080, H = 1920;
    same shape as every data screen. That contrast is what makes the cut read
    as designed rather than auto generated: not everything is a hero. */
 const STYLE = {
+  /* one weight for every caption in the film: 800. a body at 600 sitting
+     next to an emphasis at 800 reads as two different typefaces to anyone
+     who is not a designer, and that is the report we actually got. the
+     approved look is the heavy one, so the heavy one is now everywhere and
+     the two treatments differ only in size and in the accent. */
   plain: {
-    size: 68, weight: 600, align: 'center',
-    maxChars: 24, lineHeight: 1.22
+    size: 72, weight: 800, align: 'center',
+    maxChars: 22, lineHeight: 1.18
   },
   emphasis: {
-    size: 84, weight: 800, align: 'right',
-    maxChars: 18, lineHeight: 1.14, rule: true
+    size: 88, weight: 800, align: 'center',
+    maxChars: 17, lineHeight: 1.14
   }
 };
 
@@ -70,6 +75,16 @@ const SPEC = {
      something when it appears. */
   accent: '#63cbea',
   accentMaxChars: 16,
+  /* the accent word is tinted and underlined, both in the same value. the
+     underline is what makes it read as marked rather than merely coloured,
+     and it survives a bright background where colour alone can wash out. */
+  accentUnderline: 8,
+  accentUnderlineGap: 14,
+  /* every caption is white type with a dark outline drawn behind the fill.
+     that outline is what holds the type over sky, grass and skin without a
+     heavy band across the picture. */
+  stroke: '#0b2b44',
+  strokeWidth: 4,
   ruleColor: '#ffffff',
   lastBaseline: 1620,     // every caption shares this, so the block never jumps
   maxLines: 2,
@@ -172,18 +187,21 @@ ${extra}
       ? `right:${W - SPEC.padRight}px;width:${SPEC.padRight - 90}px;text-align:right`
       : `left:0;right:0;text-align:center`;
 
-    const rule = st.rule
-      ? `<div id="r" style="position:absolute;left:${SPEC.ruleX}px;top:${Math.round(top) - 8}px;
-           width:6px;height:${h + 16}px;background:${SPEC.ruleColor};border-radius:3px"></div>`
-      : '';
+    /* no vertical rule any more. the accent underline carries the mark, and
+       a rule beside centred type has nothing to align to. */
+    const rule = '';
 
     await p.setContent(page(
       rule + `<div id="c">${lines.map(() => '<div class="l"></div>').join('')}</div>`,
       `#c{position:absolute;top:${Math.round(top)}px;${box};direction:rtl}
        .l{font-size:${st.size}px;font-weight:${st.weight};color:${SPEC.color};
-          line-height:${st.lineHeight};letter-spacing:-.008em;
-          text-shadow:0 2px 14px rgba(11,43,68,.60)}
-       .l em{font-style:normal;color:${SPEC.accent}}`));
+          line-height:${st.lineHeight};letter-spacing:-.012em;
+          -webkit-text-stroke:${SPEC.strokeWidth}px ${SPEC.stroke};paint-order:stroke fill;
+          text-shadow:0 2px 14px rgba(11,43,68,.55)}
+       .l em{font-style:normal;color:${SPEC.accent};
+          text-decoration:underline;text-decoration-color:${SPEC.accent};
+          text-decoration-thickness:${SPEC.accentUnderline}px;
+          text-underline-offset:${SPEC.accentUnderlineGap}px}`));
     await p.evaluate(ls => {
       document.querySelectorAll('.l').forEach((el, k) => { el.innerHTML = ls[k]; });
     }, lines.map(markup));
