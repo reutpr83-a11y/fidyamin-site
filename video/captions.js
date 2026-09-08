@@ -10,8 +10,9 @@
        { "start": 2.4, "end": 5.0, "text": "משפט נושא", "style": "emphasis" },
        { "start": 5.0, "end": 7.2, "text": "ועוד *1.3 מיליון* בשורה" } ]
 
-   style is "plain" by default. Captions carry no colour: emphasis comes
-   from size, weight and position, never from a tinted word.
+   style is "plain" by default. Asterisks mark the one word or figure that
+   carries the point, and that word alone is tinted in the campaign light
+   blue. One highlight per caption at most.
 
    Writes:
      out/caps/scrim.png        the permanent gradient under the caption area
@@ -56,10 +57,19 @@ const STYLE = {
 const SPEC = {
   color: '#ffffff',
   /* The campaign gold is #f5b04a and it is right on flat navy. Over this
-     footage, against warm skin and a terracotta shirt, the identical value
-     reads orange and cheap. So captions carry no colour at all: the rule is
-     white and no word is tinted. The gold stays on the typographic screens
-     where it belongs. Emphasis here comes from size, weight and position. */
+     footage, against warm skin and a warm shirt, the identical value reads
+     orange and cheap, so gold never appears over picture. The accent over
+     picture is the campaign light blue, which is a cool colour against warm
+     footage and therefore separates instead of blending. It was measured
+     off the youth cut, checked against a lighter and a deeper variant on a
+     real graded frame, and this value held: lighter goes pastel, deeper
+     starts to sink into the navy scrim.
+
+     It tints one word or one figure per caption and nothing else. The body
+     stays white and the rule stays white, so the colour still means
+     something when it appears. */
+  accent: '#63cbea',
+  accentMaxChars: 16,
   ruleColor: '#ffffff',
   lastBaseline: 1620,     // every caption shares this, so the block never jumps
   maxLines: 2,
@@ -73,10 +83,10 @@ const SPEC = {
 
 const DASHES = /[-־‐‑‒–—―]/;
 
-/* asterisks are still stripped, so older caption files keep working, but
-   nothing is tinted. no colour on captions over video. */
-const GOLD = /\*([^*]+)\*/g;
-const plain = t => t.replace(GOLD, '$1');
+/* *word* marks the highlight. plain() strips the markers for measuring and
+   linting, markup() turns them into the tinted span. */
+const MARK = /\*([^*]+)\*/g;
+const plain = t => t.replace(MARK, '$1');
 
 function lint(caps) {
   const bad = [];
@@ -91,6 +101,18 @@ function lint(caps) {
     lines.forEach(l => {
       if (l.length > st.maxChars)
         bad.push(`#${i} line of ${l.length} chars, ${c.style || 'plain'} allows ${st.maxChars}: ${l}`);
+    });
+    const marks = String(c.text).match(MARK) || [];
+    if ((String(c.text).match(/\*/g) || []).length % 2)
+      bad.push(`#${i} has an unclosed highlight marker`);
+    if (marks.length > 1)
+      bad.push(`#${i} has ${marks.length} highlights, one per caption at most`);
+    marks.forEach(m => {
+      const w = m.slice(1, -1);
+      if (w.length > SPEC.accentMaxChars)
+        bad.push(`#${i} highlights ${w.length} chars, at most ${SPEC.accentMaxChars}: ${w}`);
+      if (lines.some(l => l.trim() === w.trim()))
+        bad.push(`#${i} highlights a whole line. the accent marks a word, not a sentence`);
     });
     if (!(c.end > c.start)) bad.push(`#${i} bad timing`);
     if (c.end - c.start < 0.8) bad.push(`#${i} on screen only ${(c.end - c.start).toFixed(2)}s`);
@@ -135,7 +157,7 @@ ${extra}
   await p.screenshot({ path: path.join(OUT, 'scrim.png'), omitBackground: true });
 
   const esc = s => s.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
-  const markup = l => esc(plain(l));
+  const markup = l => esc(l).replace(MARK, '<em>$1</em>');
 
   for (let i = 0; i < caps.length; i++) {
     const c = caps[i];
@@ -160,7 +182,8 @@ ${extra}
       `#c{position:absolute;top:${Math.round(top)}px;${box};direction:rtl}
        .l{font-size:${st.size}px;font-weight:${st.weight};color:${SPEC.color};
           line-height:${st.lineHeight};letter-spacing:-.008em;
-          text-shadow:0 2px 14px rgba(11,43,68,.60)}`));
+          text-shadow:0 2px 14px rgba(11,43,68,.60)}
+       .l em{font-style:normal;color:${SPEC.accent}}`));
     await p.evaluate(ls => {
       document.querySelectorAll('.l').forEach((el, k) => { el.innerHTML = ls[k]; });
     }, lines.map(markup));
