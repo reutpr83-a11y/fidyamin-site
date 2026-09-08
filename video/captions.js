@@ -60,6 +60,12 @@ const SPEC = {
      reads orange and cheap. So captions carry no colour at all: the rule is
      white and no word is tinted. The gold stays on the typographic screens
      where it belongs. Emphasis here comes from size, weight and position. */
+  /* One word per caption is tinted, at the user's explicit direction and
+     against the paragraph above. The value is sampled from the delivered
+     cut so the look matches what was already published: a pale sky blue,
+     not the campaign gold, which is what keeps it off the orange that the
+     rule was written to prevent. Weight and size do not change with it. */
+  highlight: '#58b0d8',
   ruleColor: '#ffffff',
   lastBaseline: 1620,     // every caption shares this, so the block never jumps
   maxLines: 2,
@@ -73,10 +79,10 @@ const SPEC = {
 
 const DASHES = /[-־‐‑‒–—―]/;
 
-/* asterisks are still stripped, so older caption files keep working, but
-   nothing is tinted. no colour on captions over video. */
-const GOLD = /\*([^*]+)\*/g;
-const plain = t => t.replace(GOLD, '$1');
+/* *word* tints that word. Caption files without asterisks are unchanged. */
+const MARK = /\*([^*]+)\*/g;
+const plain = t => t.replace(MARK, '$1');
+const tinted = t => t.replace(MARK, '<b class="hi">$1</b>');
 
 function lint(caps) {
   const bad = [];
@@ -135,7 +141,7 @@ ${extra}
   await p.screenshot({ path: path.join(OUT, 'scrim.png'), omitBackground: true });
 
   const esc = s => s.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
-  const markup = l => esc(plain(l));
+  const markup = l => tinted(esc(l));
 
   for (let i = 0; i < caps.length; i++) {
     const c = caps[i];
@@ -160,7 +166,8 @@ ${extra}
       `#c{position:absolute;top:${Math.round(top)}px;${box};direction:rtl}
        .l{font-size:${st.size}px;font-weight:${st.weight};color:${SPEC.color};
           line-height:${st.lineHeight};letter-spacing:-.008em;
-          text-shadow:0 2px 14px rgba(11,43,68,.60)}`));
+          text-shadow:0 2px 14px rgba(11,43,68,.60)}
+       .hi{color:${SPEC.highlight};font-weight:inherit}`));
     await p.evaluate(ls => {
       document.querySelectorAll('.l').forEach((el, k) => { el.innerHTML = ls[k]; });
     }, lines.map(markup));
