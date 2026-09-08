@@ -198,3 +198,44 @@
 **כתובית לא נמתחת על פני חיתוך.** המילים משני צדי חיתוך הן משני רגעים
 שונים, וקריאה שלהן כשורה אחת שוברת את המשמעות. גרסה קודמת חיברה "שקלים
 פחות בשכר של יחידת הנוער" עם "תגידו, השתגעתם?" לכתובית אחת.
+
+## v4 — the cold open cut (reel/youth/v4)
+
+41.4s, `video/out/youth-reel-v4-1080x1920.mp4`. Rebuilt from the take rather
+than recut from v3.
+
+**Order.** Eleven beats, opening on the outrage instead of the charge:
+`תגידו, השתגעתם? מהנוער שלנו לקחת?` (39.64 in the take) then back to the
+accusation, her words, the reversal, the court, the two figures, the silence,
+`אי אפשר להמשיך לשבת על הגדר`, the ask, and `ככה. פשוט.` The opening
+sequence the client asked to keep runs whole. `beats4.py` holds the list.
+
+**No cuts anywhere.** Every join between beats is a 0.35s dissolve
+(`xfade`/`acrossfade`). The held beat after her last word is cut from the frame
+the previous beat ended on (`tail4.py`), so it is not a join at all, and the
+end card comes up on a 0.5s dissolve over that silence. The old shot-by-shot
+punch in is gone: `composite4.py` runs one continuous 1.00 to 1.12 push across
+the whole reel, so the framing moves without ever cutting.
+
+**The youth slide.** `datapanel.py` redraws slide 07 of the budget document for
+the vertical frame — the 653 headline and all six budget lines — over her while
+the picture dims, softens and desaturates and then comes back
+(16.60 to 24.35s). Figures in `#63cbea` per `v3-youth-fix.md`. The rows sit
+above the caption zone so nothing collides.
+
+**End card.** The card the earlier cuts ended on carried the *budget* video's
+figures (55 million, 316 clauses). `endcard4.py` replaces it with the youth
+figure, her ask in brand gold, and the source line the document itself uses:
+`מקור: מסמך עדכון תקציב 2026, עיריית חריש`.
+
+**A/V drift, fixed.** Each beat's video was cut to whole frames and so ran a
+few ms longer than the audio that came with it; chained through eleven beats
+that left the sound 0.30s ahead of her mouth by the end. `audio4.py` cuts every
+beat's audio to the exact length of its own video before crossfading.
+`sync4.py` cross correlates the finished master against the take beat by beat:
+lag is 0.000s on all eleven.
+
+**Master.** 1080x1920, 30fps, h264 crf 16, -14.7 LUFS, -1.4 dBTP.
+Build order: `beats4.py` → plate → `caps4.py` → `render_track4.py` →
+`datapanel.py` → `composite4.py` → `tail4.py` → `audio4.py` → `endcard4.py` →
+`master4.sh`.
