@@ -9,9 +9,14 @@ SRC  = os.path.join(HERE, "youth.mp4")
 OUT  = os.path.join(HERE, "cutsegs")
 os.makedirs(OUT, exist_ok=True)
 
-# v3-youth-fix.md, scaled from the 1080x1920 it was written for to 1440x2560
-FIX = ("perspective=x0=-35:y0=0:x1=1475:y1=0:x2=0:y2=2560:x3=1440:y3=2560"
-       ":sense=destination,scale=1440:2637,crop=1440:2280:0:317,scale=1440:2560")
+# The camera sat below her eye line. v3-youth-fix.md answers that with a
+# keystone, a 3 percent vertical stretch and a sky crop rescaled to full
+# height - which together made her face 13.7 percent taller than life.
+# This is a crop and nothing else: 307 rows of sky come off the top, and the
+# width is cropped with it so the frame stays exactly 9:16. Raising her eye
+# line into the upper third is what kills the shot-from-below read; no pixel
+# is ever stretched.
+FIX = "crop=1260:2240:90:307"
 # shadows toward navy, highlights toward cream, contrast reined in, sky pulled back
 GRADE = ("eq=contrast=0.95:saturation=0.90:gamma=1.03,"
          "colorbalance=rs=-0.05:bs=0.07:rm=0.00:bm=0.03:rh=0.05:gh=0.02:bh=-0.03,"
