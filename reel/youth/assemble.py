@@ -3,10 +3,10 @@
 import json, os, subprocess
 HERE = os.path.dirname(os.path.abspath(__file__))
 W, H, FPS = 1080, 1920, 30
-PW, PH = 1260, 2240                      # plate size
+PW, PH = 1170, 2080                      # plate size
 # The angle crop already tightened the frame, so the punch-in steps come
 # down with it; 1.45 here would have meant upscaling past the source.
-FRAMING = {"wide": (1.00, 0.50), "mid": (1.15, 0.43), "close": (1.30, 0.36)}
+FRAMING = {"wide": (1.00, 0.50), "mid": (1.10, 0.44), "close": (1.22, 0.38)}
 
 plan  = json.load(open(os.path.join(HERE, "shot-plan.json")))
 plate = os.path.join(HERE, "plate_v.mp4")

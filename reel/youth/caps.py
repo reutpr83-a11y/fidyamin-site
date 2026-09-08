@@ -53,10 +53,32 @@ def layout(words, f, d, maxw):
     if cur: lines.append((cur, curw))
     return lines[:2], sp
 
+# How far the spoken word grows, and how much extra air the line reserves so
+# that growth never collides with its neighbour.
+POP, SPACE = 0.10, 1.9
+
+def _word_tile(word, font, stroke, pad):
+    """A word on its own transparent tile, so it can be scaled without
+    reflowing the line around it."""
+    probe = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    w = int(tw(probe, word, font)) + pad * 2
+    h = int(font.size * 1.9) + pad * 2
+    tile = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(tile)
+    d.text((pad, pad), word, font=font, fill=WHITE,
+           direction="ltr" if is_num(word) else "rtl",
+           stroke_width=stroke, stroke_fill=(0, 0, 0, 255))
+    return tile
+
+def _pop(dt):
+    """Scale curve for the word being spoken: out to 1.14, then settle."""
+    if dt < 0:            return 0.0, 1.0
+    if dt < 0.09:         k = dt / 0.09;  return k, 1.0 + POP * (k * k * (3 - 2 * k))
+    if dt < 0.31:         k = (dt - 0.09) / 0.22; return 1.0, 1.0 + POP * (1 - k * k * (3 - 2 * k))
+    return 1.0, 1.0
+
 def draw_cue(img, words, times, t, style, lines_spec=None):
-    """words: list[str]; times: list[float] start per word; t: current time.
-    lines_spec: word counts per line, so the cue's own break is honoured
-    instead of auto wrapping (which silently dropped the tail)."""
+    """words in logical order, times = when each is spoken, t = now."""
     d = ImageDraw.Draw(img)
     emph  = style == "emphasis"
     size  = 104 if emph else 84
@@ -67,41 +89,46 @@ def draw_cue(img, words, times, t, style, lines_spec=None):
         lines, i = [], 0
         for n in lines_spec:
             lw = words[i:i + n]; i += n
-            lines.append((lw, sum(tw(d, w, f) for w in lw)
-                          + d.textlength(" ", font=f) * max(0, len(lw) - 1)))
-        sp = d.textlength(" ", font=f)
-        # shrink until the widest line fits the column
-        while lines and max(l[1] for l in lines) > maxw and size > 56:
-            size -= 2; f = F(size, wt); sp = d.textlength(" ", font=f)
-            lines = [(lw, sum(tw(d, w, f) for w in lw) + sp * max(0, len(lw) - 1))
-                     for lw, _ in lines]
+            lines.append(lw)
+        sp = d.textlength(" ", font=f) * SPACE
+        def width(lw, ff, spc):
+            return sum(tw(d, x, ff) for x in lw) + spc * max(0, len(lw) - 1)
+        while max(width(lw, f, sp) for lw in lines) > maxw and size > 56:
+            size -= 2; f = F(size, wt); sp = d.textlength(" ", font=f) * SPACE
+        lines = [(lw, width(lw, f, sp)) for lw in lines]
     else:
         lines, sp = layout(words, f, d, maxw)
-    lh    = int(size * (1.14 if emph else 1.22))
-    base  = 1620
-    top   = base - lh * len(lines)
+
+    lh   = int(size * (1.14 if emph else 1.22))
+    base = 1620
+    top  = base - lh * len(lines)
+    stroke, pad = 6, 14
 
     idx = 0
     for li, (lw, lwidth) in enumerate(lines):
         y = top + li * lh
-        # emphasis is flush right to the 880 column; regular is centred
         x = (880 if emph else (W + lwidth) / 2)
-        for w in lw:
-            ww = tw(d, w, f)
-            ts = times[idx]; idx += 1
+        for word in lw:
+            ww = tw(d, word, f)
+            ts = times[idx] if idx < len(times) else times[-1]
+            nxt = times[idx + 1] if idx + 1 < len(times) else ts + 0.45
+            idx += 1
             dt = t - ts
             if dt < 0:
                 x -= ww + sp; continue
-            k  = min(1.0, dt / 0.14)              # 140ms rise + fade
-            k  = k * k * (3 - 2 * k)
-            off = int((1 - k) * 16)
-            a   = int(255 * k)
-            for pass_ in ((3, (11, 43, 68, int(a * .55))), (0, (255, 255, 255, a))):
-                blur, col = pass_
-                d.text((x - ww, y + off), w, font=f, fill=col,
-                       direction="ltr" if is_num(w) else "rtl",
-                       stroke_width=blur, stroke_fill=col if blur else None)
+            k  = min(1.0, dt / 0.14); k = k * k * (3 - 2 * k)   # entrance
+            rise = int((1 - k) * 16)
+            _, scale = _pop(dt) if t < nxt + 0.31 else (1.0, 1.0)
+            tile = _word_tile(word, f, stroke, pad)
+            if scale != 1.0:
+                tile = tile.resize((max(1, int(tile.width * scale)),
+                                    max(1, int(tile.height * scale))), Image.LANCZOS)
+            if k < 1.0:
+                tile.putalpha(tile.getchannel("A").point(lambda a: int(a * k)))
+            cx = x - ww / 2
+            cy = y + f.size * 0.95
+            img.alpha_composite(tile, (int(cx - tile.width / 2),
+                                       int(cy - tile.height / 2) + rise))
             x -= ww + sp
     if emph:
-        # white rule beside the block, at 912px
         d.rectangle([912, top + 8, 918, base - 6], fill=(255, 255, 255, 235))

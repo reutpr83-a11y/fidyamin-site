@@ -12,11 +12,12 @@ os.makedirs(OUT, exist_ok=True)
 # The camera sat below her eye line. v3-youth-fix.md answers that with a
 # keystone, a 3 percent vertical stretch and a sky crop rescaled to full
 # height - which together made her face 13.7 percent taller than life.
-# This is a crop and nothing else: 307 rows of sky come off the top, and the
-# width is cropped with it so the frame stays exactly 9:16. Raising her eye
-# line into the upper third is what kills the shot-from-below read; no pixel
-# is ever stretched.
-FIX = "crop=1260:2240:90:307"
+# This is a crop and nothing else: sky comes off the top and body off the
+# bottom, with the width cropped to match so the frame stays exactly 9:16.
+# Her eyes stay at 33 percent. Cropping the bottom alone was tried and made
+# it worse: it drops her to 47 percent with sky piled above her, which reads
+# as an even lower camera. No pixel is ever stretched.
+FIX = "crop=1170:2080:135:359"
 # shadows toward navy, highlights toward cream, contrast reined in, sky pulled back
 GRADE = ("eq=contrast=0.95:saturation=0.90:gamma=1.03,"
          "colorbalance=rs=-0.05:bs=0.07:rm=0.00:bm=0.03:rh=0.05:gh=0.02:bh=-0.03,"
