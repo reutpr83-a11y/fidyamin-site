@@ -9,40 +9,44 @@ tr = json.load(open(os.path.join(HERE, "youth-transcript.json"), encoding="utf-8
 beats, durs, starts, LAST = m["beats"], m["durs"], m["starts"], round(m["total"], 3)
 
 def to_out(a, b):
+    """Returns the output time and which beat the word belongs to."""
     for i, (x, _) in enumerate(beats):
         if x - 1e-6 <= a and b <= x + durs[i] + 1e-6:
-            return starts[i] + (a - x)
-    return None
+            return starts[i] + (a - x), i
+    return None, None
 
 FIX = {"והשארתם": "ואישרתם"}
 raw = []
 for seg in tr:
     for w in seg["words"]:
-        o = to_out(w["s"], w["e"])
+        o, bi = to_out(w["s"], w["e"])
         if o is not None:
-            raw.append((FIX.get(w["w"].strip(), w["w"].strip()), round(o, 3)))
+            raw.append((FIX.get(w["w"].strip(), w["w"].strip()), round(o, 3), bi))
 ws = []
-for w, t in raw:
+for w, t, bi in raw:
     if ws and w.startswith(",") and ws[-1][0][-1:].isdigit():
-        ws[-1] = (ws[-1][0] + w, ws[-1][1])
+        ws[-1] = (ws[-1][0] + w, ws[-1][1], ws[-1][2])
     else:
-        ws.append((w, t))
+        ws.append((w, t, bi))
 out = []
-for i, (w, t) in enumerate(ws):
+for i, (w, t, bi) in enumerate(ws):
     if w == "השתגעתם": w = "השתגעתם?"
     if w == "שהיה" and i + 1 < len(ws) and ws[i+1][0] == "לנו":
-        out.append(("שלנו", t)); continue
+        out.append(("שלנו", t, bi)); continue
     if w == "לנו" and out and out[-1][0] == "שלנו": continue
-    out.append((w, t))
+    out.append((w, t, bi))
 ws = out
 
 MAXW, MAXCH, PAUSE = 8, 46, 0.80
+# A caption must never span a cut: the words either side of one are from
+# different moments and reading them as a single line breaks the sense.
 groups, cur = [], []
-for i, (w, t) in enumerate(ws):
+for i, (w, t, bi) in enumerate(ws):
     cur.append((w, t))
     gap = ws[i+1][1] - t if i + 1 < len(ws) else 9.9
-    if (w.endswith((".", "?", "!")) or gap >= PAUSE or len(cur) >= MAXW
-            or sum(len(x)+1 for x, _ in cur) >= MAXCH or i == len(ws) - 1):
+    beat_ends = i + 1 >= len(ws) or ws[i+1][2] != bi
+    if (beat_ends or w.endswith((".", "?", "!")) or gap >= PAUSE
+            or len(cur) >= MAXW or sum(len(x)+1 for x, _ in cur) >= MAXCH):
         groups.append(cur); cur = []
 if cur: groups.append(cur)
 
@@ -50,7 +54,7 @@ tk = []
 for g in groups:
     a = [w for w, _ in g]; t = [x for _, x in g]; n = len(a); h = (n + 1) // 2
     tk.append({"start": round(t[0]-0.06, 3), "end": 0.0,
-               "style": "emphasis" if "653,000" in " ".join(a) else "regular",
+               "style": "emphasis" if any(n in " ".join(a) for n in ("653,000", "365,000")) else "regular",
                "words": a, "times": t, "lines": [n] if n <= 3 else [h, n - h]})
 for i, c in enumerate(tk):
     nxt = tk[i+1]["start"] if i + 1 < len(tk) else LAST
