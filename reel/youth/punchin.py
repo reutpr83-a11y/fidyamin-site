@@ -42,10 +42,12 @@ if __name__ == "__main__":
 # cut rather than a wobble; 12 percent was too subtle to register.
 # Re-check these on the real take, whose wide is genuinely wider than the
 # 1080p plate they were first tried on.
+# The angle crop is tight now, so these steps are small: any more would mean
+# scaling past the source width and softening the picture.
 FRAMING = {
     "wide":  (1.00, 0.50),
-    "mid":   (1.20, 0.42),
-    "close": (1.45, 0.34),
+    "mid":   (1.06, 0.45),
+    "close": (1.12, 0.40),
 }
 
 def vf(shot, w=1080, h=1920):
