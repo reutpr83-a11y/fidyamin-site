@@ -57,6 +57,12 @@ def layout(words, f, d, maxw):
 # that growth never collides with its neighbour.
 POP, SPACE = 0.10, 1.9
 
+# The entrance takes 140ms to finish, so a word timed at t only becomes
+# readable at t+0.14 - the whole track reads late even when the times are
+# right. LEAD starts it early so the word is fully up ON the syllable, and
+# a caption reading a hair early is far less noticeable than one lagging.
+LEAD = 0.13
+
 def _word_tile(word, font, stroke, pad):
     """A word on its own transparent tile, so it can be scaled without
     reflowing the line around it."""
@@ -113,12 +119,13 @@ def draw_cue(img, words, times, t, style, lines_spec=None):
             ts = times[idx] if idx < len(times) else times[-1]
             nxt = times[idx + 1] if idx + 1 < len(times) else ts + 0.45
             idx += 1
-            dt = t - ts
+            dt = t - (ts - LEAD)
             if dt < 0:
                 x -= ww + sp; continue
             k  = min(1.0, dt / 0.14); k = k * k * (3 - 2 * k)   # entrance
             rise = int((1 - k) * 16)
-            _, scale = _pop(dt) if t < nxt + 0.31 else (1.0, 1.0)
+            # the pop still lands on the syllable itself, not on the entrance
+            _, scale = _pop(t - ts) if t < nxt + 0.31 else (1.0, 1.0)
             tile = _word_tile(word, f, stroke, pad)
             if scale != 1.0:
                 tile = tile.resize((max(1, int(tile.width * scale)),
