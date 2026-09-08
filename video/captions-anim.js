@@ -33,7 +33,7 @@ const SPEC = {
   highlight: '#58b0d8',      // sampled from the delivered cut
   lastBaseline: 1620 - BAND_TOP,
   padRight: 880, ruleX: 912,
-  scrimFrom: 1380 - BAND_TOP, scrimTo: 1660 - BAND_TOP, scrimAlpha: 0.66
+  scrimFrom: 1380 - BAND_TOP, scrimTo: 1660 - BAND_TOP, scrimAlpha: parseFloat(process.env.SCRIM_ALPHA || '0.66')
 };
 
 const font = fs.readFileSync(path.join(DIR, 'fonts', 'Heebo.ttf')).toString('base64');
