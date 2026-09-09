@@ -177,42 +177,66 @@ harm. The contrast lift came down too, because the picture is no longer
 washed out by compression.
 
 
-## Pacing
 
-Measured across all 46 captions of the previous cut: mean 2.4 words per second,
-and the first figure did not reach the screen until **17.5s**. For a reel that
-is late — the opening thirteen seconds were assertion with no evidence behind
-them.
+## Restored to the approved edit, at camera quality
 
-Three captions fell below 1.7 w/s. Two are punch lines and are meant to be
-slow. The third, "רק כמה דוגמאות קטנות", took 2.7s for four words, was the
-slowest line in the reel that is not a punch line, and delivered nothing. It
-is gone.
+A run of changes went too far: an opening panel, an opening beat from a
+different take, a reordering. The client's instruction was to put the approved
+edit back exactly and improve only the picture. All of that is reverted.
 
-The bigger change is that **"אז פוליטי אמרתם" moved out of the opening** and
-now sits between "פחות פיקוח, פחות ניקיון ופחות שירות לתושבים" and "ואתם לא
-תוכלו להגיד שלא ידעתם". It carries no evidence, so in front it was costing the
-viewer seven seconds before the first number; behind, the retort answers
-figures already on screen and the closing line, "מוסרית וגם פוליטית", answers
-it seconds later instead of two minutes later.
+The seven beats are in their approved order — הטענה, אז פוליטי, הראיות,
+המציאות, הפנייה, פחות, מנהיגות — all from the 15:59:53 take. 46 captions, 284
+words, five emphasis lines, three panels.
 
-| | before | after |
-|---|---|---|
-| first figure on screen | 17.5s | **7.3s** |
-| length | 132.1s | 129.8s |
+Two things differ from the version the client approved, and only two.
+
+**The frames come from the camera original.** 2160x3840 HEVC at 26 Mbps rather
+than a 576x1024 WhatsApp export at 772 kbps, and `hqdn3d` and `unsharp` are out
+of the grade because both existed only to hide that export's damage.
+
+**Each dissolve has room.** A 0.35s dissolve takes the last 0.35s of the
+outgoing beat, and five beats ended just 0.10s after their last word, so the
+picture began changing 0.25s before the sentence had finished and the
+transition read as trampling the line. Every out point moved far enough past
+its last word for the whole dissolve to fall in silence:
+
+| beat | out was | out now | silence before the dissolve |
+|---|---|---|---|
+| הטענה | 19.99 | 20.36 | 0.12s |
+| אז פוליטי | 9.18 | 9.55 | 0.12s |
+| הראיות | 56.90 | 56.90 | 0.23s, already clear |
+| המציאות | 96.74 | 97.11 | 0.12s |
+| הפנייה | 120.27 | 120.27 | see below |
+| פחות | 128.50 | 128.86 | 0.11s |
+| מנהיגות | 156.73 | 157.10 | 0.12s |
+
+Everything added is silence. No word was added and none was removed.
+
+הפנייה cannot be fixed: 0.06s separates its last word from the sentence cut
+after it, so there is nowhere to move to. Its overlap is 0.02s, under one
+frame, and it stays as approved.
+
+133.1s, 0.000s beat lag on all seven, -14.1 LUFS, -1.4 dBTP.
 
 ## Build time
 
 The composite is the slow stage and it ran on one core. `fastbuild.sh` splits
 the frame range across four workers, each decoding its own slice of the plate
 and encoding its own chunk, then concatenates them with a stream copy and
-**fails if the frame count does not match**, so a split can never silently
-lose or duplicate a frame. `REEL_FRAMES` is passed through so each worker
-computes the push in against the whole reel rather than against its chunk,
-which keeps the zoom continuous across the joins.
+**fails if the frame count does not match**, so a split can never silently lose
+or duplicate a frame. `REEL_FRAMES` is passed through so each worker computes
+the push in against the whole reel rather than against its chunk, which keeps
+the zoom continuous across the joins.
 
 The plate and the beat cuts are intermediates that get re-encoded anyway, so
-they moved to a fast preset at a lower crf: faster and slightly cleaner at the
-same time. The master itself stays crf 18.
+they use a fast preset at a lower crf: faster and slightly cleaner at once. The
+master itself stays crf 18.
 
-Whole build: **15 minutes, down from about 40.**
+Whole build: **16 minutes, down from about 40.**
+
+## Two outputs
+
+| file | size | for |
+|---|---|---|
+| `harish-main-reel-hq-1080x1920.mp4` | 87 MB, 5.3 Mbps | posting. One file, one click, already above what Instagram and Facebook keep after their own re-encode |
+| `hq-master/` | 170 MB in 2 parts, 10.7 Mbps | archive and any future re-edit |
