@@ -41,22 +41,28 @@ GRADE = ("scale=1152:2048:flags=lanczos+accurate_rnd,"
 
 # (role, in, out, take)
 #
-# "אז פוליטי אמרתם" used to sit second. It carries no evidence, and with the
-# thesis before it that put the first figure 17.5s in, which is late for a
-# reel. It now lands just before "ואתם לא תוכלו להגיד שלא ידעתם", where the
-# retort answers numbers the viewer has already seen and the closing line
-# answers it seconds later instead of two minutes later.
+# This is the edit the client approved. Nothing is reordered, trimmed or added:
+# the in points are hers exactly, and the only change is that the frames now
+# come from the camera original instead of a WhatsApp export.
 #
-# "רק כמה דוגמאות קטנות" is gone: 2.7s for four words, the slowest line in the
-# reel that is not a punch line, and it delivers nothing.
+# The out points are extended, and that is a fix rather than an edit. A 0.35s
+# dissolve takes the last 0.35s of the outgoing beat, and five of these beats
+# ended 0.10s after their last word, so the picture began changing 0.25s before
+# the sentence had finished and the transition read as trampling the line. Each
+# out point now sits far enough past the last word for the whole dissolve to
+# fall in silence. Everything added is silence.
+#
+# הפנייה is the one that cannot be fixed: only 0.06s separates its last word
+# from the sentence that was cut after it, so there is no silence to move into.
+# Its overlap is 0.02s, under one frame, and it stays as approved.
 BEATS = [
-    ("הטענה",         2.00,  12.10, "open"),   # מקצצת מיליונים ושופכת על קבלנים
-    ("הראיות",        31.55,  56.90, "main"),   # הנדסה, תברואה, ניהול מערכות, קריסה
-    ("המציאות",       60.11,  96.74, "main"),   # הפחים, הכביש, האחריות, מי משלם
+    ("הטענה",         10.70,  20.36, "main"),   # מקצצת מיליונים ושופכת על קבלנים
+    ("אז פוליטי",      3.95,   9.55, "main"),   # ביקורת על מיליונים היא פוליטית?
+    ("הראיות",        29.28,  56.90, "main"),   # דוגמאות, הנדסה, תברואה, קריסה
+    ("המציאות",       60.11,  97.11, "main"),   # הפחים, הכביש, האחריות, מי משלם
     ("הפנייה",        98.30, 120.27, "main"),   # בית המשפט, משה נגה איציק רויטל
-    ("פחות",         124.80, 128.50, "main"),   # פחות פיקוח, פחות ניקיון
-    ("אז פוליטי",      3.95,   9.18, "main"),   # ביקורת על מיליונים היא פוליטית?
-    ("מנהיגות",      133.20, 156.73, "main"),   # לא ידעתם, זו מנהיגות, תתנגדו
+    ("פחות",         124.80, 128.86, "main"),   # פחות פיקוח, פחות ניקיון
+    ("מנהיגות",      133.20, 157.10, "main"),   # לא ידעתם, זו מנהיגות, תתנגדו
 ]
 
 if __name__ == "__main__":

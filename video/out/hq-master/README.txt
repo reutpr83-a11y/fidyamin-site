@@ -1,11 +1,11 @@
 harish-main-reel-hq.mp4  —  the full quality master
 
-Size:    174045800 bytes
-SHA-256: fde069e0b1b26d67009f87b60da44e1603a11cd1d3958bc09f8b424f8f31f148
+Size:    178482601 bytes
+SHA-256: b47b913683c79fbbb3edf83f9d5b0f7865095c1a7e04268dea80073613be981e
 
-129.8s, 1080x1920, 30fps, h264 crf 18, -13.9 LUFS, -1.3 dBTP.
-Cut from two takes: the opening beat from the 4K take already in
-youth-source-upload, everything after it from 06092026_155953.MOV.
+133.1s, 1080x1920, 30fps, h264 crf 18, -14.1 LUFS, -1.4 dBTP.
+The approved edit, cut from the camera original 06092026_155953.MOV
+(2160x3840 HEVC, 26 Mbps).
 
 Split into 2 parts so each stays under GitHub's 100 MB per file limit. The
 video was NOT re-encoded: the parts are raw byte ranges of the master.
