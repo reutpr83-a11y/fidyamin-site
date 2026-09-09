@@ -20,7 +20,8 @@ for i in range(1, n):
     fc.append("[%s][%d:a]acrossfade=d=%.3f:c1=tri:c2=nofade[a%d]" % (a, i, XF, i))
     v, a = "v%d" % i, "a%d" % i
 args += ["-filter_complex", ";".join(fc), "-map", "[%s]" % v, "-map", "[%s]" % a,
-         "-c:v", "libx264", "-preset", "medium", "-crf", "16", "-pix_fmt", "yuv420p",
+         "-c:v", "libx264", "-preset", "veryfast", "-crf", "14",
+         "-x264-params", "keyint=30:min-keyint=30:scenecut=0", "-pix_fmt", "yuv420p",
          "-c:a", "pcm_s16le", os.path.join(HERE, "plate6.mov")]
 subprocess.run(args, check=True)
 out = subprocess.run(["ffprobe", "-v", "error", "-count_frames", "-select_streams", "v:0",

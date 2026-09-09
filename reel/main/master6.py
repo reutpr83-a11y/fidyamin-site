@@ -31,7 +31,7 @@ subprocess.run(["ffmpeg", "-y", "-v", "error",
     "[3:a]afade=t=out:st=%.4f:d=%.2f,apad,atrim=0:%.4f,asetpts=N/SR/TB[a]"
     % (XF, picture - XF, picture - FADE - 0.15, FADE, total),
     "-map", "[v]", "-map", "[a]",
-    "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p",
+    "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
     "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
     "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart",
     os.path.join(HERE, "harish-main-reel-hq.mp4")], check=True)

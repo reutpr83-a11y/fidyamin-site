@@ -176,58 +176,43 @@ Both filters existed only to serve a damaged source. On a real one they do
 harm. The contrast lift came down too, because the picture is no longer
 washed out by compression.
 
-## Two outputs
 
-| file | size | for |
+## Pacing
+
+Measured across all 46 captions of the previous cut: mean 2.4 words per second,
+and the first figure did not reach the screen until **17.5s**. For a reel that
+is late — the opening thirteen seconds were assertion with no evidence behind
+them.
+
+Three captions fell below 1.7 w/s. Two are punch lines and are meant to be
+slow. The third, "רק כמה דוגמאות קטנות", took 2.7s for four words, was the
+slowest line in the reel that is not a punch line, and delivered nothing. It
+is gone.
+
+The bigger change is that **"אז פוליטי אמרתם" moved out of the opening** and
+now sits between "פחות פיקוח, פחות ניקיון ופחות שירות לתושבים" and "ואתם לא
+תוכלו להגיד שלא ידעתם". It carries no evidence, so in front it was costing the
+viewer seven seconds before the first number; behind, the retort answers
+figures already on screen and the closing line, "מוסרית וגם פוליטית", answers
+it seconds later instead of two minutes later.
+
+| | before | after |
 |---|---|---|
-| `harish-main-reel-hq-1080x1920.mp4` | 90 MB, 5.7 Mbps | posting. One file, one click, and already above what Instagram and Facebook keep after their own re-encode |
-| `hq-master/` | 194 MB in 3 parts, 12.4 Mbps | archive and any future re-edit |
+| first figure on screen | 17.5s | **7.3s** |
+| length | 132.1s | 129.8s |
 
+## Build time
 
+The composite is the slow stage and it ran on one core. `fastbuild.sh` splits
+the frame range across four workers, each decoding its own slice of the plate
+and encoding its own chunk, then concatenates them with a stream copy and
+**fails if the frame count does not match**, so a split can never silently
+lose or duplicate a frame. `REEL_FRAMES` is passed through so each worker
+computes the push in against the whole reel rather than against its chunk,
+which keeps the zoom continuous across the joins.
 
-## The opening beat comes from the other take
+The plate and the beat cuts are intermediates that get re-encoded anyway, so
+they moved to a fast preset at a lower crf: faster and slightly cleaner at the
+same time. The master itself stays crf 18.
 
-The client's note on the first cut from the original was that her delivery in
-the opening seconds reads too light. Sampled every half second, she smiles
-almost continuously from 3.9 to 19.8 in the 15:59:53 take, and each of those
-sentences is said only once in it, so there was no firmer reading to cut to.
-
-A first attempt covered those seconds with a data panel, which dims and
-softens the picture. That was wrong and the client said so: a film opens on
-the person, not on a graphic over a blurred face.
-
-The other take says the same sentence and says it straight. `youth-source.mp4`
-on `youth-source-upload` is the first 85s of the `transcript.json` take, in
-2160x3840, and she is composed through the whole line. Its wording is also
-slightly better: "פשוט מיליונים **שאף אחד לא יודע** לאן הם הולכים" against
-"שמי יודע" in ours.
-
-It works as a join because it is the same setup. Same camera position, same
-building, same fence, same table, same shirt, same light — overlay a frame
-from each and the backgrounds line up. The standard 0.35s dissolve reads as
-her shifting, not as a second shoot. Measured mean audio level differs by
-0.7 dB between the takes, which is nothing.
-
-So the reel now cuts from two takes:
-
-| beat | take | source |
-|---|---|---|
-| הטענה, 2.00-12.10 | `transcript.json`, +0.10 | `gb/src.mp4`, 2160x3840 |
-| everything after | `transcript_155953`, +0.09 | `full.MOV`, 2160x3840 |
-
-`beats6.py` carries a `TAKES` table and each beat names its own; `caps6.py`
-reads each beat's captions from that take's own transcript, `audio6.py` cuts
-each beat's audio from its own file, and `sync6.py` verifies each beat against
-the take it came from. All seven measured 0.000s.
-
-"אז פוליטי אמרתם" keeps its smirk on purpose. On "תגידו, אתם השתגעתם?" it
-reads as disbelief rather than levity — the client's own note, and she is
-right. Same expression, different job, and what decides which is the sentence
-it sits under.
-
-## Two outputs
-
-| file | size | for |
-|---|---|---|
-| `harish-main-reel-hq-1080x1920.mp4` | 87 MB, 5.5 Mbps | posting. One file, one click, already above what Instagram and Facebook keep after their own re-encode |
-| `hq-master/` | 196 MB in 3 parts, 12.5 Mbps | archive and any future re-edit |
+Whole build: **15 minutes, down from about 40.**

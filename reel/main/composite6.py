@@ -17,6 +17,7 @@ Z0, Z1 = 1.00, 1.0667        # slow push in; ends at 1:1 with the output
 ANCH = 0.35
 NPX = SW * SH * 3
 
+TOTAL = int(os.environ.get("REEL_FRAMES", "0")) or int(sys.argv[1])
 panel = json.load(open(os.path.join(HERE, "panel6.json")))
 PDIM = {int(k): v for k, v in panel["dim"].items()}
 scrim = Image.open(os.path.join(HERE, "scrim.png")).convert("RGBA")
@@ -28,13 +29,17 @@ r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H * 0.44) / (H / 2)) ** 2)
 vig = np.clip(1.0 - 0.20 * np.clip((r - 0.55) / 0.75, 0, 1) ** 2 * 3.0, 0.80, 1.0)[..., None]
 
 N = int(sys.argv[1])
+# frame index of the first frame on this worker's stdin, so panels and
+# captions are looked up on the reel's clock and not on the chunk's
+BASE = int(sys.argv[2]) if len(sys.argv) > 2 else 0
 inp, out = sys.stdin.buffer, sys.stdout.buffer
-for i in range(N):
+for k in range(N):
+    i = BASE + k
     buf = inp.read(NPX)
     if len(buf) < NPX:
         break
     im = Image.frombuffer("RGB", (SW, SH), buf, "raw", "RGB", 0, 1)
-    z = Z0 + (Z1 - Z0) * (i / max(1, N - 1))
+    z = Z0 + (Z1 - Z0) * (i / max(1, TOTAL - 1))
     cw, ch = SW / z, SH / z
     x0, y0 = (SW - cw) / 2.0, (SH - ch) * ANCH
     im = im.resize((W, H), Image.LANCZOS, box=(x0, y0, x0 + cw, y0 + ch))
