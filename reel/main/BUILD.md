@@ -139,3 +139,46 @@ used none.
   than the 0.35s crossfade. Every beat is cut to end in silence, so only the
   outgoing side needs a fade: the audio crossfades now use `c2=nofade` and the
   incoming beat enters at full level.
+
+
+---
+
+# The camera original
+
+`video/out/harish-main-reel-hq-1080x1920.mp4`, 131.3s, and the full quality
+master in `video/out/hq-master/`.
+
+The reel had been cut from a 576x1024 WhatsApp export at 772 kbps, because
+that was the only copy of the take that existed anywhere I could reach. The
+camera original was then pushed to `youth-source-upload:video/src/155953/`
+in six byte exact parts, rejoined here, and verified against its sha256:
+
+    0a9d12ff3c42f0edc1d764a145e36259491cf5f78b7d78c19c1d69d80c893861
+    520673951 bytes, HEVC 2160x3840, 26 Mbps, 159.367s
+
+**Nothing about the edit changed.** The speech mask correlation put it at the
+same +0.09s offset against `transcript_155953` (0.557, against 0.383 for the
+next best), and the take is the same length as the export, so every beat,
+every caption time and every panel window came out identical: 126.00s of body,
+46 captions, 5 emphasis lines, panels at 17.19, 25.94 and 92.87. Beat lag
+against the source measured 0.000s on all seven beats.
+
+What changed is the grade, and that matters as much as the resolution:
+
+| | from the export | from the original |
+|---|---|---|
+| `hqdn3d=3:2:6:6` | hiding compression artefacts | **removed** |
+| `unsharp=7:7:0.9` | putting back what the upscale lost | **removed** |
+| contrast / saturation | 1.06 / 1.05 | 1.03 / 1.02 |
+| scale | up 2x from 576x1024 | **down** from 2160x3840 |
+
+Both filters existed only to serve a damaged source. On a real one they do
+harm. The contrast lift came down too, because the picture is no longer
+washed out by compression.
+
+## Two outputs
+
+| file | size | for |
+|---|---|---|
+| `harish-main-reel-hq-1080x1920.mp4` | 90 MB, 5.7 Mbps | posting. One file, one click, and already above what Instagram and Facebook keep after their own re-encode |
+| `hq-master/` | 194 MB in 3 parts, 12.4 Mbps | archive and any future re-edit |

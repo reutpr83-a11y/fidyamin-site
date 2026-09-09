@@ -11,9 +11,8 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # same grade beats6.py cuts its segments with
-GRADE = ("hqdn3d=3:2:6:6,scale=1152:2048:flags=lanczos+accurate_rnd,"
-         "unsharp=7:7:0.9:5:5:0.0,"
-         "eq=contrast=1.06:saturation=1.05:gamma=0.99,"
+GRADE = ("scale=1152:2048:flags=lanczos+accurate_rnd,"
+         "eq=contrast=1.03:saturation=1.02:gamma=0.99,"
          "colorbalance=rs=-0.04:bs=0.06:rm=0.00:bm=0.02:rh=0.04:gh=0.01:bh=-0.03")
 W, H, SW, SH, FPS = 1080, 1920, 1152, 2048, 30
 # picks up on the frame after the last beat, computed rather than typed
@@ -28,7 +27,7 @@ r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H * 0.44) / (H / 2)) ** 2)
 vig = np.clip(1.0 - 0.20 * np.clip((r - 0.55) / 0.75, 0, 1) ** 2 * 3.0, 0.80, 1.0)[..., None]
 
 src = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", "%.3f" % START, "-t", "%.3f" % DUR,
-    "-i", os.path.join(HERE, "raw.mov"),
+    "-i", os.path.join(HERE, "full.MOV"),
     "-vf", "%s,fps=30,setsar=1" % GRADE,
     "-an", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
 enc = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",

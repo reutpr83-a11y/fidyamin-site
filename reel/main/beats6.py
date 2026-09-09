@@ -22,13 +22,12 @@ out, the incoming beat enters at full level and is not attenuated on
 import json, os, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "raw.mov")
+SRC = os.path.join(HERE, "full.MOV")
 OFFSET = 0.09
 XF = 0.35
 
-GRADE = ("hqdn3d=3:2:6:6,scale=1152:2048:flags=lanczos+accurate_rnd,"
-         "unsharp=7:7:0.9:5:5:0.0,"
-         "eq=contrast=1.06:saturation=1.05:gamma=0.99,"
+GRADE = ("scale=1152:2048:flags=lanczos+accurate_rnd,"
+         "eq=contrast=1.03:saturation=1.02:gamma=0.99,"
          "colorbalance=rs=-0.04:bs=0.06:rm=0.00:bm=0.02:rh=0.04:gh=0.01:bh=-0.03")
 
 BEATS = [

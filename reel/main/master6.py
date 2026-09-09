@@ -34,5 +34,5 @@ subprocess.run(["ffmpeg", "-y", "-v", "error",
     "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p",
     "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
     "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart",
-    os.path.join(HERE, "harish-main-reel-v2.mp4")], check=True)
-print("master %.4fs" % dur("harish-main-reel-v2.mp4"))
+    os.path.join(HERE, "harish-main-reel-hq.mp4")], check=True)
+print("master %.4fs" % dur("harish-main-reel-hq.mp4"))

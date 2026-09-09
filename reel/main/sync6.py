@@ -24,8 +24,8 @@ worst = 0.0
 for i, ((a, b), st) in enumerate(zip(m["beats"], m["starts"])):
     win = min(1.5, (b - a) - 1.0)
     if win < 0.5: win = 0.5
-    ref = pcm(os.path.join(HERE, "raw.mov"), a + OFF + 0.5, win)
-    seg = pcm(os.path.join(HERE, "harish-main-reel-v2.mp4"), st + 0.5 - 0.30, win + 0.60)
+    ref = pcm(os.path.join(HERE, "full.MOV"), a + OFF + 0.5, win)
+    seg = pcm(os.path.join(HERE, "harish-main-reel-hq.mp4"), st + 0.5 - 0.30, win + 0.60)
     if len(ref) < 100 or len(seg) < len(ref): print("beat %2d: short" % i); continue
     ref = ref - ref.mean(); seg = seg - seg.mean()
     c = np.correlate(seg, ref, "valid")
