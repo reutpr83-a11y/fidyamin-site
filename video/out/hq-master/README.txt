@@ -1,12 +1,12 @@
 harish-main-reel-hq.mp4  —  the full quality master
 
-Size:    203274916 bytes
-SHA-256: ee4753897e6e7ff65e8b1d639bb0423a77b1d2277a2d84e0b21bc50a0baaa174
+Size:    183079930 bytes
+SHA-256: 891569079319362c884337939006b2a94e78ed744ad83b59f671cc21bcd46ca4
 
-131.3s, 1080x1920, 30fps, h264 crf 18, 12.4 Mbps, -14.1 LUFS, -1.4 dBTP.
+131.3s, 1080x1920, 30fps, h264 crf 18, 11.1 Mbps, -14.1 LUFS, -1.4 dBTP.
 Cut from the camera original 06092026_155953.MOV (2160x3840 HEVC, 26 Mbps).
 
-Split into 3 parts so each stays under GitHub's 100 MB per file limit. The
+Split into 2 parts so each stays under GitHub's 100 MB per file limit. The
 video was NOT re-encoded: the parts are raw byte ranges of the master.
 
 Rejoin (macOS / Linux / Git Bash), from this directory:
@@ -15,7 +15,7 @@ Rejoin (macOS / Linux / Git Bash), from this directory:
 
 Rejoin (Windows PowerShell), from this directory:
 
-  cmd /c copy /b hqmaster.00.part+hqmaster.01.part+hqmaster.02.part harish-main-reel-hq.mp4
+  cmd /c copy /b hqmaster.00.part+hqmaster.01.part harish-main-reel-hq.mp4
 
 Then check it prints the SHA-256 above.
 

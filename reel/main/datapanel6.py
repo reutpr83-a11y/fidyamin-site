@@ -33,6 +33,16 @@ def clk(i, t):
     return S[i] - B[i][0] + t
 
 PANELS = [
+    # Slide 01. This one opens the reel, so it comes up already at full
+    # strength: the client's note was that her delivery in the first seconds
+    # reads too light, and the take has no firmer reading of this line. The
+    # panel dims and softens the picture over exactly those seconds, and the
+    # figure is the right one for the sentence she is saying.
+    dict(label="עדכון תקציב חריש 2026",
+         rows=[("11.3", "מיליון ₪", 0, ("הוזזו בעדכון התקציב",))],
+         note="316 סעיפים השתנו", instant=True,
+         t_in=clk(0, 10.70), t_a=clk(0, 10.90), t_b=None,
+         t_out=clk(0, 18.20), t_end=clk(0, 19.00)),
     dict(label="הנדסה, תכנון ובנייה",
          rows=[("1.3", "מיליון ₪", -1, ("פחות לשכר עובדי האגף",)),
                ("970", "אלף ₪",    +1, ("יותר לייעוץ, פיקוח ועבודות קבלניות",))],
@@ -67,7 +77,7 @@ def arrow(d, x, y, up, a):
 
 def block(d, y, fig, unit, up, caps_, a, rise):
     f_fig = caps.F(112, 800); f_un = caps.F(46, 600); f_cap = caps.F(42, 500)
-    col = (*BLUE, int(255 * a)) if up else (255, 255, 255, int(235 * a))
+    col = (255, 255, 255, int(235 * a)) if up is False else (*BLUE, int(255 * a))
     x = RIGHT
     wf = caps.tw(d, fig, f_fig)
     d.text((x - wf, y + rise), fig, font=f_fig, fill=col, direction="ltr",
@@ -76,7 +86,8 @@ def block(d, y, fig, unit, up, caps_, a, rise):
     d.text((x - wf - wu, y + 52 + rise), " " + unit, font=f_un,
            fill=(255, 255, 255, int(215 * a)), direction="rtl",
            stroke_width=5, stroke_fill=(*INK, int(200 * a)))
-    arrow(d, x - wf - wu - 34, y + 76 + rise, up, a)
+    if up is not None:
+        arrow(d, x - wf - wu - 34, y + 76 + rise, up, a)
     for j, line in enumerate(caps_):
         wc = caps.tw(d, line, f_cap)
         d.text((RIGHT - wc, y + 132 + j * 54 + rise), line, font=f_cap,
@@ -88,7 +99,8 @@ def frame(t):
     p = next((p for p in PANELS if p["t_in"] <= t <= p["t_end"]), None)
     if p is None:
         return img, 0.0
-    fade = ease((t - p["t_in"]) / 0.42) if t < p["t_in"] + 0.42 else \
+    fade = (1.0 if p.get("instant") else ease((t - p["t_in"]) / 0.42)) \
+           if t < p["t_in"] + 0.42 else \
            (1.0 - ease((t - p["t_out"]) / (p["t_end"] - p["t_out"])) if t > p["t_out"] else 1.0)
     d = ImageDraw.Draw(img)
     f_lab = caps.F(46, 500)
@@ -102,7 +114,8 @@ def frame(t):
     for i, (t0, (fig, unit, dirn, cs)) in enumerate(zip(cues, p["rows"])):
         k = ease((t - t0) / 0.45)
         if k <= 0: continue
-        block(d, 400 + i * 300, fig, unit, dirn > 0, cs, k * fade, int((1 - k) * 18))
+        block(d, 400 + i * 300, fig, unit, None if dirn == 0 else dirn > 0,
+              cs, k * fade, int((1 - k) * 18))
     if p["note"]:
         k = ease((t - p["t_a"] - 0.55) / 0.45)
         if k > 0:

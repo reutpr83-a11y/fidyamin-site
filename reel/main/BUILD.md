@@ -182,3 +182,23 @@ washed out by compression.
 |---|---|---|
 | `harish-main-reel-hq-1080x1920.mp4` | 90 MB, 5.7 Mbps | posting. One file, one click, and already above what Instagram and Facebook keep after their own re-encode |
 | `hq-master/` | 194 MB in 3 parts, 12.4 Mbps | archive and any future re-edit |
+
+
+## The opening panel
+
+The client's note on the first cut from the original was that her delivery in
+the opening seconds reads too light. Sampled every half second, she is smiling
+almost continuously from 3.9 to 19.8 in the take, and each of those sentences
+is said only once, so there was no firmer reading to cut to.
+
+The fix is a fourth panel rather than a different line. Slide 01 — 11.3 מיליון ₪
+and 316 סעיפים השתנו — is exactly the graphic for the sentence she is saying,
+and the panel treatment already dims the picture by half and softens it, so
+she reads as a presence behind the figure instead of a face in close up. It
+comes up at full strength on the first frame rather than fading in, since the
+frames it exists to cover are the first ones.
+
+It runs 0.00 to 8.30 and clears before "אז פוליטי אמרתם". That beat keeps its
+smirk deliberately: on "תגידו, אתם השתגעתם?" it reads as disbelief rather than
+levity. Same expression, different job, and the difference is which sentence
+it sits under.
