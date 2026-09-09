@@ -22,7 +22,16 @@ out, the incoming beat enters at full level and is not attenuated on
 import json, os, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "full.MOV")
+# Two takes. The reel is cut from the 15:59:53 one, but its reading of the
+# opening sentence smiles the whole way through and that sentence is said only
+# once in it. The other take says the same sentence, in the same place, in the
+# same shirt, and says it straight. Same camera position too, so the join
+# dissolves as movement rather than as a second shoot.
+GB = os.path.join(os.path.dirname(HERE), "gb")
+TAKES = {
+    "main": (os.path.join(HERE, "full.MOV"), 0.09, "transcript_155953.json"),
+    "open": (os.path.join(GB, "src.mp4"),    0.10, "transcript.json"),
+}
 OFFSET = 0.09
 XF = 0.35
 
@@ -30,36 +39,42 @@ GRADE = ("scale=1152:2048:flags=lanczos+accurate_rnd,"
          "eq=contrast=1.03:saturation=1.02:gamma=0.99,"
          "colorbalance=rs=-0.04:bs=0.06:rm=0.00:bm=0.02:rh=0.04:gh=0.01:bh=-0.03")
 
+# (role, in, out, take)
 BEATS = [
-    ("הטענה",         10.70,  19.99),   # מקצצת מיליונים ושופכת על קבלנים
-    ("אז פוליטי",      3.95,   9.18),   # ביקורת על מיליונים היא פוליטית?
-    ("הראיות",        29.28,  56.90),   # דוגמאות, הנדסה, תברואה, ניהול מערכות, קריסה
-    ("המציאות",       60.11,  96.74),   # הפחים, הכביש, האחריות, מי משלם
-    ("הפנייה",        98.30, 120.27),   # בית המשפט, משה נגה איציק רויטל, הסתירו מכם
-    ("פחות",         124.80, 128.50),   # פחות פיקוח, פחות ניקיון ופחות שירות
-    ("מנהיגות",      133.20, 156.73),   # לא ידעתם, זו מנהיגות, תתנגדו, מוסרית וגם פוליטית
+    ("הטענה",         2.00,  12.10, "open"),   # מקצצת מיליונים ושופכת על קבלנים
+    ("אז פוליטי",      3.95,   9.18, "main"),   # ביקורת על מיליונים היא פוליטית?
+    ("הראיות",        29.28,  56.90, "main"),   # דוגמאות, הנדסה, תברואה, קריסה
+    ("המציאות",       60.11,  96.74, "main"),   # הפחים, הכביש, האחריות, מי משלם
+    ("הפנייה",        98.30, 120.27, "main"),   # בית המשפט, משה נגה איציק רויטל
+    ("פחות",         124.80, 128.50, "main"),   # פחות פיקוח, פחות ניקיון
+    ("מנהיגות",      133.20, 156.73, "main"),   # לא ידעתם, זו מנהיגות, תתנגדו
 ]
 
 if __name__ == "__main__":
     segd = os.path.join(HERE, "s6"); os.makedirs(segd, exist_ok=True)
     durs = []
-    for i, (role, a, b) in enumerate(BEATS):
+    for i, (role, a, b, take) in enumerate(BEATS):
+        src, off, _ = TAKES[take]
         v = os.path.join(segd, "v%02d.mp4" % i)
-        subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", "%.3f" % (a + OFFSET),
-            "-t", "%.3f" % (b - a), "-i", SRC,
+        subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", "%.3f" % (a + off),
+            "-t", "%.3f" % (b - a), "-i", src,
             "-vf", "%s,fps=30,setsar=1" % GRADE,
             "-c:v", "libx264", "-preset", "medium", "-crf", "16",
             "-c:a", "pcm_s16le", "-ar", "48000", "-ac", "2", v], check=True)
         d = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries",
             "format=duration", "-of", "csv=p=0", v], capture_output=True, text=True).stdout)
         durs.append(d)
-        print("%-10s %6.2f-%6.2f  %.3fs" % (role, a, b, d), flush=True)
+        print("%-10s %-5s %6.2f-%6.2f  %.3fs" % (role, take, a, b, d), flush=True)
 
     starts, acc = [], 0.0
     for d in durs:
         starts.append(acc); acc += d - XF
     total = acc + XF
-    json.dump({"beats": [[a, b] for _, a, b in BEATS], "roles": [r for r, _, _ in BEATS],
-               "durs": durs, "starts": starts, "total": total, "xf": XF, "offset": OFFSET},
+    json.dump({"beats": [[a, b] for _, a, b, _ in BEATS],
+               "roles": [r for r, _, _, _ in BEATS],
+               "takes": [t for _, _, _, t in BEATS],
+               "sources": {k: {"path": v[0], "offset": v[1], "transcript": v[2]}
+                           for k, v in TAKES.items()},
+               "durs": durs, "starts": starts, "total": total, "xf": XF},
               open(os.path.join(HERE, "map6.json"), "w"), indent=1)
     print("\n%d beats, %.2fs dissolves, the cut runs %.2fs" % (len(BEATS), XF, total))

@@ -17,7 +17,9 @@ GRADE = ("scale=1152:2048:flags=lanczos+accurate_rnd,"
 W, H, SW, SH, FPS = 1080, 1920, 1152, 2048, 30
 # picks up on the frame after the last beat, computed rather than typed
 _m = json.load(open(os.path.join(HERE, "map6.json")))
-START = _m["beats"][-1][0] + _m["offset"] + _m["durs"][-1]
+_take = _m["sources"][_m["takes"][-1]]      # the last beat's own take
+SRC = _take["path"]
+START = _m["beats"][-1][0] + _take["offset"] + _m["durs"][-1]
 DUR = 0.85
 Z, ANCH = 1.0667, 0.35
 
@@ -27,7 +29,7 @@ r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H * 0.44) / (H / 2)) ** 2)
 vig = np.clip(1.0 - 0.20 * np.clip((r - 0.55) / 0.75, 0, 1) ** 2 * 3.0, 0.80, 1.0)[..., None]
 
 src = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", "%.3f" % START, "-t", "%.3f" % DUR,
-    "-i", os.path.join(HERE, "full.MOV"),
+    "-i", SRC,
     "-vf", "%s,fps=30,setsar=1" % GRADE,
     "-an", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
 enc = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",

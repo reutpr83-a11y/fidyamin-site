@@ -33,16 +33,6 @@ def clk(i, t):
     return S[i] - B[i][0] + t
 
 PANELS = [
-    # Slide 01. This one opens the reel, so it comes up already at full
-    # strength: the client's note was that her delivery in the first seconds
-    # reads too light, and the take has no firmer reading of this line. The
-    # panel dims and softens the picture over exactly those seconds, and the
-    # figure is the right one for the sentence she is saying.
-    dict(label="עדכון תקציב חריש 2026",
-         rows=[("11.3", "מיליון ₪", 0, ("הוזזו בעדכון התקציב",))],
-         note="316 סעיפים השתנו", instant=True,
-         t_in=clk(0, 10.70), t_a=clk(0, 10.90), t_b=None,
-         t_out=clk(0, 18.20), t_end=clk(0, 19.00)),
     dict(label="הנדסה, תכנון ובנייה",
          rows=[("1.3", "מיליון ₪", -1, ("פחות לשכר עובדי האגף",)),
                ("970", "אלף ₪",    +1, ("יותר לייעוץ, פיקוח ועבודות קבלניות",))],

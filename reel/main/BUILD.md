@@ -184,21 +184,50 @@ washed out by compression.
 | `hq-master/` | 194 MB in 3 parts, 12.4 Mbps | archive and any future re-edit |
 
 
-## The opening panel
+
+## The opening beat comes from the other take
 
 The client's note on the first cut from the original was that her delivery in
-the opening seconds reads too light. Sampled every half second, she is smiling
-almost continuously from 3.9 to 19.8 in the take, and each of those sentences
-is said only once, so there was no firmer reading to cut to.
+the opening seconds reads too light. Sampled every half second, she smiles
+almost continuously from 3.9 to 19.8 in the 15:59:53 take, and each of those
+sentences is said only once in it, so there was no firmer reading to cut to.
 
-The fix is a fourth panel rather than a different line. Slide 01 — 11.3 מיליון ₪
-and 316 סעיפים השתנו — is exactly the graphic for the sentence she is saying,
-and the panel treatment already dims the picture by half and softens it, so
-she reads as a presence behind the figure instead of a face in close up. It
-comes up at full strength on the first frame rather than fading in, since the
-frames it exists to cover are the first ones.
+A first attempt covered those seconds with a data panel, which dims and
+softens the picture. That was wrong and the client said so: a film opens on
+the person, not on a graphic over a blurred face.
 
-It runs 0.00 to 8.30 and clears before "אז פוליטי אמרתם". That beat keeps its
-smirk deliberately: on "תגידו, אתם השתגעתם?" it reads as disbelief rather than
-levity. Same expression, different job, and the difference is which sentence
+The other take says the same sentence and says it straight. `youth-source.mp4`
+on `youth-source-upload` is the first 85s of the `transcript.json` take, in
+2160x3840, and she is composed through the whole line. Its wording is also
+slightly better: "פשוט מיליונים **שאף אחד לא יודע** לאן הם הולכים" against
+"שמי יודע" in ours.
+
+It works as a join because it is the same setup. Same camera position, same
+building, same fence, same table, same shirt, same light — overlay a frame
+from each and the backgrounds line up. The standard 0.35s dissolve reads as
+her shifting, not as a second shoot. Measured mean audio level differs by
+0.7 dB between the takes, which is nothing.
+
+So the reel now cuts from two takes:
+
+| beat | take | source |
+|---|---|---|
+| הטענה, 2.00-12.10 | `transcript.json`, +0.10 | `gb/src.mp4`, 2160x3840 |
+| everything after | `transcript_155953`, +0.09 | `full.MOV`, 2160x3840 |
+
+`beats6.py` carries a `TAKES` table and each beat names its own; `caps6.py`
+reads each beat's captions from that take's own transcript, `audio6.py` cuts
+each beat's audio from its own file, and `sync6.py` verifies each beat against
+the take it came from. All seven measured 0.000s.
+
+"אז פוליטי אמרתם" keeps its smirk on purpose. On "תגידו, אתם השתגעתם?" it
+reads as disbelief rather than levity — the client's own note, and she is
+right. Same expression, different job, and what decides which is the sentence
 it sits under.
+
+## Two outputs
+
+| file | size | for |
+|---|---|---|
+| `harish-main-reel-hq-1080x1920.mp4` | 87 MB, 5.5 Mbps | posting. One file, one click, already above what Instagram and Facebook keep after their own re-encode |
+| `hq-master/` | 196 MB in 3 parts, 12.5 Mbps | archive and any future re-edit |

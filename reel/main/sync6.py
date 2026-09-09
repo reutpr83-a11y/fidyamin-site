@@ -11,7 +11,6 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 SR = 16000
 m = json.load(open(os.path.join(HERE, "map6.json")))
-OFF = m["offset"]   # the beat clock is the transcript's, the file runs later
 
 def pcm(path, ss, dur):
     raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", "%.4f" % ss, "-t", "%.4f" % dur,
@@ -21,10 +20,11 @@ def pcm(path, ss, dur):
 
 MAXLAG = int(0.30 * SR)
 worst = 0.0
-for i, ((a, b), st) in enumerate(zip(m["beats"], m["starts"])):
+for i, ((a, b), st, take) in enumerate(zip(m["beats"], m["starts"], m["takes"])):
+    src, OFF = m["sources"][take]["path"], m["sources"][take]["offset"]
     win = min(1.5, (b - a) - 1.0)
     if win < 0.5: win = 0.5
-    ref = pcm(os.path.join(HERE, "full.MOV"), a + OFF + 0.5, win)
+    ref = pcm(src, a + OFF + 0.5, win)
     seg = pcm(os.path.join(HERE, "harish-main-reel-hq.mp4"), st + 0.5 - 0.30, win + 0.60)
     if len(ref) < 100 or len(seg) < len(ref): print("beat %2d: short" % i); continue
     ref = ref - ref.mean(); seg = seg - seg.mean()

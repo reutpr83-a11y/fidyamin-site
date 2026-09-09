@@ -9,13 +9,17 @@ underneath it."""
 import json, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 m = json.load(open(os.path.join(HERE, "map6.json")))
-tr = json.load(open(os.path.join(HERE, "transcript_155953.json"), encoding="utf-8"))
 beats, durs, starts, XF = m["beats"], m["durs"], m["starts"], m["xf"]
+takes, SRCS = m["takes"], m["sources"]
+# the opening beat comes from a different take, which says the same sentence in
+# slightly different words, so each beat's captions come from its own transcript
+TR = {k: json.load(open(os.path.join(HERE, os.path.basename(v["transcript"])),
+                        encoding="utf-8")) for k, v in SRCS.items()}
 LAST = round(m["total"], 3)
 
-def place(a, b):
+def place(a, b, take):
     for i, (x, _) in enumerate(beats):
-        if x - 1e-6 <= a and b <= x + durs[i] + 1e-6:
+        if takes[i] == take and x - 1e-6 <= a and b <= x + durs[i] + 1e-6:
             return starts[i] + (a - x), i
     return None, None
 
@@ -25,9 +29,10 @@ def place(a, b):
 FIX = {"לממלאי": "לממלא", "נגע,": "נגה,", "לתקציב": "התקציב"}
 
 raw = []
-for seg in tr:
+for take, tr in TR.items():
+  for seg in tr:
     for w in seg["words"]:
-        o, bi = place(w["s"], w["e"])
+        o, bi = place(w["s"], w["e"], take)
         if o is not None:
             # the end time travels with the word: gaps are measured from where
             # a word stops, and a figure glued from two tokens stops at the

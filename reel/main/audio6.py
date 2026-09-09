@@ -15,11 +15,11 @@ m["durs"][-1] += TAIL
 m["total"] += TAIL
 XF = m["xf"]; segd = os.path.join(HERE, "s6")
 
-OFF = m["offset"]
-for i, ((a, b), d) in enumerate(zip(m["beats"], m["durs"])):
+for i, ((a, b), d, take) in enumerate(zip(m["beats"], m["durs"], m["takes"])):
+    src, off = m["sources"][take]["path"], m["sources"][take]["offset"]
     w = os.path.join(segd, "a%02d.wav" % i)
-    subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", "%.5f" % (a + OFF), "-t", "%.5f" % d,
-        "-i", os.path.join(HERE, "raw.mov"), "-vn",
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", "%.5f" % (a + off), "-t", "%.5f" % d,
+        "-i", src, "-vn",
         "-c:a", "pcm_s16le", "-ar", "48000", "-ac", "2", w], check=True)
     got = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries",
         "format=duration", "-of", "csv=p=0", w], capture_output=True, text=True).stdout)
