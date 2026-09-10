@@ -41,7 +41,19 @@ GRADE = ("scale=1152:2048:flags=lanczos+accurate_rnd,"
 
 # (role, in, out, take)
 #
-# This is the edit the client approved. Nothing is reordered, trimmed or added:
+# "תגידו, אתם השתגעתם?" is out. Going from the analytic question to
+# incredulity and then straight into figures is a tonal swing that costs her
+# more credibility than the line buys. She finishes on "ביקורת על מיליונים היא
+# פוליטית?" and goes straight to the examples. It cuts clean: 0.45s of real
+# silence sits between the two, 7.34 to 7.79.
+#
+# "פחות פיקוח, פחות ניקיון ופחות שירות לתושבים" moves up, to sit straight after
+# "התושבים הם אלה שמשלמים את המחיר. הם ורק הם." That is what they pay, so it
+# belongs at the end of the consequences; where it was, it interrupted the
+# address to the four council members, which now runs unbroken from the court
+# petition through to the demand.
+#
+# Otherwise this is the edit the client approved. Nothing is reordered, trimmed or added:
 # the in points are hers exactly, and the only change is that the frames now
 # come from the camera original instead of a WhatsApp export.
 #
@@ -57,11 +69,11 @@ GRADE = ("scale=1152:2048:flags=lanczos+accurate_rnd,"
 # Its overlap is 0.02s, under one frame, and it stays as approved.
 BEATS = [
     ("הטענה",         10.70,  20.36, "main"),   # מקצצת מיליונים ושופכת על קבלנים
-    ("אז פוליטי",      3.95,   9.55, "main"),   # ביקורת על מיליונים היא פוליטית?
+    ("אז פוליטי",      3.95,   7.72, "main"),   # ביקורת על מיליונים היא פוליטית?
     ("הראיות",        29.28,  56.90, "main"),   # דוגמאות, הנדסה, תברואה, קריסה
     ("המציאות",       60.11,  97.11, "main"),   # הפחים, הכביש, האחריות, מי משלם
-    ("הפנייה",        98.30, 120.27, "main"),   # בית המשפט, משה נגה איציק רויטל
     ("פחות",         124.80, 128.86, "main"),   # פחות פיקוח, פחות ניקיון
+    ("הפנייה",        98.30, 120.27, "main"),   # בית המשפט, משה נגה איציק רויטל
     ("מנהיגות",      133.20, 157.10, "main"),   # לא ידעתם, זו מנהיגות, תתנגדו
 ]
 

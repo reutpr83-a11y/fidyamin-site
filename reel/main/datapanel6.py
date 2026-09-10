@@ -14,6 +14,12 @@ by the time she says she is making it. It is also what makes her last sentence
 land, because the choice she puts to them, "לציבור או לממלא המקום", is now a
 figure they have seen.
 
+Every cue below is the time the word is spoken, taken from the transcript's
+word times, because BRAND.md puts the number on her word. They used to run
+0.6 to 1.4s ahead of her, which is worse than late: the graphic pre-empts the
+speaker and then sits there waiting, and that is what made the examples feel
+drawn out.
+
 Figures in the light blue v3-youth-fix.md sets for exactly this. The arrow and
 the word carry the direction, so the colour never has to mean up or down."""
 import os, json
@@ -37,20 +43,30 @@ PANELS = [
          rows=[("1.3", "מיליון ₪", -1, ("פחות לשכר עובדי האגף",)),
                ("970", "אלף ₪",    +1, ("יותר לייעוץ, פיקוח ועבודות קבלניות",))],
          note=None,
-         t_in=clk(2, 32.60), t_a=clk(2, 32.95), t_b=clk(2, 36.90),
-         t_out=clk(2, 40.10), t_end=clk(2, 40.75)),
+         t_in=clk(2, 32.30), t_a=clk(2, 33.54), t_b=clk(2, 38.16),
+         t_out=clk(2, 40.20), t_end=clk(2, 40.85)),
     dict(label="ניקיון העיר",
          rows=[("421",  "אלף ₪",    -1, ("פחות לשכר עובדי העירייה באגף",)),
                ("2.43", "מיליון ₪", +1, ("יותר לקבלנים חיצוניים",))],
          note=None,
-         t_in=clk(2, 41.35), t_a=clk(2, 41.70), t_b=clk(2, 44.60),
-         t_out=clk(2, 47.90), t_end=clk(2, 48.55)),
+         t_in=clk(2, 41.05), t_a=clk(2, 43.08), t_b=clk(2, 45.82),
+         t_out=clk(2, 47.95), t_end=clk(2, 48.60)),
+    # Slide 08. It lands on "האחריות, הפיקוח והיכולת לוודא שהעיר מתפקדת חייבים
+    # להישאר בתוך העירייה" — she names oversight, and the document shows the
+    # oversight salaries being cut while the bought in guarding goes up. It is
+    # also the fourth time the same shape appears, which is the argument.
+    dict(label="תקציב הביטחון",
+         rows=[("650", "אלף ₪",  +1, ("יותר לשמירה",)),
+               ("206", "אלף ₪",  -1, ("פחות לשכר בשיטור ובפיקוח העירוני",))],
+         note=None,
+         t_in=clk(3, 85.20), t_a=clk(3, 85.60), t_b=clk(3, 87.30),
+         t_out=clk(3, 91.60), t_end=clk(3, 92.30)),
     dict(label="תקציב התקשורת של ההנהלה",
          rows=[("100", "אלף ₪ נוספים", +1, ("לתקשורת הנהלת העירייה",
                                             "ולשכת ממלא מקום ראש העיר"))],
          note="מ-900 אלף ₪ למיליון ₪",
-         t_in=clk(4, 113.70), t_a=clk(4, 114.10), t_b=None,
-         t_out=clk(4, 119.30), t_end=clk(4, 119.95)),
+         t_in=clk(5, 113.70), t_a=clk(5, 114.10), t_b=None,
+         t_out=clk(5, 119.30), t_end=clk(5, 119.95)),
 ]
 
 def ease(x):

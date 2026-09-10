@@ -1,0 +1,82 @@
+{
+ "beats": [
+  [
+   10.7,
+   20.36
+  ],
+  [
+   3.95,
+   9.55
+  ],
+  [
+   29.28,
+   56.9
+  ],
+  [
+   60.11,
+   97.11
+  ],
+  [
+   98.3,
+   120.27
+  ],
+  [
+   124.8,
+   128.86
+  ],
+  [
+   133.2,
+   157.1
+  ]
+ ],
+ "roles": [
+  "\u05d4\u05d8\u05e2\u05e0\u05d4",
+  "\u05d0\u05d6 \u05e4\u05d5\u05dc\u05d9\u05d8\u05d9",
+  "\u05d4\u05e8\u05d0\u05d9\u05d5\u05ea",
+  "\u05d4\u05de\u05e6\u05d9\u05d0\u05d5\u05ea",
+  "\u05d4\u05e4\u05e0\u05d9\u05d9\u05d4",
+  "\u05e4\u05d7\u05d5\u05ea",
+  "\u05de\u05e0\u05d4\u05d9\u05d2\u05d5\u05ea"
+ ],
+ "takes": [
+  "main",
+  "main",
+  "main",
+  "main",
+  "main",
+  "main",
+  "main"
+ ],
+ "sources": {
+  "main": {
+   "path": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/main/full.MOV",
+   "offset": 0.09,
+   "transcript": "transcript_155953.json"
+  },
+  "open": {
+   "path": "/tmp/claude-0/-home-user-fidyamin-site/1c371464-4edc-56c0-a59a-49feb0e0eb3e/scratchpad/gb/src.mp4",
+   "offset": 0.1,
+   "transcript": "transcript.json"
+  }
+ },
+ "durs": [
+  9.666667,
+  5.633333,
+  27.666667,
+  37.0,
+  22.0,
+  4.066667,
+  23.9
+ ],
+ "starts": [
+  0.0,
+  9.316667,
+  14.600000000000001,
+  41.916667000000004,
+  78.566667,
+  100.216667,
+  103.933334
+ ],
+ "total": 127.833334,
+ "xf": 0.35
+}

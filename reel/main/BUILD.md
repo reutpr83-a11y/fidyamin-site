@@ -240,3 +240,105 @@ Whole build: **16 minutes, down from about 40.**
 |---|---|---|
 | `harish-main-reel-hq-1080x1920.mp4` | 87 MB, 5.3 Mbps | posting. One file, one click, already above what Instagram and Facebook keep after their own re-encode |
 | `hq-master/` | 170 MB in 2 parts, 10.7 Mbps | archive and any future re-edit |
+
+
+---
+
+# v3 — flow, and a score
+
+`video/out/harish-main-reel-hq-1080x1920.mp4` (voice only) and
+`video/out/harish-main-reel-hq-music-1080x1920.mp4` (with the score). Identical
+picture, identical length: 131.306s, 1080x1920, 30fps, -14.1 LUFS, -1.4 dBTP.
+0.000s beat lag on all seven beats.
+
+The complaint was that the structure did not carry, that the opening swung the
+tone too far, and that the examples section smeared. Three separate problems,
+and only one of them was in the writing.
+
+## The opening no longer changes register
+
+"ביקורת על מיליונים היא פוליטית?" is the whole answer to the dismissal, and it
+is delivered straight. "תגידו, אתם השתגעתם?" that followed it is delivered as
+disbelief, with the smirk — funny in the room, and a cost in credibility in a
+reel that is otherwise a manager presenting evidence. It is out. `אז פוליטי`
+ends at 7.72 instead of 9.18, cutting into 0.45s of measured silence
+(7.34–7.79), and the reel goes straight from the rhetorical question to
+"רק כמה דוגמאות קטנות."
+
+Nothing else in the opening moved.
+
+## The examples section no longer drags
+
+The smear was not pacing. It was the panels arriving before the words.
+
+Every figure cue was 0.6–1.4s ahead of the sentence that names it, which
+BRAND.md forbids in as many words: *המספר נוחת על המילה של הדובר, לא אחריה*.
+A number that lands early reads as an illustration of something not yet said,
+and the eye goes back and forth between the graphic and her face looking for
+the connection. Every cue was re-timed against the transcript's word clock:
+
+| panel | figure lands on | at |
+|---|---|---|
+| הנדסה | "1.3 מיליון" | 33.54 |
+| הנדסה | "כמעט מיליון" | 38.16 |
+| ניקיון | "400,000" | 43.08 |
+| ניקיון | "2.4 מיליון" | 45.82 |
+
+## A fourth panel, and one address kept whole
+
+**ביטחון (slide 08)** — 650 אלף ₪ יותר לשמירה מול 206 אלף ₪ פחות לשכר בשיטור
+ובפיקוח העירוני — lands on the word "הפיקוח" at 85.38, inside
+"האחריות, הפיקוח והיכולת לוודא שהעיר מתפקדת חייבים להישאר בתוך העירייה." The
+reel's claim is that the shape repeats across departments, and a fourth
+instance of the same shape, on the sentence that states the principle, is the
+cheapest proof of it available.
+
+**`פחות` moved up**, to sit directly after "הם ורק הם" instead of after
+הפנייה. "פחות פיקוח, פחות ניקיון ופחות שירות לתושבים" is the consequence of
+the four departments she has just been through; it belongs to that address, not
+to the section about the court. The order is now: הטענה, אז פוליטי, הראיות,
+המציאות, **פחות**, הפנייה, מנהיגות.
+
+## Every dissolve falls in silence
+
+The v2 pass fixed five of seven out points; this one fixed the rest. All seven
+beats now end far enough past their last word that the whole 0.35s dissolve
+lands in silence. Nothing was cut and nothing added but silence.
+
+## The score (`score6.py`)
+
+Built rather than licensed, to BRAND.md's spec, and it follows the cut — it
+reads `map6.json` and `panel6.json`, so it cannot drift from the picture.
+
+- 84 BPM. A pulse from frame one.
+- A sub floor arrives at המציאות (40.1s), when the argument moves from
+  documents to the street.
+- Dry ticks from הראיות (12.8s), under the evidence.
+- One pad, chord changes only on act boundaries.
+- **Exactly six effects** in 131 seconds: four figure accents, one on each
+  panel's arrival, plus the layer arrival and the resolve.
+- `hush()` drops everything for 1.5s before the demand. The loudest moment in
+  the reel is silence.
+
+## The mix (`mix6.py`)
+
+The music ducks 10 dB under her voice, keyed off the voice's own envelope
+rather than a fixed automation curve: 30ms smoothing, threshold at the 55th
+percentile, a one-pole follower at 0.08 attack / 0.55 release. She is talking
+for 55% of the reel, so the score is effectively a floor under the speech and a
+presence in the gaps. Mixed at 0.55, then `loudnorm` on the sum.
+
+Both audio variants are rendered onto the identical picture, so the choice
+between them is only ever a choice about the score.
+
+## Files
+
+| file | size | for |
+|---|---|---|
+| `harish-main-reel-hq-1080x1920.mp4` | 87 MB, 5.5 Mbps | posting, voice only |
+| `harish-main-reel-hq-music-1080x1920.mp4` | 87 MB, 5.5 Mbps | posting, with the score |
+| `hq-master/` | 167 MB in 2 parts, 10.2 Mbps | archive and any future re-edit |
+
+`beats6.approved.py`, `datapanel6.approved.py` and `map6.approved.json` are the
+approved v2 edit, kept so any of this can be compared against it or reverted to
+it exactly.
