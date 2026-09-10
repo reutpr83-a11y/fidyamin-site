@@ -246,7 +246,8 @@ Whole build: **16 minutes, down from about 40.**
 
 # v3 — flow, and a score
 
-`video/out/harish-main-reel-hq-1080x1920.mp4` (voice only) and
+`video/out/harish-main-reel-hq-1080x1920.mp4` (voice only — **this is the
+approved final**, see `video/out/FINAL.md`) and
 `video/out/harish-main-reel-hq-music-1080x1920.mp4` (with the score). Identical
 picture, identical length: 131.306s, 1080x1920, 30fps, -14.1 LUFS, -1.4 dBTP.
 0.000s beat lag on all seven beats.
