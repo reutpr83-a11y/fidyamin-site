@@ -1,7 +1,7 @@
 harish-main-reel-hq.mp4  —  the full quality master (no music)
 
-Size:    166824000 bytes
-SHA-256: 355174277fe74fe3f7c1dc20796b8bb11a9260bd3e6ab33daabeba5e4d4c16a6
+Size:    166851385 bytes
+SHA-256: cf4b0788b010c404b84e1c67d70fb09024bd61a3d9547ee423f41cd28d1732e2
 
 131.3s, 1080x1920, 30fps, h264 crf 18, 10.2 Mbps, -14.1 LUFS, -1.4 dBTP.
 Cut from the camera original 06092026_155953.MOV (2160x3840 HEVC, 26 Mbps).

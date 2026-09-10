@@ -343,3 +343,73 @@ between them is only ever a choice about the score.
 `beats6.approved.py`, `datapanel6.approved.py` and `map6.approved.json` are the
 approved v2 edit, kept so any of this can be compared against it or reverted to
 it exactly.
+
+## Cleaning the voice track (`clean6.py`)
+
+The delivered reel sounded noisy. The measurement said the noise was in the
+recording, not in the edit: the source's speech-to-floor ratio is 33.4 dB and
+the finished reel's is 33.5 dB, so nothing in the chain changed it. What
+changed is absolute level — `loudnorm` lifts the whole thing 10.6 dB to reach
+-14 LUFS, and a floor that was inaudible at the phone's own level is not
+inaudible at broadcast level.
+
+What is actually in that floor, measured over eight real gaps between phrases:
+
+| | level | what it is |
+|---|---|---|
+| below 120 Hz | the loudest part of the floor | wind, handling, traffic |
+| 50 and 100 Hz | stationary tones | mains hum |
+| 250 Hz to 16 kHz | a smooth 1/f hiss | mic self noise |
+| 99 transients | +14 dB over the local floor | 88 of them are her own consonants |
+
+### The denoiser is the thing that makes it metallic
+
+Every spectral denoiser tried made the artefact index worse, measured as the
+frame to frame spectral deviation in the gaps (2-10 kHz), where a rising number
+means the residue is breaking into short lived tones — musical noise, which is
+what the ear calls metallic:
+
+| chain | hiss 6-9 kHz | artefact index | air in her voice |
+|---|---|---|---|
+| as delivered | — | 7.66 | — |
+| `afftdn` nr=12 | -12 dB | 8.53 | -8.7 dB |
+| `afftdn` nr=20 | -13 dB | 9.18 | -14.4 dB |
+| `afwtdn` | -9 dB | 8.89 | -6.3 dB |
+| `anlmdn` | -1 dB | 8.69 | 0 dB |
+
+So the fix could not be "denoise it".
+
+### What it does instead
+
+1. `highpass=90` plus narrow notches at 50 and 100 Hz. The loudest part of the
+   floor, and none of it is her voice.
+2. A **parallel** denoiser at 65% — profiled on a real 0.8s gap in the reel
+   (`afftdn sn start/stop` via `asendcmd`) rather than guessed, and summed with
+   a dry path. Keeping 35% dry keeps the residue broadband, which is what stops
+   it breaking into tones. The knee is between 80% and 100%: the artefact index
+   runs 8.47 / 8.58 / 8.71 / 9.57 at 50 / 65 / 80 / 100 percent.
+3. A downward expander that only acts below -38 dB. Measured gain by input
+   level: -3.1 dB at -45..-38, -0.55 dB at -38..-32, -0.19 dB at -26..-20,
+   +0.10 dB above. Her voice is untouched; only the gaps move.
+
+`afftdn` runs 1200 samples late, so the dry path is delayed to match — an
+earlier version used `adelay=25S`, which is 25 *samples*, and combed the two
+paths together. The 1200 samples come off the head afterwards, and the result
+is sample aligned with the picture (measured lag 2 to 7 samples over eight
+probes across the reel).
+
+### Result
+
+| | before | after |
+|---|---|---|
+| speech to background | 31.8 dB | **38.5 dB** |
+| 50 Hz hum | — | **-29.0 dB** |
+| 100 Hz hum | — | **-24.2 dB** |
+| below 60 Hz | — | **-27.2 dB** |
+| hiss 2-16 kHz | — | **-7 to -8 dB** |
+| her voice, 300-3400 Hz | — | **+0.03 dB** |
+| her voice, 6-12 kHz | — | -2.0 dB |
+
+The picture was not re-rendered. The video stream is stream copied and its MD5
+is identical to the approved version's, so the edit is bit for bit the one that
+was signed off; only the audio track is new.
