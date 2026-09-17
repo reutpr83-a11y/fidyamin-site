@@ -273,3 +273,65 @@ stitched and nothing is said twice.
 Kept with a ט. "אתה נפטר מהעובדים המקצועיים שלך" is the verb for getting rid
 of something; with a ת, "נפתר", the word means *was solved*, which is not what
 she says and not what the sentence can carry.
+
+---
+
+# v5 — the script, rebuilt
+
+129.0s. One block out at the client's instruction, three in, and the argument
+re-laid around them.
+
+## Out
+
+**"מה שהשתנה זה שאתה נפטר מהעובדים המקצועיים שלך"** (229.0-232.8). The client
+judged it improper and it is: the sentence reduces people who lost their jobs
+to something disposed of. Nothing of the reel's case rests on it.
+
+## In
+
+Three passages that were sitting unused in the recording, all verifiable word
+for word:
+
+**111.4-114.4 — "בסוף זו ההתמחות שלי, זה הניסיון שלי."** Her standing, in her
+own voice, immediately after he asks why she calls it a collapse. The
+management argument was making the case without ever saying who was making
+it.
+
+**171.4-175.5 — "הוא מפקח על כל העבודות שנעשות בעיר. תסביר לי איך עושים את
+זה?"** What the engineering department actually does, which is what makes
+cutting 1.3 million out of it mean something, and her challenge back to him.
+
+**187.3-194.8 — "אז כן, בניהול מערכות ציבוריות, לא מתרוקן מכוח אדם שיש לו
+ידע, ניסיון, הבנה של מה שקורה בעיר, ופשוט זורק אותו."** This is the sentence
+the client was looking for, and it takes the removed block's place exactly:
+she asks "מה קרה ומה השתנה", and this answers it.
+
+## What moved, and why
+
+She says **"בניהול מערכות ציבוריות"** twice in the interview. The reel used to
+carry it once, in the management block; the drain sentence needs it more,
+because without that frame "לא מתרוקן" has no subject. So it is cut out of the
+management block — which now opens on her credentials instead — and kept in
+the drain block. **She says it twice, the reel says it once.**
+
+**The second half of "expect" came out** (179.5-186.1, "שבאמת כל השיפוצים
+שנעשים ברחבי העיר..."). With "תסביר לי איך עושים את זה?" now immediately in
+front of it, "אתה מעביר את כל הכסף הזה לקבלנים ומה אתה מצפה שיקרה?" closes the
+thought on its own, and the elaboration only costs seconds the reel had
+already spent.
+
+## The shape now
+
+| | |
+|---|---|
+| the fact | Rotem: the Interior Ministry letter, and the vote that went ahead |
+| the concession | consultants are sometimes necessary |
+| the claim | 56 million, the direct path to collapse |
+| **the standing** | "זו ההתמחות שלי, זה הניסיון שלי" |
+| the principle | you still need a system that supervises from within |
+| the evidence | ניקיון ותברואה, then הנדסה, each with its panel |
+| the consequence | what the department does, and what you expect to happen |
+| what residents feel | rubbish in the streets — what changed? |
+| **the answer** | a public system does not empty itself of the people who know |
+| the pattern | and it repeats in policing, welfare, youth |
+| the verdict | a direct path to collapse. It is emptying its departments. |
