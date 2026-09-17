@@ -152,15 +152,20 @@ SEGS = [
     (192.99,"מה"),(193.15,"שקורה"),(193.47,"בעיר,"),
     (193.79,"ופשוט"),(194.03,"זורק"),(194.51,"אותו.")])]),
 
- ("repeat", 251.70, 257.72, [(2, [
+ ("repeat", 251.70, 257.68, [(2, [
     (251.76,"בתברואה,"),(252.48,"וזה"),(252.88,"בשיטור"),(253.36,"ובפיקוח,"),
     (254.08,"וזה"),(254.48,"ברווחה"),(255.26,"וזה"),(255.58,"בנוער,"),
     (256.06,"והסיפור"),(256.70,"הזה"),(256.86,"חוזר"),(257.26,"על"),(257.50,"עצמו.")])]),
 
- # "בעיריות ובכלל" is the frame of his challenge; without it the sentence had
- # no subject.
- ("q3",     194.86, 196.05, [(1, [
-    (194.91,"איך"),(195.07,"את"),(195.31,"מסבירה"),(195.63,"את"),(195.79,"זה?")])]),
+ # His question "איך את מסבירה את זה?" is out. Under it, in the broadcast
+ # itself, she is still audible - a second voice you cannot make out, running
+ # through his words. It is not something the edit introduced: the reel's audio
+ # across that span subtracts against the source to a residual 66.5 dB down,
+ # which is numerical noise, so the overlap is in the 90FM recording and cannot
+ # be lifted off his voice. There is no clean take of the same question
+ # anywhere else in the interview, so the question goes rather than the mess.
+ # Her answer needs no prompt: "והסיפור הזה חוזר על עצמו" runs straight into
+ # "אני לא יודעת להסביר את הפעולות שלהם".
 
  # Split, to drop 201.22-201.90. Between "שלהם" and "בעיניי" the broadcast
  # carries 0.68s of speech that neither the word transcript nor the block
@@ -173,8 +178,8 @@ SEGS = [
  # immediately before "בעיניי" starts at 201.94. The pause is kept, so her
  # answer still has its natural beat before the hook; only the speech between
  # the pause and the word comes out, and no transcribed word is touched.
- ("hook2",  199.00, 201.30, [(2, [
-    (199.06,"אני"),(199.14,"לא"),(199.30,"יודעת"),(199.46,"להסביר"),
+ ("hook2",  198.72, 201.30, [(2, [
+    (198.80,"תראה,"),(199.06,"אני"),(199.14,"לא"),(199.30,"יודעת"),(199.46,"להסביר"),
     (199.94,"את"),(200.18,"הפעולות"),(200.58,"שלהם.")])]),
 
  ("hook2b", 201.86, 205.20, [(2, [

@@ -721,3 +721,51 @@ invisible in the captions: the same words, the same two chunks, the same colour.
 140.30s of voice (0.63s shorter), 4383 frames.
 
 146.1s (2:26), 4383 frames, -13.7 LUFS, 0 samples of A/V lag including across the new splice at 129s.
+
+---
+
+# v19 — the question comes out, because the mess is in the broadcast
+
+v18 removed a stray half-second and it was not what was being heard. What is
+being heard sits **under the anchor's question** "איך את מסבירה את זה?", where
+she is still audible through his words — a second voice you cannot make out.
+
+## Proving whose fault it is
+
+The reel's audio across that span was subtracted against the source, sample
+aligned:
+
+    gain reel/source                 0.9994
+    source level                     -24.9 dB
+    residual after removing source   -91.4 dB   (66.5 dB down)
+
+66.5 dB down is numerical noise, so the reel carries that span **bit for bit as
+the broadcast has it**. The edit introduced nothing; the overlap is in the 90FM
+recording and cannot be lifted off his voice. A two-comb detector was tried
+first and thrown away: run against clean single-speaker passages it fired on
+31-46% of frames (`q4` 30.9%, `repeat` 40.8%, `eng` 45.6%) against 28.8% on the
+suspect span, so it could not tell one voice from two and nothing was decided
+on it.
+
+There is no clean take of the same question anywhere in the interview — the
+other four are already in the reel or were cut on request — so the question goes
+rather than the mess. Her answer needs no prompt: "והסיפור הזה חוזר על עצמו"
+runs straight into "תראה, אני לא יודעת להסביר את הפעולות שלהם".
+
+## Two splices improved, now that they can be
+
+Removing the question put `repeat` next to `hook2`, so both edges could move off
+speech and into silence:
+
+- **`repeat` out 257.72 → 257.68.** 257.72 was 0.02s into her *next* sentence
+  and put the crossfade tail on its onset. 257.68 puts the whole tail inside the
+  -49 to -53 dB dip after "עצמו".
+- **`hook2` in 199.00 → 198.72.** 199.00 was 0.2s inside "תראה", clipping it to
+  a fragment. 198.72 is in the real silence before she speaks, so the crossfade
+  is inaudible and the word comes back whole — and it is captioned now, because
+  it is audible and the transcript has it.
+
+Measured at the new splice: her sentence decays to -61 dB and "תראה" starts
+0.02s later. The crossfade sits entirely inside that pause.
+
+139.42s of voice, 4357 frames.
