@@ -44,7 +44,8 @@ STYLE = {
  "expect": [("run", 2, None)],
  "drain":  [("run", 2, None)],
  "q3":     [("card",1, None)],
- "hook2":  [("run", 2, 201.94)],          # run, then hook from this word on
+ "hook2":  [("run", 2, None)],
+ "hook2b": [("hook",2, None)],
  "felt":   [("hook",2, None)],
  "q4str":  [("card",1, None), ("run",2, None)],
  "repeat": [("run", 2, None)],

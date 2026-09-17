@@ -69,7 +69,7 @@ DOMAINS = [
     (("q2hook", "eng", "supervise", "expect", "felt"),    "הנדסה, תכנון ובנייה"),
     (("q4str", "drain"),                                  "אשפה ברחובות"),
     (("repeat",),                                         "כוח אדם בכל האגפים"),
-    (("q3", "hook2", "empty", "claim"),                   "התמונה הכוללת"),
+    (("q3", "hook2", "hook2b", "empty", "claim"),         "התמונה הכוללת"),
 ]
 
 def domain_spans():

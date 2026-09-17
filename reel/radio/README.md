@@ -689,3 +689,33 @@ a figure 6.0:1. The threshold is 4.5:1. Caption length runs to a median of 28
 characters and never more than two lines. None of it needed changing.
 
 146.7s (2:27), 4401 frames, -13.7 LUFS, 0 samples of A/V lag.
+
+---
+
+# v18 — the stray half-second under her answer
+
+Between "אני לא יודעת להסביר את הפעולות שלהם" and "בעיניי, הם מובילים אותנו
+למסלול ישיר לקריסה" the broadcast carries **0.56s of speech that no transcript
+accounts for** — not the word-level one, not the block-level one. It was in the
+reel because `hook2` was lifted as one piece, 199.00-205.20, and it sat under
+her answer with no caption of its own, which is exactly how it reads: a second
+sentence bleeding through hers.
+
+What the source actually contains across that stretch:
+
+    200.58-201.20  "שלהם", emphatic, F0 rising 210→390 into a continuation rise
+    201.20-201.34  a real pause, -45 to -56 dB
+    201.34-201.86  voiced speech, no transcribed word anywhere in it
+    201.94         "בעיניי" starts
+
+`hook2` is now split in two around it: 199.00-201.30 and 201.86-205.20. The
+split points are chosen so the 0.07s equal-power crossfade itself lands in quiet
+audio — the outgoing tail is 201.23-201.30, inside the pause, and the incoming
+head is 201.86-201.93, the dip before the word starts. The pause is kept, so her
+answer still has its natural beat before the hook; only the speech between the
+pause and the word comes out.
+
+Nothing else was touched. `hook2b` inherits the hook style, so the split is
+invisible in the captions: the same words, the same two chunks, the same colour.
+
+140.30s of voice (0.63s shorter), 4383 frames.

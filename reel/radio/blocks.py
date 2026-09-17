@@ -162,9 +162,22 @@ SEGS = [
  ("q3",     194.86, 196.05, [(1, [
     (194.91,"איך"),(195.07,"את"),(195.31,"מסבירה"),(195.63,"את"),(195.79,"זה?")])]),
 
- ("hook2",  199.00, 205.20, [(2, [
+ # Split, to drop 201.22-201.90. Between "שלהם" and "בעיניי" the broadcast
+ # carries 0.68s of speech that neither the word transcript nor the block
+ # transcript accounts for - the tail of something said earlier, left in
+ # because the block was lifted whole. It sat under her answer with no caption
+ # of its own and read as a second sentence bleeding through. Both splice
+ # points are placed so that the 0.07s crossfade itself lands in quiet audio:
+ # the outgoing tail is 201.23-201.30, inside the 201.20-201.34 pause where the
+ # signal is -45 to -56 dB, and the incoming head is 201.86-201.93, the dip
+ # immediately before "בעיניי" starts at 201.94. The pause is kept, so her
+ # answer still has its natural beat before the hook; only the speech between
+ # the pause and the word comes out, and no transcribed word is touched.
+ ("hook2",  199.00, 201.30, [(2, [
     (199.06,"אני"),(199.14,"לא"),(199.30,"יודעת"),(199.46,"להסביר"),
-    (199.94,"את"),(200.18,"הפעולות"),(200.58,"שלהם."),
+    (199.94,"את"),(200.18,"הפעולות"),(200.58,"שלהם.")])]),
+
+ ("hook2b", 201.86, 205.20, [(2, [
     (201.94,"בעיניי,"),(202.50,"הם"),(202.66,"מובילים"),(202.98,"אותנו"),(203.38,"למסלול"),
     (203.94,"ישיר"),(204.34,"לקריסה.")])]),
 
