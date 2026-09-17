@@ -36,6 +36,7 @@ STYLE = {
  "q1":     [("card",1, None)],
  "argument": [("run", 2, None)],
  "clean":  [("run", 2, None)],
+ "round":  [("run", 2, None)],
  "q2hook": [("card",1, None), ("hook",2, None)],
  "eng":    [("run", 2, None)],
  "supervise": [("run", 2, None)],
@@ -115,6 +116,8 @@ def build(mapfile="map.json", out="track.json"):
 
     caps = _absorb(caps, d)
     caps = _unorphan(caps, d)
+    for c in caps:                      # last, after every merge and move
+        c["words"] = _nodot(c["words"])
     caps.sort(key=lambda c: c["start"])
     # Never let one caption sit on top of the next. They all share one zone
     # now, so an overlap is not a soft handover, it is two lines of text drawn
@@ -192,7 +195,9 @@ def _absorb(caps, d):
 
     out = []
     for c in caps:
-        if (out and len(c["words"]) <= 2 and out[-1]["style"] == c["style"]
+        if (out and len(c["words"]) <= 2
+                and not out[-1]["words"][-1].rstrip().endswith((".", "?", "!"))
+                and out[-1]["style"] == c["style"]
                 and out[-1]["speaker"] == c["speaker"] and out[-1]["seg"] == c["seg"]
                 and c["start"] - out[-1]["end"] < 0.9):
             p = out[-1]
@@ -211,16 +216,19 @@ def _absorb(caps, d):
         out.append(c)
     return out
 
-def _nodot(w):
-    """No full stops in captions.
+def _nodot(words):
+    """Strip the full stop from the LAST word of a caption, and only there.
 
-    A caption is a fragment of speech, not a paragraph, and the cut does not
-    always land where a sentence does: "זה אגף שיש בו סמכויות שלטוניות כמו
-    פיקוח" and "לא מעט ספקים חיצוניים, לא רק בניקיון" both carried a full stop
-    while the speaker was still mid sentence. Commas and question marks stay —
-    they are real — and the internal point in "2.4" is untouched because only a
-    trailing one is stripped."""
-    return w[:-1] if w.endswith(".") and len(w) > 1 else w
+    The cut does not always land where a sentence does — "כמו פיקוח" and
+    "לא רק בניקיון" both carried a point while the speaker was still mid
+    sentence — so a caption never ends in one. A point *inside* a caption sits
+    between two sentences that really did end, and it stays: "לא הורידו.
+    והצביעו באותו ערב" and "בוודאי. אבל אין לה עובדים" need it. Commas and
+    question marks stay everywhere, and "2.4" is untouched because only a
+    trailing point is stripped."""
+    if words and words[-1].endswith(".") and len(words[-1]) > 1:
+        words = words[:-1] + [words[-1][:-1]]
+    return words
 
 def make(chunk, style, spk, base, seg):
     ends = [min(chunk[i+1][0], chunk[i][0] + dur(chunk[i][1]) + 0.12)
@@ -228,7 +236,7 @@ def make(chunk, style, spk, base, seg):
     return dict(style=style, speaker=spk, seg=seg["id"],
                 start=round(base + chunk[0][0] - LEAD, 3),
                 end=round(min(base + ends[-1], seg["start"] + seg["len"] + 0.25), 3),
-                words=[_nodot(w) for _, w in chunk],
+                words=[w for _, w in chunk],
                 times=[round(base + t - LEAD, 3) for t, _ in chunk],
                 ends=[round(base + e, 3) for e in ends])
 

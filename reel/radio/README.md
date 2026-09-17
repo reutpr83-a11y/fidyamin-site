@@ -556,3 +556,32 @@ stops at all now. A caption is a fragment of speech, not a paragraph. Commas
 and question marks stay, because they are real and they carry meaning; only a
 trailing point is stripped, so "2.4" and "1.3" are untouched. The end card
 follows the same rule.
+
+---
+
+# v14 — two more of hers, and the full stop rule made precise
+
+**"עושה סיבוב ורואה שבאמת הקבלן עושה את העבודה שלו?"** (141.3-145.0). The third
+of the three questions she asks in one breath, and the only one that is not
+abstract — somebody actually driving around to see the contractor did the job.
+What sits between it and "מפנים את הפחים?" came back garbled, so the cut steps
+over it.
+
+**"שבאמת כל השיפוצים שנעשים ברחבי העיר, כאילו בשם העירייה, יש עליהם פיקוח
+נאות?"** (179.5-186.2). Contiguous with the question before it, so no splice.
+It is the line that takes the argument out of the budget and onto the street:
+every renovation in the city is done in the city's name.
+
+## The full stop rule, corrected
+
+v13 stripped every point, which took two that were doing work: "לא הורידו**.**
+והצביעו באותו ערב" and "בוודאי**.** אבל אין לה עובדים". The rule is narrower
+now and applies where the complaint actually was — **a caption never ends in a
+full stop**, because that is where the cut may not agree with the sentence. A
+point *inside* a caption sits between two sentences that really did end, and it
+stays.
+
+It is applied last, after every merge and move, so a word that was stripped
+while it was last does not come back mid-caption without its point.
+
+166.3s, -13.8 LUFS, 0 samples of A/V lag.
