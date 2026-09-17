@@ -111,12 +111,12 @@ def chip(d, spk, t, a=1.0):
     """Just the name. The role, the station and the date were all furniture
     competing with the only text that matters, which is what was said."""
     name, col = SPK[spk]
-    f = D.F(33, 700)
+    f = D.F(37, 700)
     w = D.tw(d, name, f)
     x = (W + w) / 2
-    d.text((x - w, 1140), name, font=f, fill=(*col, int(235 * a)), direction="rtl")
-    d.rectangle([int(x - w) - 26, 1154, int(x - w) - 12, 1157], fill=(*col, int(200 * a)))
-    d.rectangle([int(x) + 12, 1154, int(x) + 26, 1157], fill=(*col, int(200 * a)))
+    d.text((x - w, 1136), name, font=f, fill=(*col, int(245 * a)), direction="rtl")
+    d.rectangle([int(x - w) - 28, 1154, int(x - w) - 12, 1157], fill=(*col, int(200 * a)))
+    d.rectangle([int(x) + 12, 1154, int(x) + 28, 1157], fill=(*col, int(200 * a)))
 
 def lines_of(words, f, d, maxw):
     sp = d.textlength(" ", font=f)

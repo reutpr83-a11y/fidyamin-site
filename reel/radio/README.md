@@ -362,3 +362,20 @@ octave errors put Greenberg's median at 119 Hz.
 > **צאו נגד זה.**
 
 The reel has already made the case. The card only has to say what to do with it.
+
+---
+
+# v7 — one name on the frame
+
+The programme's title is "יומן החדשות עם יוסי הדר", and it sat at the top of
+every frame while the speaker's name sat above the caption. So whenever she was
+talking, the frame carried **two names** — his at the top, hers in the middle —
+and neither one clearly belonged to the voice. A viewer scrubbing with the
+sound off had no way to tell which was which.
+
+The anchor's name comes out of the header. It reads **90FM · יומן החדשות**, and
+the only name anywhere on the frame is the person speaking. He is still named,
+on his own questions, where it means something.
+
+The speaker line also grew from 33px to 37px and its rules were widened, so the
+one name that is left reads as a label rather than a footnote.

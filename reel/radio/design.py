@@ -47,15 +47,20 @@ def ground():
 BG = ground()
 
 def header(d, topic="עדכון תקציב 2026, עיריית חריש"):
-    """Where the interview was broadcast, and what it was about. Nothing else
-    lives up here — every other word on the frame is something somebody said."""
+    """Where the interview was broadcast, and what it was about.
+
+    The programme's own title is "יומן החדשות עם יוסי הדר", but the anchor's
+    name is left out of it on purpose: it sat at the top of every frame while
+    the speaker's name sat above the caption, so two names were on screen at
+    once and neither one clearly belonged to the voice. The only name on the
+    frame now is the person talking."""
     f = F(29, 700)
     x = RIGHT
     w = d.textlength("90FM", font=f, direction="ltr")
     d.text((x - w, 128), "90FM", font=f, fill=(*BLUE, 255), direction="ltr")
     d.rectangle([x - w, 178, x, 181], fill=(*GOLD, 235))
     x -= w
-    for run in ["  ·  ", "יומן החדשות עם יוסי הדר"]:
+    for run in ["  ·  ", "יומן החדשות"]:
         ww = d.textlength(run, font=f, direction="rtl")
         d.text((x - ww, 128), run, font=f, fill=(*BLUE, 255), direction="rtl")
         x -= ww
