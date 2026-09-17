@@ -719,3 +719,5 @@ Nothing else was touched. `hook2b` inherits the hook style, so the split is
 invisible in the captions: the same words, the same two chunks, the same colour.
 
 140.30s of voice (0.63s shorter), 4383 frames.
+
+146.1s (2:26), 4383 frames, -13.7 LUFS, 0 samples of A/V lag including across the new splice at 129s.
