@@ -1,0 +1,164 @@
+# -*- coding: utf-8 -*-
+"""Turn the word list into a caption track on the reel clock.
+
+Words carry start times only, so a word ends where the next one begins. Words
+are grouped into captions that fit two lines; a gap longer than GAP also
+starts a new caption, because a caption that spans a pause reads as one breath
+when it was two.
+"""
+import json
+from PIL import Image, ImageDraw
+import design as D
+
+LEAD = 0.12          # a word lights this early so it is up ON the syllable
+TAIL = 0.40          # how long the last word of a caption holds
+GAP  = 0.45          # a real pause this long breaks the caption
+
+def dur(word):
+    """The transcriber returns no end times, so a word length is estimated
+    from its letters. Without this, a long word looks like a pause: "שלחה"
+    to "נציגת" is 0.64s start to start and is not a break at all."""
+    return min(0.90, max(0.12, 0.055 * len(word) + 0.06))
+MAXW = 860           # caption line width
+
+# style per segment: list of (style, speaker, split_at_source_time_or_None)
+STYLE = {
+ "setup":  [("run", 1, None)],
+ "vote":   [("run", 1, None)],
+ "concede":[("run", 2, None)],
+ "fifty6": [("fig", 2, None)],
+ "claim":  [("run", 2, None)],
+ "q1":     [("card",1, None)],
+ "mgmt":   [("run", 2, None)],
+ "clean":  [("run", 2, None)],
+ "q2hook": [("card",1, None), ("hook",2, None)],
+ "eng_a":  [("run", 2, None)],
+ "eng_b":  [("run", 2, None)],
+ "q3":     [("card",1, None)],
+ "hook2":  [("run", 2, 201.94)],          # run, then hook from this word on
+ "q4str":  [("card",1, None), ("run",2, None)],
+ "repeat": [("run", 2, None)],
+ "q5":     [("card",1, None)],
+ "hook3":  [("hook",2, None)],
+}
+
+SIZE = {"run": 62, "card": 58, "hook": 92, "fig": 62}
+
+def build(mapfile="map.json", out="track.json"):
+    m = json.load(open(mapfile))
+    d = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    caps = []
+    for seg in m["segs"]:
+        base = seg["start"] - seg["in"]        # source clock -> reel clock
+        styles = STYLE[seg["id"]]
+        for ti, turn in enumerate(seg["turns"]):
+            style, spk, split = styles[min(ti, len(styles)-1)]
+            words = [(t, w) for t, w in turn["words"]]
+            # split the turn where a style change was asked for
+            parts = [(style, words)]
+            if split is not None:
+                a = [x for x in words if x[0] <  split]
+                b = [x for x in words if x[0] >= split]
+                parts = [(style, a), ("hook", b)]
+            for st, ws in parts:
+                if not ws: continue
+                f = D.F(SIZE[st], 800 if st in ("hook", "run", "fig") else 500)
+                sp = d.textlength(" ", font=f)
+
+                def nlines(group):
+                    """greedy wrap of a word group, returns the line count"""
+                    n, w = 1, 0.0
+                    for _, word in group:
+                        ww = D.tw(d, word, f)
+                        if w and w + sp + ww > MAXW:
+                            n += 1; w = ww
+                        else:
+                            w += (sp if w else 0) + ww
+                    return n
+
+                chunk = []
+                for i, (t, word) in enumerate(ws):
+                    gap = (t - ws[i-1][0] - dur(ws[i-1][1])) if i else 0.0
+                    if chunk and gap > GAP:
+                        caps.append(make(chunk, st, spk, base, seg)); chunk = []
+                    chunk.append((t, word))
+                    if nlines(chunk) > 2:
+                        chunk.pop()
+                        caps.append(make(chunk, st, spk, base, seg))
+                        chunk = [(t, word)]
+                if chunk:
+                    caps.append(make(chunk, st, spk, base, seg))
+
+    caps = _absorb(caps, d)
+    caps.sort(key=lambda c: c["start"])
+    # never let one caption sit on top of the next
+    for i in range(len(caps)-1):
+        caps[i]["end"] = min(caps[i]["end"], caps[i+1]["start"] - 0.02)
+    json.dump(caps, open(out, "w"), ensure_ascii=False, indent=1)
+    return caps
+
+def _absorb(caps, d):
+    """A caption of one or two words is a flicker, not a line. Fold it into the
+    neighbour it belongs to whenever the two still fit two lines."""
+    def fits(words, style):
+        f = D.F(SIZE[style], 800 if style in ("hook","run","fig") else 500)
+        n, w, sp = 1, 0.0, d.textlength(" ", font=f)
+        for word in words:
+            ww = D.tw(d, word, f)
+            if w and w + sp + ww > MAXW: n += 1; w = ww
+            else: w += (sp if w else 0) + ww
+        return n <= 2
+
+    # a short caption with nothing before it in its turn folds into the one after
+    fwd = []
+    for i, c in enumerate(caps):
+        if (len(c["words"]) <= 2 and i + 1 < len(caps)):
+            nx = caps[i+1]
+            if (nx["style"] == c["style"] and nx["speaker"] == c["speaker"]
+                    and nx["seg"] == c["seg"] and nx["start"] - c["end"] < 1.2
+                    and fits(c["words"] + nx["words"], c["style"])):
+                nx["words"] = c["words"] + nx["words"]
+                nx["times"] = c["times"] + nx["times"]
+                nx["ends"] = c["ends"] + nx["ends"]
+                nx["start"] = c["start"]
+                continue
+        fwd.append(c)
+    caps = fwd
+
+    out = []
+    for c in caps:
+        if (out and len(c["words"]) <= 2 and out[-1]["style"] == c["style"]
+                and out[-1]["speaker"] == c["speaker"] and out[-1]["seg"] == c["seg"]
+                and c["start"] - out[-1]["end"] < 0.9):
+            p = out[-1]
+            f = D.F(SIZE[p["style"]], 800 if p["style"] in ("hook","run","fig") else 500)
+            merged = p["words"] + c["words"]
+            n, w, sp = 1, 0.0, d.textlength(" ", font=f)
+            for word in merged:
+                ww = D.tw(d, word, f)
+                if w and w + sp + ww > MAXW: n += 1; w = ww
+                else: w += (sp if w else 0) + ww
+            if n <= 2:
+                p["words"] = merged
+                p["times"] += c["times"]; p["ends"] += c["ends"]
+                p["end"] = c["end"]
+                continue
+        out.append(c)
+    return out
+
+def make(chunk, style, spk, base, seg):
+    ends = [min(chunk[i+1][0], chunk[i][0] + dur(chunk[i][1]) + 0.12)
+            for i in range(len(chunk)-1)] + [chunk[-1][0] + TAIL]
+    return dict(style=style, speaker=spk, seg=seg["id"],
+                start=round(base + chunk[0][0] - LEAD, 3),
+                end=round(min(base + ends[-1], seg["start"] + seg["len"] + 0.25), 3),
+                words=[w for _, w in chunk],
+                times=[round(base + t - LEAD, 3) for t, _ in chunk],
+                ends=[round(base + e, 3) for e in ends])
+
+if __name__ == "__main__":
+    caps = build()
+    print("%d captions" % len(caps))
+    for c in caps:
+        print("  %6.2f-%6.2f %-4s s%d  %s" % (c["start"], c["end"], c["style"],
+                                              c["speaker"], " ".join(c["words"])))
