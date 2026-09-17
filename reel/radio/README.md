@@ -812,3 +812,5 @@ the source cannot see an in-point, because both sides move together. Worth
 remembering: that test rules out corruption, never bad framing.
 
 140.50s of voice, 4389 frames.
+
+146.3s (2:26), 4389 frames, -13.7 LUFS, 0 samples of A/V lag including across the restored question at 126s.
