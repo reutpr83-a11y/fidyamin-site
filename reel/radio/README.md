@@ -585,3 +585,27 @@ It is applied last, after every merge and move, so a word that was stripped
 while it was last does not come back mid-caption without its point.
 
 166.3s, -13.8 LUFS, 0 samples of A/V lag.
+
+---
+
+# v15 — three corrections
+
+**The anchor's "אבל בעיריות ובכלל יש לא מעט ספקים חיצוניים" is out**, and her
+answer to it had to go with it. "אתה לא עושה את המהלך הזה באופן שיטתי ורחב" is
+addressed to *him*, about other municipalities: they use contractors, but not
+systematically and not on this scale. Standing alone after "והסיפור הזה חוזר
+על עצמו", the same sentence reads as being about Harish and says the opposite
+of what she means. Both blocks are gone; the reel runs from the repeat straight
+into "איך את מסבירה את זה?"
+
+**"עדיין" is cut out of the middle of the sentence** — 120.30 to 120.72, the
+word and nothing else — so the line lands as "אתה צריך מערכת שיודעת לפקח
+מבפנים" rather than "you still need". Levels either side of the cut are within
+0.3 dB of each other, so the splice sits inside continuous speech and does not
+click.
+
+**"העירייה צריכה לעשות את זה" loses its question mark.** He is telling her the
+municipality should be doing it, not asking whether it should.
+
+157.0s, -13.7 LUFS, 0 samples of A/V lag. `script.txt` carries the full
+running script as text.

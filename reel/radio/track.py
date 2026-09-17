@@ -35,6 +35,7 @@ STYLE = {
  "claim":  [("run", 2, 101.18)],
  "q1":     [("card",1, None)],
  "argument": [("run", 2, None)],
+ "argument2":[("run", 2, None)],
  "clean":  [("run", 2, None)],
  "round":  [("run", 2, None)],
  "q2hook": [("card",1, None), ("hook",2, None)],
@@ -47,8 +48,6 @@ STYLE = {
  "felt":   [("hook",2, None)],
  "q4str":  [("card",1, None), ("run",2, None)],
  "repeat": [("run", 2, None)],
- "q5":     [("card",1, None)],
- "hook3":  [("hook",2, None)],
  "empty":  [("hook",2, None)],
 
 }
