@@ -513,3 +513,28 @@ land as a rhyme rather than as an accident, and "ממש בכל התחומים." 
 gold. Then the card, where the number returns a third time as type.
 
 165.6s, -13.8 LUFS, 0 samples of A/V lag.
+
+---
+
+# v12 — the claim moves to the end, and stays there only
+
+v11 left her claim in both places. The instruction was one place: the end. The
+three blocks — "אבל אנחנו מדברים פה על מצב", the figure, and
+"סעיפים שונים, ובזיהוי של איך הכסף הזה זז. מה שאנחנו רואים שזה שם אותנו על
+המסלול הישיר להקרסת שירותי העירייה. ממש בכל התחומים." — are moved, not copied.
+
+**What that costs, recorded honestly.** The anchor's question at 0:24,
+"למה **הקרסת** שירותי העירייה?", used to follow her saying "להקרסת" thirteen
+seconds earlier. It no longer does. It still reads as him challenging a claim
+of hers, and the header names the subject, so it holds — but it is a real
+seam and it is the price of the ending.
+
+**The end card drops the addressee and the attribution.** It goes up on her own
+page, so "לחברי מועצת העיר חריש" and her name under the figure were both saying
+something the page already says.
+
+> **56** מיליון שקלים
+> **תפסיקו לשתוק.**
+> **צאו נגד זה.**
+
+156.0s, -13.8 LUFS, 0 samples of A/V lag.
