@@ -459,3 +459,37 @@ takes pressure off the breaks. 57 captions, 326 words, zero overlaps.
 is a sentence that was not previously legible — but a trim pass is available
 and the candidates are known: the middle clause of the Ministry item, the
 second half of the engineering block, and the repeat block.
+
+---
+
+# v10 — the 56 million, completed and landed
+
+**Restored in place:** "סעיפים שונים, ובזיהוי של איך הכסף הזה **זז**" (91.5-96.1).
+It had been cut out of the middle of her claim for length, and it is the part
+that says the money *moved* — which is the whole claim. The passage now runs
+whole: 56 million, different budget lines, how the money moves, and the direct
+path to the collapse of city services.
+
+**Not moved to the end, and why.** The client asked for it as a closing beat.
+Moving it breaks the interview's own logic: the anchor's question thirteen
+seconds later — "למה **הקרסת** שירותי העירייה?" — exists only because she has
+just used that word, and the whole long answer behind it hangs off that
+question. The reel would lose her credentials, the management principle and
+both figure panels to gain a repetition, because the reel already closes on
+"מובילים אותנו למסלול ישיר לקריסה".
+
+**So the number closes the reel on the card instead**, where it needs no
+sentence around it:
+
+> **56** מיליון שקלים
+> שני גרינברג, על היקף המהלך
+>
+> לחברי מועצת העיר חריש
+> **תפסיקו לשתוק. צאו נגד זה.**
+
+The figure lands first and the ask follows it, so the last thing on screen is
+the number and then what to do about it. The attribution line under it is there
+because the figure is her characterisation of the budget update, not a figure
+the reel can state in its own voice.
+
+156.8s, -13.8 LUFS, 0 samples of A/V lag.

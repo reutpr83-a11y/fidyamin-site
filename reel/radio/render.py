@@ -14,7 +14,7 @@ import design as D
 W, H, FPS = 1080, 1920, 30
 NAVY, GOLD, CREAM, BLUE, DIM = D.NAVY, D.GOLD, D.CREAM, D.BLUE, D.DIM
 RIGHT = D.RIGHT
-TAIL = 6.2                         # end card
+TAIL = 7.6                         # end card
 
 m     = json.load(open("map.json"))
 caps  = json.load(open("track.json"))
@@ -204,27 +204,42 @@ def speaker_at(t):
 # The interview holds no address to the council — she is answering questions,
 # not making an appeal — so the appeal is made here, in the campaign's own
 # voice and plainly as a card, rather than assembled out of her sentences.
-# One message. The reel has already made the case; the card only has to say
-# what to do with it.
-END = [("לחברי מועצת העיר חריש",  40, 700, GOLD,  0.15),
-       ("תפסיקו לשתוק.",          92, 800, CREAM, 0.75),
-       ("צאו נגד זה.",            92, 800, GOLD,  1.45)]
+# The figure lands first and the ask follows it. The quote under the number is
+# hers, verbatim from the reel, so the card asserts nothing the recording does
+# not already carry.
+END = [("לחברי מועצת העיר חריש",  40, 700, GOLD,  1.50),
+       ("תפסיקו לשתוק.",          86, 800, CREAM, 2.00),
+       ("צאו נגד זה.",            86, 800, GOLD,  2.60)]
 
 def endcard(t):
     img = D.BG.copy(); d = ImageDraw.Draw(img)
     a = ease(t / 0.5)
     D.header(d)
-    d.rectangle([RIGHT + 4, 640, RIGHT + 9, 640 + int(340 * ease(t / 0.9))],
+
+    k = ease((t - 0.15) / 0.40)                       # the number
+    if k > 0:
+        fn = D.F(140, 800)
+        wn = D.tw(d, "56", fn)
+        d.text((RIGHT - wn, 452 + int((1 - k) * 12)), "56", font=fn,
+               fill=(*BLUE, int(255 * k)), direction="ltr")
+        D.rtl(d, "מיליון שקלים", 52, 500, 512 + int((1 - k) * 12), CREAM,
+              right=RIGHT - wn - 20, a=255 * k)
+    k = ease((t - 0.70) / 0.40)                       # her words under it
+    if k > 0:
+        D.rtl(d, "שני גרינברג, על היקף המהלך", 38, 400, 628, DIM, a=255 * k)
+
+    d.rectangle([RIGHT + 4, 780, RIGHT + 9, 780 + int(330 * ease((t - 1.4) / 0.9))],
                 fill=(*GOLD, int(230 * a)))
-    y = 640
+    y = 780
     for s, size, wt, col, t0 in END:
         k = ease((t - t0) / 0.45)
         if k <= 0:
             y += size + (60 if size < 60 else 46); continue
         D.rtl(d, s, size, wt, y + int((1 - k) * 14), col, right=RIGHT - 30, a=255 * k)
         y += size + (60 if size < 60 else 46)
-    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1150, D.DIM,
-          a=255 * ease((t - 2.4) / 0.5))
+
+    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1240, D.DIM,
+          a=255 * ease((t - 3.3) / 0.5))
     return img
 
 # ---------------------------------------------------------------- frame
