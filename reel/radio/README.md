@@ -493,3 +493,23 @@ because the figure is her characterisation of the budget update, not a figure
 the reel can state in its own voice.
 
 156.8s, -13.8 LUFS, 0 samples of A/V lag.
+
+---
+
+# v11 — the reprise
+
+**Nothing moved.** Her claim still runs whole in its own place at 0:32, because
+the anchor's next question depends on her having just said "להקרסת" there.
+
+What is new is a **reprise at the end**: the same two pieces of her opening
+answer, spent again as the last thing said in the reel.
+
+> **56 מיליון שקלים,**
+> מה שאנחנו רואים שזה שם אותנו על המסלול הישיר להקרסת שירותי העירייה.
+> **ממש בכל התחומים.**
+
+The figure gets the same large treatment it got the first time, so the two
+land as a rhyme rather than as an accident, and "ממש בכל התחומים." closes in
+gold. Then the card, where the number returns a third time as type.
+
+165.6s, -13.8 LUFS, 0 samples of A/V lag.

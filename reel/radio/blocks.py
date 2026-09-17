@@ -179,6 +179,19 @@ SEGS = [
  # Held back from q2hook and spent here. Contiguous with what it was cut from.
  ("empty",  149.92, 152.06, [(2, [
     (149.98,"היא"),(150.30,"מרוקנת"),(150.78,"את"),(151.02,"האגפים"),(151.50,"שלה.")])]),
+
+ # The reprise. Her own words from the top of the interview, spent again as the
+ # last thing said: the figure, and where the figure leads. Nothing was moved
+ # to make room for it — the passage still runs whole in its own place at 0:32,
+ # because the anchor's next question depends on her having just said it there.
+ ("recap56", 88.90,  91.00, [(2, [
+    (88.96,"56"),(89.60,"מיליון"),(90.08,"שקלים,")])]),
+
+ ("recap",   96.10, 103.00, [(2, [
+    (96.16,"מה"),(96.48,"שאנחנו"),(96.88,"רואים"),(97.12,"שזה"),(97.44,"שם"),
+    (97.76,"אותנו"),(98.08,"על"),(98.32,"המסלול"),(98.72,"הישיר"),(99.12,"להקרסת"),
+    (99.76,"שירותי"),(100.16,"העירייה."),
+    (101.18,"ממש"),(101.50,"בכל"),(101.90,"התחומים.")])]),
 ]
 
 # the two figure panels, keyed to the segment they sit over and the word they land on

@@ -49,6 +49,8 @@ STYLE = {
  "q5":     [("card",1, None)],
  "hook3":  [("hook",2, None)],
  "empty":  [("hook",2, None)],
+ "recap56":[("fig", 2, None)],
+ "recap":  [("run", 2, 101.18)],
 }
 
 SIZE = {"run": 66, "card": 58, "hook": 66, "fig": 66}
