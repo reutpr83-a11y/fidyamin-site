@@ -102,7 +102,9 @@ def panel_at(t):
     return None
 
 # ---------------------------------------------------------------- captions
-SPK = {1: ("יוסי הדר", GOLD), 2: ("שני גרינברג", BLUE)}
+SPK = {1: ("יוסי הדר", GOLD),          # the anchor
+       2: ("שני גרינברג", BLUE),
+       3: ("איתמר רותם", GOLD)}        # the reporter who files the opening item
 CAP_Y = 1230                      # every caption starts here, whatever it is
 
 def chip(d, spk, t, a=1.0):
@@ -166,7 +168,7 @@ def caption(img, d, c, t):
         D.rtl(d, " ".join(c["words"][1:]), 56, 500, 682 + rise, CREAM,
               right=RIGHT - wn - 20, a=255 * a)
         return
-    if st == "card":                      # his question
+    if st == "card":                      # a question from the studio
         draw_words(d, c, t, 58, 500, CAP_Y + rise, (214, 226, 238),
                    lit=(214, 226, 238), a=a, maxw=830)
     elif st == "hook":                    # her line, in the brand gold
@@ -237,7 +239,7 @@ def frame(i):
         caption(img, d, c, t)
     chip(d, speaker_at(t), t)
     live = [c for c in caps if c["start"] <= t <= c["end"]]
-    col = GOLD if (live and live[0]["speaker"] == 1) else BLUE
+    col = GOLD if (live and live[0]["speaker"] in (1, 3)) else BLUE
     k = stage_busy(t)
     wave(d, 1570, t, col=col, amp=0.85, a=k)                       # the quiet strip
     wave(d, 820, t, col=col, amp=2.5, bars=62, gap=15, bw=5, a=1 - k)   # the stage

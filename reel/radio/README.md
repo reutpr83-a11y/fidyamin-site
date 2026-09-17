@@ -232,3 +232,44 @@ campaign's own voice:
 
 The first two lines are the same pair the budget reel's end card carries, so
 the two films close the same way.
+
+---
+
+# v4 — three voices, and a sharper last word
+
+126.8s, -13.7 LUFS, 0 samples of lag.
+
+## The opening item is the reporter's, not the anchor's
+
+It was attributed to Yossi Hadar. It is **Itamar Rotem**, the station's
+reporter, and the recording says so: at 66.1s the anchor thanks him by name —
+"אוקיי, תודה איתמר" — before turning to her. So the reel now carries three
+names, not two: Rotem files the Interior Ministry item, Hadar asks the five
+questions, Greenberg answers. Both station voices keep the same gold, because
+both of them are 90FM.
+
+The anchor's surname is left as **הדר**. The station's own lower third reads
+"יומן החדשות עם יוסי הדר" in every frame of the recording, and so does 90FM's
+own write-up of the interview.
+
+## Two cuts that sharpen the end
+
+**"תראה," is gone** from the front of her last answer. It is a softener, and
+the answer starts harder without it: "אני לא יודעת להסביר את הפעולות שלהם."
+
+**The hardest sentence in the interview was held back and spent last.** Her
+answer to "העירייה צריכה לעשות את זה?" used to run whole — "בוודאי. אבל אין
+לה עובדים. היא מרוקנת את האגפים שלה." The first half stays with his question;
+the second half is now the reel's final line, after the verdict:
+
+> בעיניי, הם מובילים אותנו למסלול ישיר לקריסה.
+> **היא מרוקנת את האגפים שלה.**
+
+Both halves are contiguous with what they were cut from, so nothing is
+stitched and nothing is said twice.
+
+## On "נפטר"
+
+Kept with a ט. "אתה נפטר מהעובדים המקצועיים שלך" is the verb for getting rid
+of something; with a ת, "נפתר", the word means *was solved*, which is not what
+she says and not what the sentence can carry.

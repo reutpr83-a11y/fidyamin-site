@@ -26,8 +26,8 @@ MAXW_BY = {"run": 830, "card": 830, "hook": 690, "fig": 830}
 
 # style per segment: list of (style, speaker, split_at_source_time_or_None)
 STYLE = {
- "setup":  [("run", 1, None)],
- "vote":   [("run", 1, None)],
+ "setup":  [("run", 3, None)],
+ "vote":   [("run", 3, None)],
  "concede":[("run", 2, None)],
  "fifty6": [("fig", 2, None)],
  "claim":  [("run", 2, None)],
@@ -45,6 +45,7 @@ STYLE = {
  "repeat": [("run", 2, None)],
  "q5":     [("card",1, None)],
  "hook3":  [("hook",2, None)],
+ "empty":  [("hook",2, None)],
 }
 
 SIZE = {"run": 66, "card": 58, "hook": 66, "fig": 66}
