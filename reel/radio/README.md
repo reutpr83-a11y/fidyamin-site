@@ -636,4 +636,4 @@ Both lines went to 96px/800 (from 84) now that they are alone on the card, the
 gold rule sits at y=640 and grows to 280px, and the card tail is 5.8s instead of
 6.8 — there is less to read, so it does not need as long.
 
-146.7s total, 4401 frames.
+146.7s total (2:27), 4401 frames, -13.7 LUFS, 0 samples of A/V lag.
