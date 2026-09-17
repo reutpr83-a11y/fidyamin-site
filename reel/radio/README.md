@@ -135,3 +135,68 @@ waveform was then drawn from the first half of the speech stretched over the
 whole reel — silently, with no error anywhere. It is written with Python's
 `wave` module now. The check that caught it was simply comparing the file's
 duration against `len(out)/SR`.
+
+
+---
+
+# v2 — more of her, one caption zone, a darker ground
+
+126.1s, -13.7 LUFS, 0 samples of lag at three probes. Four notes from the
+client, and what each one changed.
+
+## More of Greenberg
+
+Two passages of hers came back in, both verifiable word for word:
+
+- **175.7-186.2** — "אתה מעביר את כל הכסף הזה לקבלנים ומה אתה מצפה שיקרה?
+  שבאמת כל השיפוצים שנעשים ברחבי העיר כאילו בשם העירייה יש עליהם פיקוח נאות?"
+  Ten and a half seconds, and it is the consequence of the engineering
+  figures stated as a question. It should not have been left out.
+- **216.0-217.8** — "כבר עכשיו זה מורגש." It is also the line that earns his
+  next question, so it now sits directly before "למשל איפה? תן לי דוגמאות."
+
+And three of his questions lost their run-ups: q1 starts on "למה הקרסת שירותי
+העירייה?" rather than "אבל אני רוצה להבין", q2 on "העירייה צריכה לעשות את
+זה?", q5 on "לא מעט ספקים חיצוניים". Nothing was lost; the operative clause
+is the question.
+
+She now holds **78%** of the speech, against 74% before.
+
+## One caption zone
+
+Every caption starts at y=1230, whatever it is. The question cards, the hooks
+and the figure captions used to live in the middle of the frame with their own
+furniture — a "יוסי הדר שואל" label, a gold rule, a second type size — which
+put four separate blocks of text on screen at once. They are all captions now,
+told apart by weight and colour and nothing else:
+
+| | |
+|---|---|
+| her | 66px / 800, cream, spoken word in blue |
+| her, on a hook | 66px / 800, **gold** |
+| him | 58px / 500, dimmed cream |
+
+Gone with them: the credit line under the title, the speaker's role, the
+station under his name. **A title at the top, the names, the captions.** Every
+other word on the frame was furniture.
+
+## Captions that break where the sentence breaks
+
+Splitting on width alone stranded last words: "בוודאי. אבל אין לה עובדים. היא
+מרוקנת את" / "האגפים שלה." The chunker now looks back for a sentence end
+before it breaks, and takes it if it falls beyond the first third:
+"בוודאי. אבל אין לה עובדים." / "היא מרוקנת את האגפים שלה."
+
+Hooks also wrap at 690px rather than 830, so they split into two lines that
+each say something. 48 captions, 263 words, zero overlaps.
+
+**And they no longer overlap each other.** Sharing one zone means a soft
+handover is two lines of text drawn on top of each other. A caption whose
+successor follows within 0.35s is now cut, not faded — which is how subtitles
+have always worked. 32 of the 48 are hard swaps.
+
+## Darker, bluer
+
+The ground runs (5,15,35) to (11,36,82), from (11,43,68) to (18,61,96), and
+the radial lift came down from 14 to 10. The brand blue and gold are unchanged
+so the two reels still read as one family.

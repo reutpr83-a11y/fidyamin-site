@@ -11,10 +11,10 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import numpy as np
 
 W, H = 1080, 1920
-NAVY, MID = (11, 43, 68), (18, 61, 96)
+NAVY, MID = (5, 15, 35), (11, 36, 82)
 GOLD, CREAM = (245, 176, 74), (251, 250, 246)
 BLUE = (99, 203, 234)
-DIM  = (150, 176, 198)
+DIM  = (126, 152, 184)
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONT = os.path.join(HERE, "Heebo.ttf")
 RIGHT = 940          # RTL text right edge
@@ -42,24 +42,24 @@ def ground():
     k = np.clip(0.30 * (xx / W) + 0.70 * (1 - yy / H), 0, 1)[..., None]
     g = np.array(NAVY, np.float32) + (np.array(MID, np.float32) - np.array(NAVY, np.float32)) * k
     r = np.sqrt(((xx - W * 0.30) / (W * 1.05)) ** 2 + ((yy - H * 0.34) / (H * 0.62)) ** 2)
-    g = g + (14.0 * np.clip(1 - r, 0, 1) ** 2)[..., None]
+    g = g + (10.0 * np.clip(1 - r, 0, 1) ** 2)[..., None]
     return Image.fromarray(g.clip(0, 255).astype(np.uint8), "RGB").convert("RGBA")
 BG = ground()
 
 def header(d, topic="עדכון תקציב 2026, עיריית חריש"):
-    """station + programme, then the topic. Same on every frame."""
-    f = F(30, 700)
+    """Where the interview was broadcast, and what it was about. Nothing else
+    lives up here — every other word on the frame is something somebody said."""
+    f = F(29, 700)
     x = RIGHT
-    wst = d.textlength("90FM", font=f, direction="ltr")
-    d.text((x - wst, 132), "90FM", font=f, fill=(*BLUE, 255), direction="ltr")
-    d.rectangle([x - wst, 182, x, 185], fill=(*GOLD, 235))
-    x -= wst
-    for run in ["  ·  ", "יומן צהריים עם יוסי הדר"]:
+    w = d.textlength("90FM", font=f, direction="ltr")
+    d.text((x - w, 128), "90FM", font=f, fill=(*BLUE, 255), direction="ltr")
+    d.rectangle([x - w, 178, x, 181], fill=(*GOLD, 235))
+    x -= w
+    for run in ["  ·  ", "יומן החדשות עם יוסי הדר"]:
         ww = d.textlength(run, font=f, direction="rtl")
-        d.text((x - ww, 132), run, font=f, fill=(*BLUE, 255), direction="rtl")
+        d.text((x - ww, 128), run, font=f, fill=(*BLUE, 255), direction="rtl")
         x -= ww
-    rtl(d, topic, 46, 500, 214, DIM)
-    _credit(d)
+    rtl(d, topic, 52, 800, 212, CREAM)
 
 def speaker(d, name, role, y, accent=GOLD):
     d.rectangle([RIGHT + 2, y + 6, RIGHT + 7, y + 74], fill=(*accent, 240))

@@ -19,7 +19,10 @@ def dur(word):
     from its letters. Without this, a long word looks like a pause: "שלחה"
     to "נציגת" is 0.64s start to start and is not a break at all."""
     return min(0.90, max(0.12, 0.055 * len(word) + 0.06))
-MAXW = 860           # caption line width
+MAXW = 830           # caption line width
+MAXW_BY = {"run": 830, "card": 830, "hook": 690, "fig": 830}
+                     # a hook wraps sooner so it splits into two lines that
+                     # each say something, instead of orphaning its last word
 
 # style per segment: list of (style, speaker, split_at_source_time_or_None)
 STYLE = {
@@ -34,15 +37,17 @@ STYLE = {
  "q2hook": [("card",1, None), ("hook",2, None)],
  "eng_a":  [("run", 2, None)],
  "eng_b":  [("run", 2, None)],
+ "expect": [("run", 2, None)],
  "q3":     [("card",1, None)],
  "hook2":  [("run", 2, 201.94)],          # run, then hook from this word on
+ "felt":   [("hook",2, None)],
  "q4str":  [("card",1, None), ("run",2, None)],
  "repeat": [("run", 2, None)],
  "q5":     [("card",1, None)],
  "hook3":  [("hook",2, None)],
 }
 
-SIZE = {"run": 62, "card": 58, "hook": 92, "fig": 62}
+SIZE = {"run": 66, "card": 58, "hook": 66, "fig": 66}
 
 def build(mapfile="map.json", out="track.json"):
     m = json.load(open(mapfile))
@@ -65,12 +70,13 @@ def build(mapfile="map.json", out="track.json"):
                 f = D.F(SIZE[st], 800 if st in ("hook", "run", "fig") else 500)
                 sp = d.textlength(" ", font=f)
 
+                mw = MAXW_BY[st]
                 def nlines(group):
                     """greedy wrap of a word group, returns the line count"""
                     n, w = 1, 0.0
                     for _, word in group:
                         ww = D.tw(d, word, f)
-                        if w and w + sp + ww > MAXW:
+                        if w and w + sp + ww > mw:
                             n += 1; w = ww
                         else:
                             w += (sp if w else 0) + ww
@@ -84,16 +90,31 @@ def build(mapfile="map.json", out="track.json"):
                     chunk.append((t, word))
                     if nlines(chunk) > 2:
                         chunk.pop()
-                        caps.append(make(chunk, st, spk, base, seg))
-                        chunk = [(t, word)]
+                        # break at the end of a sentence if there is one far
+                        # enough in, so a caption does not stop mid-phrase and
+                        # leave its last two words stranded in the next one
+                        cut = len(chunk)
+                        for j in range(len(chunk) - 1, max(0, len(chunk)//3) - 1, -1):
+                            if chunk[j][1].rstrip().endswith((".", "?", "!")):
+                                cut = j + 1; break
+                        caps.append(make(chunk[:cut], st, spk, base, seg))
+                        chunk = chunk[cut:] + [(t, word)]
+                        while nlines(chunk) > 2:
+                            caps.append(make(chunk[:-1], st, spk, base, seg))
+                            chunk = chunk[-1:]
                 if chunk:
                     caps.append(make(chunk, st, spk, base, seg))
 
     caps = _absorb(caps, d)
     caps.sort(key=lambda c: c["start"])
-    # never let one caption sit on top of the next
+    # Never let one caption sit on top of the next. They all share one zone
+    # now, so an overlap is not a soft handover, it is two lines of text drawn
+    # over each other. A caption whose successor follows straight on is cut,
+    # not faded: that is how subtitles have always worked.
     for i in range(len(caps)-1):
         caps[i]["end"] = min(caps[i]["end"], caps[i+1]["start"] - 0.02)
+        caps[i]["hard"] = caps[i+1]["start"] - caps[i]["end"] < 0.35
+    if caps: caps[-1]["hard"] = False
     json.dump(caps, open(out, "w"), ensure_ascii=False, indent=1)
     return caps
 
@@ -105,7 +126,7 @@ def _absorb(caps, d):
         n, w, sp = 1, 0.0, d.textlength(" ", font=f)
         for word in words:
             ww = D.tw(d, word, f)
-            if w and w + sp + ww > MAXW: n += 1; w = ww
+            if w and w + sp + ww > MAXW_BY[style]: n += 1; w = ww
             else: w += (sp if w else 0) + ww
         return n <= 2
 
@@ -136,7 +157,7 @@ def _absorb(caps, d):
             n, w, sp = 1, 0.0, d.textlength(" ", font=f)
             for word in merged:
                 ww = D.tw(d, word, f)
-                if w and w + sp + ww > MAXW: n += 1; w = ww
+                if w and w + sp + ww > MAXW_BY[p["style"]]: n += 1; w = ww
                 else: w += (sp if w else 0) + ww
             if n <= 2:
                 p["words"] = merged

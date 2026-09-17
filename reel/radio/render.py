@@ -102,15 +102,19 @@ def panel_at(t):
     return None
 
 # ---------------------------------------------------------------- captions
-SPK = {1: ("יוסי הדר", "מגיש יומן החדשות", GOLD),
-       2: ("שני גרינברג", "יו״ר האופוזיציה בחריש", BLUE)}
+SPK = {1: ("יוסי הדר", GOLD), 2: ("שני גרינברג", BLUE)}
+CAP_Y = 1230                      # every caption starts here, whatever it is
 
 def chip(d, spk, t, a=1.0):
-    name, role, col = SPK[spk]
-    y = 1150
-    d.rectangle([RIGHT + 2, y + 6, RIGHT + 7, y + 74], fill=(*col, int(240 * a)))
-    D.rtl(d, name, 40, 800, y, CREAM, right=RIGHT - 22, a=255 * a)
-    D.rtl(d, role, 30, 400, y + 50, DIM, right=RIGHT - 22, a=255 * a)
+    """Just the name. The role, the station and the date were all furniture
+    competing with the only text that matters, which is what was said."""
+    name, col = SPK[spk]
+    f = D.F(33, 700)
+    w = D.tw(d, name, f)
+    x = (W + w) / 2
+    d.text((x - w, 1140), name, font=f, fill=(*col, int(235 * a)), direction="rtl")
+    d.rectangle([int(x - w) - 26, 1154, int(x - w) - 12, 1157], fill=(*col, int(200 * a)))
+    d.rectangle([int(x) + 12, 1154, int(x) + 26, 1157], fill=(*col, int(200 * a)))
 
 def lines_of(words, f, d, maxw):
     sp = d.textlength(" ", font=f)
@@ -145,50 +149,48 @@ def draw_words(d, c, t, size, weight, ytop, col, lit=BLUE, centre=True, a=1.0,
     return len(rows)
 
 def caption(img, d, c, t):
-    a = ease((t - c["start"]) / 0.22) * (1 - ease((t - c["end"]) / 0.28))
+    a = ease((t - c["start"]) / 0.22)
+    if c.get("hard"):
+        if t >= c["end"]: return
+    else:
+        a *= 1 - ease((t - c["end"]) / 0.28)
     if a <= 0.01: return
-    rise = int((1 - ease((t - c["start"]) / 0.30)) * 16)
+    rise = int((1 - ease((t - c["start"]) / 0.30)) * 14)
     st = c["style"]
-    if st == "card":
-        f = D.F(34, 800); s = "יוסי הדר שואל"
-        d.text((RIGHT - D.tw(d, s, f), 690 + rise), s, font=f,
-               fill=(*GOLD, int(255 * a)), direction="rtl")
-        d.rectangle([RIGHT - 78, 742 + rise, RIGHT, 745 + rise], fill=(*GOLD, int(200 * a)))
-        draw_words(d, c, t, 58, 500, 800 + rise, CREAM, lit=CREAM, centre=False, a=a,
-                   maxw=800, right=RIGHT)
-    elif st == "hook":
-        f = D.F(84, 800)
-        rows, _ = lines_of(c["words"], f, d, 760)
-        d.rectangle([RIGHT - 3, 700 + rise, RIGHT + 2,
-                     700 + rise + int(84 * 1.34) * len(rows) - 14],
-                    fill=(*GOLD, int(230 * a)))
-        draw_words(d, c, t, 84, 800, 700 + rise, CREAM, lit=GOLD, centre=False, a=a,
-                   maxw=760, right=RIGHT - 34)
-    elif st == "fig":
+    if st == "fig":
         fn = D.F(150, 800)
         num = c["words"][0]
         wn = D.tw(d, num, fn)
-        d.text((RIGHT - wn, 640 + rise), num, font=fn, fill=(*BLUE, int(255*a)), direction="ltr")
-        D.rtl(d, " ".join(c["words"][1:]), 56, 500, 700 + rise, CREAM,
+        d.text((RIGHT - wn, 620 + rise), num, font=fn, fill=(*BLUE, int(255*a)),
+               direction="ltr")
+        D.rtl(d, " ".join(c["words"][1:]), 56, 500, 682 + rise, CREAM,
               right=RIGHT - wn - 20, a=255 * a)
+        return
+    if st == "card":                      # his question
+        draw_words(d, c, t, 58, 500, CAP_Y + rise, (214, 226, 238),
+                   lit=(214, 226, 238), a=a, maxw=830)
+    elif st == "hook":                    # her line, in the brand gold
+        draw_words(d, c, t, 66, 800, CAP_Y + rise, GOLD, lit=CREAM, a=a, maxw=690)
     else:
-        draw_words(d, c, t, 62, 800, 1268 + rise, CREAM, a=a, maxw=860)
+        draw_words(d, c, t, 66, 800, CAP_Y + rise, CREAM, a=a, maxw=830)
 
 def stage_busy(t):
     """0 when nothing occupies the middle of the frame, 1 when something does,
-    with a short ramp so the waveform can trade places with it."""
+    so the waveform can trade places with it. Only a panel or a figure claims
+    the middle now — every other caption lives in the one caption zone."""
     k = 0.0
     for p in PANELS:
         k = max(k, ease((t - (p["t_in"] - 0.30)) / 0.35)
                    * (1 - ease((t - (p["t_out"] + 0.40)) / 0.35)))
     for c in caps:
-        if c["style"] in ("card", "hook", "fig"):
+        if c["style"] == "fig":
             k = max(k, ease((t - (c["start"] - 0.20)) / 0.30)
                        * (1 - ease((t - (c["end"] + 0.28)) / 0.30)))
     return k
 
 def cap_at(t):
-    return [c for c in caps if c["start"] - 0.25 <= t <= c["end"] + 0.30]
+    return [c for c in caps
+            if c["start"] <= t <= (c["end"] if c.get("hard") else c["end"] + 0.30)]
 
 def speaker_at(t):
     cur = [c for c in caps if c["start"] <= t <= c["end"]]
@@ -215,7 +217,7 @@ def endcard(t):
             y += size + 42; continue
         D.rtl(d, s, size, wt, y + int((1 - k) * 14), col, right=RIGHT - 30, a=255 * k)
         y += size + 42
-    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1180, (150, 176, 198),
+    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1180, D.DIM,
           a=255 * ease((t - 2.3) / 0.5))
     return img
 
@@ -234,8 +236,8 @@ def frame(i):
     live = [c for c in caps if c["start"] <= t <= c["end"]]
     col = GOLD if (live and live[0]["speaker"] == 1) else BLUE
     k = stage_busy(t)
-    wave(d, 1600, t, col=col, amp=0.85, a=k)                       # the quiet strip
-    wave(d, 760, t, col=col, amp=2.6, bars=62, gap=15, bw=5, a=1 - k)   # the stage
+    wave(d, 1570, t, col=col, amp=0.85, a=k)                       # the quiet strip
+    wave(d, 820, t, col=col, amp=2.5, bars=62, gap=15, bw=5, a=1 - k)   # the stage
     return img
 
 if __name__ == "__main__":
