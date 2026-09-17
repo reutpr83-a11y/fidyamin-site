@@ -771,3 +771,44 @@ Measured at the new splice: her sentence decays to -61 dB and "תראה" starts
 139.42s of voice, 4357 frames.
 
 145.2s (2:25), 4357 frames, -13.7 LUFS, 0 samples of A/V lag including across the new splice at 126s.
+
+---
+
+# v20 — the question back, from where the question starts
+
+v19 removed the anchor's question on the theory that she was audible underneath
+it. That was wrong, and the right diagnosis came from the person who could hear
+it: in the broadcast he says **"כן, אבל איך את מסבירה את זה?"**, and the old
+in-point of 194.86 landed inside the decay of "אבל". What played was the wreck
+of a word and then the question — two things at once, which is exactly what it
+sounded like.
+
+Measured at 5ms, the head of that question is unambiguous:
+
+    194.82-194.88  "אבל" decaying, -31 → -46 dB
+    194.88-194.95  silence, -46 dB down to a -57 dB floor
+    194.955        "איך" starts, -28 dB
+
+So the in-point is **194.88**: the whole 0.07s crossfade lands inside that
+silence, and the question opens at full level on its own first word with nothing
+of "כן, אבל" left. The out-point moves 196.05 → 196.03, stopping just short of
+the next voice's onset at 196.04.
+
+Verified on the cut: her sentence decays through the crossfade to a -57 dB floor
+and "איך" starts 0.025s later.
+
+The two splice improvements from v19 stay — `repeat` ends in the pause after
+"עצמו" instead of 0.02s into her next sentence, and her answer starts from the
+silence before "תראה" instead of 0.2s inside the word, so it is whole and
+captioned.
+
+## What the residual test did and did not prove
+
+The sample-aligned subtraction in v19 (residual 66.5 dB down) was sound and
+still holds: the reel carries that span exactly as the broadcast has it. What it
+proved was that the edit added nothing *within* the span — not that the span
+began in the right place. The in-point was the fault, and a subtraction against
+the source cannot see an in-point, because both sides move together. Worth
+remembering: that test rules out corruption, never bad framing.
+
+140.50s of voice, 4389 frames.

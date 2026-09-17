@@ -157,15 +157,19 @@ SEGS = [
     (254.08,"וזה"),(254.48,"ברווחה"),(255.26,"וזה"),(255.58,"בנוער,"),
     (256.06,"והסיפור"),(256.70,"הזה"),(256.86,"חוזר"),(257.26,"על"),(257.50,"עצמו.")])]),
 
- # His question "איך את מסבירה את זה?" is out. Under it, in the broadcast
- # itself, she is still audible - a second voice you cannot make out, running
- # through his words. It is not something the edit introduced: the reel's audio
- # across that span subtracts against the source to a residual 66.5 dB down,
- # which is numerical noise, so the overlap is in the 90FM recording and cannot
- # be lifted off his voice. There is no clean take of the same question
- # anywhere else in the interview, so the question goes rather than the mess.
- # Her answer needs no prompt: "והסיפור הזה חוזר על עצמו" runs straight into
- # "אני לא יודעת להסביר את הפעולות שלהם".
+ # His question is back, and it starts where the question starts. In the
+ # broadcast he says "כן, אבל איך את מסבירה את זה?" - the old in-point of 194.86
+ # landed in the decay of "אבל", so what played was the wreck of a word and then
+ # the question, which is what was being heard as two things at once.
+ #
+ # 194.88 is the one right answer here: 194.880-194.950 is a real silence,
+ # -46 dB falling to -57 dB at the floor, and "איך" starts at 194.955. The whole
+ # 0.07s crossfade therefore lands inside that silence and the question opens at
+ # full level on its own first word, with nothing of "כן, אבל" left. The
+ # out-point moves 196.05 -> 196.03 to stop just short of the next voice's onset
+ # at 196.04.
+ ("q3",     194.88, 196.03, [(1, [
+    (194.96,"איך"),(195.07,"את"),(195.31,"מסבירה"),(195.63,"את"),(195.79,"זה?")])]),
 
  # Split, to drop 201.22-201.90. Between "שלהם" and "בעיניי" the broadcast
  # carries 0.68s of speech that neither the word transcript nor the block
