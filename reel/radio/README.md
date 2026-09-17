@@ -413,3 +413,49 @@ the two ends that are clean and drops what could not be verified, rather than
 guessing at a word.
 
 132.0s, 0 samples of A/V lag.
+
+---
+
+# v9 — the lead-ins put back
+
+A full pass over the transcript against the cut, looking for sentences that had
+lost the thing that makes them mean something. Seven were found.
+
+| where | what had been cut away |
+|---|---|
+| the opening | **"אז לאחר פניות של יושב ראש האופוזיציה עם עורך דין לממונה המחוז במשרד הפנים"** — why the Ministry wrote at all. Without it the letter arrives from nowhere, and her part in causing it is gone |
+| her answer to "למה קריסה" | **"אני אסביר. אני באה מהעולם הזה, בסדר?"** — the credentials line was landing with nothing behind it |
+| the same block | **"בניהול מערכות ציבוריות,"** — put back, so the principle has its frame |
+| the 420 | **"אם אתה מקצץ בתברואה"** — the figures were arriving with no verb and no department |
+| the 1.3 | **"קיצצו"** — the same, and the reason the client caught it: 3 million, then 1.3 million, and nobody cutting anything |
+| his second question | **"מה זאת אומרת מי?"** — it answers the four "מי" she has just asked |
+| his last question | **"אבל בעיריות ובכלל"** — the frame of the challenge |
+
+**"תן לי דוגמאות" is "תני לי דוגמאות".** He is talking to a woman.
+
+Two blocks became one in the process. `creds` + `mgmt` + `clean` are a single
+unbroken stretch now (109.5-139.1), and `eng_a` + `eng_b` likewise
+(153.9-167.9) — which is what put "קיצצו" back, because the word had been
+falling into the gap between them.
+
+## Captions that do not fall over
+
+The line breaker was leaving words stranded: "מבפנים. אתה חייב את זה. **אם**",
+"היה להם תקציב מקורי של **3**", "לא מתרוקן **מכוח**". Two rules now:
+
+- a caption never ends on a word that belongs to what comes after it — a list
+  of connectives and pronouns, checked both when the line breaks and in a pass
+  afterwards;
+- a figure never ends a caption when the next word is its unit, so "2.4" and
+  "מיליון שקל" stay together.
+
+Line width went from 830 to 880, the width the budget reel uses, which also
+takes pressure off the breaks. 57 captions, 326 words, zero overlaps.
+
+## Length
+
+**150.8s.** The reel gained nearly twenty seconds of context and it is now
+2:31, which is long for a Reel. Nothing here was padding — every second of it
+is a sentence that was not previously legible — but a trim pass is available
+and the candidates are known: the middle clause of the Ministry item, the
+second half of the engineering block, and the repeat block.

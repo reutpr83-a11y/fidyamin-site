@@ -55,11 +55,11 @@ PANELS = [
   dict(label="ניקיון ותברואה",
        rows=[("420","אלף ₪",-1,"פחות לשכר העובדים"),
              ("2.4","מיליון ₪",+1,"יותר לתשלום לקבלנים")],
-       seg="clean", src_a=128.84, src_b=132.07, src_in=128.60, src_out=136.40),
+       seg="argument", src_a=128.84, src_b=132.07, src_in=128.60, src_out=136.40),
   dict(label="הנדסה, תכנון ובנייה",
        rows=[("3","מיליון ₪",0,"התקציב המקורי לשכר העובדים באגף"),
              ("1.3","מיליון ₪",-1,"קוצצו מהשכר של העובדים")],
-       seg="eng_a", src_a=158.38, seg_b="eng_b", src_b=161.39,
+       seg="eng", src_a=158.38, src_b=161.39,
        src_in=157.90, src_out=165.20),
 ]
 def base_of(sid):
@@ -170,11 +170,11 @@ def caption(img, d, c, t):
         return
     if st == "card":                      # a question from the studio
         draw_words(d, c, t, 58, 500, CAP_Y + rise, (214, 226, 238),
-                   lit=(214, 226, 238), a=a, maxw=830)
+                   lit=(214, 226, 238), a=a, maxw=880)
     elif st == "hook":                    # her line, in the brand gold
-        draw_words(d, c, t, 66, 800, CAP_Y + rise, GOLD, lit=CREAM, a=a, maxw=690)
+        draw_words(d, c, t, 66, 800, CAP_Y + rise, GOLD, lit=CREAM, a=a, maxw=700)
     else:
-        draw_words(d, c, t, 66, 800, CAP_Y + rise, CREAM, a=a, maxw=830)
+        draw_words(d, c, t, 66, 800, CAP_Y + rise, CREAM, a=a, maxw=880)
 
 def stage_busy(t):
     """0 when nothing occupies the middle of the frame, 1 when something does,

@@ -20,7 +20,7 @@ def dur(word):
     to "נציגת" is 0.64s start to start and is not a break at all."""
     return min(0.90, max(0.12, 0.055 * len(word) + 0.06))
 MAXW = 830           # caption line width
-MAXW_BY = {"run": 830, "card": 830, "hook": 690, "fig": 830}
+MAXW_BY = {"run": 880, "card": 880, "hook": 700, "fig": 880}
                      # a hook wraps sooner so it splits into two lines that
                      # each say something, instead of orphaning its last word
 
@@ -34,12 +34,10 @@ STYLE = {
  "fifty6": [("fig", 2, None)],
  "claim":  [("run", 2, None)],
  "q1":     [("card",1, None)],
- "creds":  [("run", 2, None)],
- "mgmt":   [("run", 2, None)],
+ "argument": [("run", 2, None)],
  "clean":  [("run", 2, None)],
  "q2hook": [("card",1, None), ("hook",2, None)],
- "eng_a":  [("run", 2, None)],
- "eng_b":  [("run", 2, None)],
+ "eng":    [("run", 2, None)],
  "supervise": [("run", 2, None)],
  "expect": [("run", 2, None)],
  "drain":  [("run", 2, None)],
@@ -103,6 +101,9 @@ def build(mapfile="map.json", out="track.json"):
                         for j in range(len(chunk) - 1, max(0, len(chunk)//3) - 1, -1):
                             if chunk[j][1].rstrip().endswith((".", "?", "!")):
                                 cut = j + 1; break
+                        # never leave a connective as the last word on screen
+                        while cut > 2 and chunk[cut-1][1] in CONNECT:
+                            cut -= 1
                         caps.append(make(chunk[:cut], st, spk, base, seg))
                         chunk = chunk[cut:] + [(t, word)]
                         while nlines(chunk) > 2:
@@ -112,6 +113,7 @@ def build(mapfile="map.json", out="track.json"):
                     caps.append(make(chunk, st, spk, base, seg))
 
     caps = _absorb(caps, d)
+    caps = _unorphan(caps, d)
     caps.sort(key=lambda c: c["start"])
     # Never let one caption sit on top of the next. They all share one zone
     # now, so an overlap is not a soft handover, it is two lines of text drawn
@@ -123,6 +125,41 @@ def build(mapfile="map.json", out="track.json"):
     if caps: caps[-1]["hard"] = False
     json.dump(caps, open(out, "w"), ensure_ascii=False, indent=1)
     return caps
+
+# Words that belong to what comes after them, not to what came before. A
+# caption that ends on one of these reads as a sentence that fell over.
+CONNECT = {"אם","אז","כי","אבל","וגם","ואז","שגם","גם","וזה","זה","את","של","על",
+           "עם","כשאתה","שאתה","ואף","מה","לא","הוא","היא","הם","מכוח","אין","יש"}
+UNITS   = {"מיליון","אלף","שקל","שקלים","₪"}
+
+def _unorphan(caps, d):
+    """Move a trailing connective, or a figure stranded from its unit, into the
+    caption that follows it."""
+    for i in range(len(caps) - 1):
+        c, nx = caps[i], caps[i + 1]
+        if len(c["words"]) < 2 or c["style"] != nx["style"] or c["speaker"] != nx["speaker"]:
+            continue
+        if nx["start"] - c["end"] > 1.6:
+            continue
+        last = c["words"][-1]
+        move = last in CONNECT or (D.is_num(last) and nx["words"][0] in UNITS)
+        if not move:
+            continue
+        f = D.F(SIZE[nx["style"]], 800 if nx["style"] in ("hook","run","fig") else 500)
+        n, w, sp = 1, 0.0, d.textlength(" ", font=f)
+        for word in [last] + nx["words"]:
+            ww = D.tw(d, word, f)
+            if w and w + sp + ww > MAXW_BY[nx["style"]]: n += 1; w = ww
+            else: w += (sp if w else 0) + ww
+        if n > 2:
+            continue
+        nx["words"] = [last] + nx["words"]
+        nx["times"] = [c["times"][-1]] + nx["times"]
+        nx["ends"]  = [c["ends"][-1]] + nx["ends"]
+        nx["start"] = min(nx["start"], c["times"][-1])
+        c["words"] = c["words"][:-1]; c["times"] = c["times"][:-1]; c["ends"] = c["ends"][:-1]
+        c["end"] = min(c["end"], nx["start"] - 0.02)
+    return [c for c in caps if c["words"]]
 
 def _absorb(caps, d):
     """A caption of one or two words is a flicker, not a line. Fold it into the
