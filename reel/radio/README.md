@@ -769,3 +769,5 @@ Measured at the new splice: her sentence decays to -61 dB and "תראה" starts
 0.02s later. The crossfade sits entirely inside that pause.
 
 139.42s of voice, 4357 frames.
+
+145.2s (2:25), 4357 frames, -13.7 LUFS, 0 samples of A/V lag including across the new splice at 126s.
