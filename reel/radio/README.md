@@ -609,3 +609,31 @@ municipality should be doing it, not asking whether it should.
 
 157.0s, -13.7 LUFS, 0 samples of A/V lag. `script.txt` carries the full
 running script as text.
+
+---
+
+# v16 — the ending starts where the money leads
+
+**The figure comes off the front of the closing block.** The ending used to open
+on "אנחנו מדברים פה על מצב 56 מיליון שקלים, סעיפים שונים, ובזיהוי של איך הכסף
+הזה זז" and only then reach the line that matters. The cut now starts at 97.38s,
+on **"שם אותנו על המסלול הישיר להקרסת שירותי העירייה — ממש בכל התחומים"**, and
+the run-up is gone. Two reasons it is better this way: the last thing said in
+the reel is where the money leads rather than how much of it there is, and the
+accounting sentence ("סעיפים שונים, ובזיהוי של איך הכסף הזה זז") was the one
+place in the closing block that asked the viewer to follow a mechanism instead
+of a claim. The `but` and `fifty6` blocks are removed outright; `claim` is a
+single unspliced piece of speech, 97.38-103.00.
+
+**The end card drops the number too.** It now carries one message and nothing
+else:
+
+    תפסיקו לשתוק
+    צאו נגד זה
+    מתוך הראיון ביומן החדשות
+
+Both lines went to 96px/800 (from 84) now that they are alone on the card, the
+gold rule sits at y=640 and grows to 280px, and the card tail is 5.8s instead of
+6.8 — there is less to read, so it does not need as long.
+
+146.7s total, 4401 frames.

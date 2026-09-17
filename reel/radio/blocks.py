@@ -176,20 +176,12 @@ SEGS = [
  # last thing said: the figure, and where the figure leads. Nothing was moved
  # to make room for it — the passage still runs whole in its own place at 0:32,
  # because the anchor's next question depends on her having just said it there.
- ("but",     86.74,  88.20, [(2, [
-    (86.80,"אבל"),(87.12,"אנחנו"),(87.28,"מדברים"),(87.52,"פה"),(87.76,"על"),
-    (87.92,"מצב")])]),
- ("fifty6",  88.90,  91.00, [(2, [
-    (88.96,"56"),(89.60,"מיליון"),(90.08,"שקלים,")])]),
-
- # "סעיפים שונים, ובזיהוי של איך הכסף הזה זז" — the money moving, which is the
- # whole claim, and which had been cut out of the middle of it for length.
- ("claim",   91.54, 103.00, [(2, [
-    (91.60,"סעיפים"),(92.16,"שונים,"),(93.52,"ובזיהוי"),(94.32,"של"),(94.64,"איך"),
-    (94.88,"הכסף"),(95.28,"הזה"),(95.52,"זז."),
-    (96.16,"מה"),(96.48,"שאנחנו"),(96.88,"רואים"),(97.12,"שזה"),(97.44,"שם"),
-    (97.76,"אותנו"),(98.08,"על"),(98.32,"המסלול"),(98.72,"הישיר"),(99.12,"להקרסת"),
-    (99.76,"שירותי"),(100.16,"העירייה."),
+ # The ending starts on "שם אותנו": the figure and the run up to it come out,
+ # so the last thing said in the reel is where the money leads, not how much
+ # of it there is.
+ ("claim",   97.38, 103.00, [(2, [
+    (97.44,"שם"),(97.76,"אותנו"),(98.08,"על"),(98.32,"המסלול"),(98.72,"הישיר"),
+    (99.12,"להקרסת"),(99.76,"שירותי"),(100.16,"העירייה."),
     (101.18,"ממש"),(101.50,"בכל"),(101.90,"התחומים.")])]),
 ]
 
