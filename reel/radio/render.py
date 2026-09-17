@@ -204,26 +204,27 @@ def speaker_at(t):
 # The interview holds no address to the council — she is answering questions,
 # not making an appeal — so the appeal is made here, in the campaign's own
 # voice and plainly as a card, rather than assembled out of her sentences.
-END = [("פחות אנשי מקצוע בעירייה.",  70, 800, CREAM, 0.15),
-       ("יותר כסף לקבלנים מבחוץ.",   70, 800, CREAM, 0.70),
-       ("חברי המועצה,",              70, 800, GOLD,  1.60),
-       ("דרשו לעצור עד שיוסבר.",     70, 800, GOLD,  2.10)]
+# One message. The reel has already made the case; the card only has to say
+# what to do with it.
+END = [("לחברי מועצת העיר חריש",  40, 700, GOLD,  0.15),
+       ("תפסיקו לשתוק.",          92, 800, CREAM, 0.75),
+       ("צאו נגד זה.",            92, 800, GOLD,  1.45)]
 
 def endcard(t):
     img = D.BG.copy(); d = ImageDraw.Draw(img)
     a = ease(t / 0.5)
     D.header(d)
-    d.rectangle([RIGHT + 4, 600, RIGHT + 9, 600 + int(470 * ease(t / 0.9))],
+    d.rectangle([RIGHT + 4, 640, RIGHT + 9, 640 + int(340 * ease(t / 0.9))],
                 fill=(*GOLD, int(230 * a)))
-    y = 600
+    y = 640
     for s, size, wt, col, t0 in END:
         k = ease((t - t0) / 0.45)
         if k <= 0:
-            y += size + 42; continue
+            y += size + (60 if size < 60 else 46); continue
         D.rtl(d, s, size, wt, y + int((1 - k) * 14), col, right=RIGHT - 30, a=255 * k)
-        y += size + 42
-    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1210, D.DIM,
-          a=255 * ease((t - 2.9) / 0.5))
+        y += size + (60 if size < 60 else 46)
+    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1150, D.DIM,
+          a=255 * ease((t - 2.4) / 0.5))
     return img
 
 # ---------------------------------------------------------------- frame

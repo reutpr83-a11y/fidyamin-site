@@ -335,3 +335,30 @@ already spent.
 | **the answer** | a public system does not empty itself of the people who know |
 | the pattern | and it repeats in policing, welfare, youth |
 | the verdict | a direct path to collapse. It is emptying its departments. |
+
+---
+
+# v6 — the handover, and one message on the card
+
+**The second opening block is the anchor, not the reporter.** The client hears
+Yossi Hadar taking the item's last sentence — "ואם צריך, להוריד את הנושא מסדר
+היום. לא הורידו. והצביעו באותו ערב." — and that is a normal radio shape: the
+reporter lays it out, the anchor delivers the sting. It is labelled accordingly.
+
+Worth recording that the measurement disagreed. Long-term average spectrum over
+speech frames, cosine distance against clean references of each voice, puts
+both opening blocks with the reporter (0.995 and 0.995, against 0.970 and 0.969
+for the anchor) and places the handover at 57.1s, where the anchor says "אוקיי,
+תודה איתמר". But every score on this recording sits between 0.96 and 0.99 —
+both men go through the same studio chain, which flattens exactly the
+differences the method relies on — so the margins are not wide enough to
+overrule someone who knows both voices. Pitch was tried first and was worse:
+octave errors put Greenberg's median at 119 Hz.
+
+**The end card carries one message now.**
+
+> לחברי מועצת העיר חריש
+> **תפסיקו לשתוק.**
+> **צאו נגד זה.**
+
+The reel has already made the case. The card only has to say what to do with it.
