@@ -211,13 +211,24 @@ def _absorb(caps, d):
         out.append(c)
     return out
 
+def _nodot(w):
+    """No full stops in captions.
+
+    A caption is a fragment of speech, not a paragraph, and the cut does not
+    always land where a sentence does: "זה אגף שיש בו סמכויות שלטוניות כמו
+    פיקוח" and "לא מעט ספקים חיצוניים, לא רק בניקיון" both carried a full stop
+    while the speaker was still mid sentence. Commas and question marks stay —
+    they are real — and the internal point in "2.4" is untouched because only a
+    trailing one is stripped."""
+    return w[:-1] if w.endswith(".") and len(w) > 1 else w
+
 def make(chunk, style, spk, base, seg):
     ends = [min(chunk[i+1][0], chunk[i][0] + dur(chunk[i][1]) + 0.12)
             for i in range(len(chunk)-1)] + [chunk[-1][0] + TAIL]
     return dict(style=style, speaker=spk, seg=seg["id"],
                 start=round(base + chunk[0][0] - LEAD, 3),
                 end=round(min(base + ends[-1], seg["start"] + seg["len"] + 0.25), 3),
-                words=[w for _, w in chunk],
+                words=[_nodot(w) for _, w in chunk],
                 times=[round(base + t - LEAD, 3) for t, _ in chunk],
                 ends=[round(base + e, 3) for e in ends])
 

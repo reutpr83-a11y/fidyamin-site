@@ -538,3 +538,21 @@ something the page already says.
 > **צאו נגד זה.**
 
 156.0s, -13.8 LUFS, 0 samples of A/V lag.
+
+---
+
+# v13 — no full stops
+
+Two captions were carrying a full stop while the speaker was still mid
+sentence, because the cut landed where the sentence did not:
+
+- **"זה אגף שיש בו סמכויות שלטוניות כמו פיקוח."** — she goes on to
+  "לדוגמה, צווי סגירה על הבנייה"
+- **"יש לא מעט ספקים חיצוניים, לא רק בניקיון."** — he goes on to
+  "בדברים נוספים"
+
+Rather than fix two and leave the rest to judgement, captions carry no full
+stops at all now. A caption is a fragment of speech, not a paragraph. Commas
+and question marks stay, because they are real and they carry meaning; only a
+trailing point is stripped, so "2.4" and "1.3" are untouched. The end card
+follows the same rule.

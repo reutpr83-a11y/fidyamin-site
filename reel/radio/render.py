@@ -207,8 +207,8 @@ def speaker_at(t):
 # The figure lands first and the ask follows it. The quote under the number is
 # hers, verbatim from the reel, so the card asserts nothing the recording does
 # not already carry.
-END = [("תפסיקו לשתוק.",          92, 800, CREAM, 1.50),
-       ("צאו נגד זה.",            92, 800, GOLD,  2.10)]
+END = [("תפסיקו לשתוק",           92, 800, CREAM, 1.50),
+       ("צאו נגד זה",             92, 800, GOLD,  2.10)]
 
 def endcard(t):
     img = D.BG.copy(); d = ImageDraw.Draw(img)
