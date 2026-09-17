@@ -637,3 +637,53 @@ gold rule sits at y=640 and grows to 280px, and the card tail is 5.8s instead of
 6.8 — there is less to read, so it does not need as long.
 
 146.7s total (2:27), 4401 frames, -13.7 LUFS, 0 samples of A/V lag.
+
+---
+
+# v17 — the design audit
+
+Four changes, all of them measured on the v16 frames before they were made.
+
+**The speech block moved down 90px.** The lowest ink on four frames out of five
+was y=1400 of 1920 — a quarter of the picture doing nothing, and a composition
+that floated in the middle of the frame. The waveform stage, the speaker's name
+and the caption zone all moved together: 820→880, 1136→1226, 1230→1320. A
+two-line hook now bottoms out at 1502 and the waveform strip under a panel is
+unchanged at 1610, both clear of 1620 where Instagram's own furniture starts.
+
+**Hooks are 76px, not 66px.** A hook and an ordinary caption were the same size
+and the same weight, separated by colour alone — gold against cream reads as "a
+slightly different colour", not "this is the line". The line width went with it,
+700→760, so the chunking came out identical: same 53 captions, same splits, just
+bigger where it matters.
+
+**The domain is named on screen.** The cut is ordered by domain, which was the
+brief, but the only place that order was visible was the two number panels;
+supervision, manpower and refuse all went by unmarked. `DOMAINS` maps segment
+ids to a label and `domain_spans()` reads their times out of the segment map, so
+the tag cannot drift from the cut. Spans are chained end-to-start, so there is
+exactly one boundary between any two domains and the outgoing label finishes
+fading before the incoming one begins. While a number panel is up the tag fades
+out and the panel's own bigger label carries the domain — it is never named
+twice on the same frame.
+
+    0.00-23.43   ההצבעה על התקציב
+    23.43-44.84  קבלנים במקום עובדים
+    44.84-66.74  ניקיון ותברואה          ← panel
+    66.74-101.43 הנדסה, תכנון ובנייה     ← panel
+    101.43-120.04 אשפה ברחובות
+    120.04-125.99 כוח אדם בכל האגפים
+    125.99-140.93 התמונה הכוללת
+
+**A progress bar, and the ground drifts.** The bar is 4px at the very top and
+fills right to left like the words, completing exactly at the end of the card.
+The drift pans an oversized ground on two long periods (46s and 61s) that do not
+repeat inside a reel, under two pixels a second — the frame stops being
+literally static between two caption fades without anything appearing to move.
+
+## What was measured and left alone
+
+Contrast of every text colour against the actual pixels behind it: captions
+17.1:1, the anchor's questions 13.6:1, gold hooks 9.5:1, the dim sub-line under
+a figure 6.0:1. The threshold is 4.5:1. Caption length runs to a median of 28
+characters and never more than two lines. None of it needed changing.

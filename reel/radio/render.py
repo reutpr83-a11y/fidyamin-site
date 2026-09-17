@@ -62,6 +62,42 @@ PANELS = [
        seg="eng", src_a=158.38, src_b=161.39,
        src_in=157.90, src_out=165.20),
 ]
+DOMAINS = [
+    (("setup", "vote"),                                   "ההצבעה על התקציב"),
+    (("concede", "sure", "q1", "argument"),               "קבלנים במקום עובדים"),
+    (("argument2", "round"),                              "ניקיון ותברואה"),
+    (("q2hook", "eng", "supervise", "expect", "felt"),    "הנדסה, תכנון ובנייה"),
+    (("q4str", "drain"),                                  "אשפה ברחובות"),
+    (("repeat",),                                         "כוח אדם בכל האגפים"),
+    (("q3", "hook2", "empty", "claim"),                   "התמונה הכוללת"),
+]
+
+def domain_spans():
+    """Each domain's stretch of the reel, taken from the segment map so the tag
+    can never drift from the cut."""
+    seg = {x["id"]: x for x in m["segs"]}
+    out = []
+    for ids, label in DOMAINS:
+        have = [seg[i] for i in ids if i in seg]
+        if not have: continue
+        out.append((min(x["start"] for x in have),
+                    max(x["start"] + (x["out"] - x["in"]) for x in have), label))
+    out.sort()
+    # Chain each span's end to the next one's start, so there is exactly one
+    # boundary between any two domains and nothing to overlap across.
+    return [(a, out[i + 1][0] if i + 1 < len(out) else VOICE, label)
+            for i, (a, _, label) in enumerate(out)]
+SPANS = domain_spans()
+FADE = 0.35
+
+def domain_at(t):
+    """The label and how far up it is. One fades out as the boundary arrives
+    and the next starts from nothing, so the two are never on screen together."""
+    for a, b, label in SPANS:
+        if a <= t < b:
+            return label, ease((t - a) / FADE) * (1 - ease((t - (b - FADE)) / FADE))
+    return None, 0.0
+
 def base_of(sid):
     s = [x for x in m["segs"] if x["id"] == sid][0]
     return s["start"] - s["in"]
@@ -96,6 +132,12 @@ def panel(img, d, p, t):
                       fill=(*CREAM, int(230 * ra * a)))
         D.rtl(d, sub, 34, 400, y + 132, DIM, a=255 * ra * a)
 
+def panel_alpha(t):
+    k = 0.0
+    for p in PANELS:
+        k = max(k, ease((t - p["t_in"]) / 0.45) * (1 - ease((t - p["t_out"]) / 0.40)))
+    return k
+
 def panel_at(t):
     for p in PANELS:
         if p["t_in"] - 0.5 <= t <= p["t_out"] + 0.5: return p
@@ -105,7 +147,12 @@ def panel_at(t):
 SPK = {1: ("יוסי הדר", GOLD),          # the anchor
        2: ("שני גרינברג", BLUE),
        3: ("איתמר רותם", GOLD)}        # the reporter who files the opening item
-CAP_Y = 1230                      # every caption starts here, whatever it is
+CAP_Y = 1320                      # every caption starts here, whatever it is
+# The block sits 90px lower than it used to. Measured on the v16 frames, the
+# lowest ink on four frames out of five was y=1400 of 1920: a quarter of the
+# picture was doing nothing and the composition floated in the middle. A
+# two-line hook now bottoms out at 1502, still clear of the 1620 line where
+# Instagram's own furniture starts.
 
 def chip(d, spk, t, a=1.0):
     """Just the name. The role, the station and the date were all furniture
@@ -114,9 +161,9 @@ def chip(d, spk, t, a=1.0):
     f = D.F(37, 700)
     w = D.tw(d, name, f)
     x = (W + w) / 2
-    d.text((x - w, 1136), name, font=f, fill=(*col, int(245 * a)), direction="rtl")
-    d.rectangle([int(x - w) - 28, 1154, int(x - w) - 12, 1157], fill=(*col, int(200 * a)))
-    d.rectangle([int(x) + 12, 1154, int(x) + 28, 1157], fill=(*col, int(200 * a)))
+    d.text((x - w, 1226), name, font=f, fill=(*col, int(245 * a)), direction="rtl")
+    d.rectangle([int(x - w) - 28, 1244, int(x - w) - 12, 1247], fill=(*col, int(200 * a)))
+    d.rectangle([int(x) + 12, 1244, int(x) + 28, 1247], fill=(*col, int(200 * a)))
 
 def lines_of(words, f, d, maxw):
     sp = d.textlength(" ", font=f)
@@ -172,7 +219,7 @@ def caption(img, d, c, t):
         draw_words(d, c, t, 58, 500, CAP_Y + rise, (214, 226, 238),
                    lit=(214, 226, 238), a=a, maxw=880)
     elif st == "hook":                    # her line, in the brand gold
-        draw_words(d, c, t, 66, 800, CAP_Y + rise, GOLD, lit=CREAM, a=a, maxw=700)
+        draw_words(d, c, t, 76, 800, CAP_Y + rise, GOLD, lit=CREAM, a=a, maxw=760)
     else:
         draw_words(d, c, t, 66, 800, CAP_Y + rise, CREAM, a=a, maxw=880)
 
@@ -211,7 +258,7 @@ END = [("תפסיקו לשתוק",           96, 800, CREAM, 0.35),
        ("צאו נגד זה",             96, 800, GOLD,  0.95)]
 
 def endcard(t):
-    img = D.BG.copy(); d = ImageDraw.Draw(img)
+    img = D.drifted(VOICE + t); d = ImageDraw.Draw(img)
     a = ease(t / 0.5)
     D.header(d)
     d.rectangle([RIGHT + 4, 640, RIGHT + 9, 640 + int(280 * ease((t - 0.25) / 0.9))],
@@ -225,6 +272,7 @@ def endcard(t):
         y += size + 46
     D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1010, D.DIM,
           a=255 * ease((t - 1.8) / 0.5))
+    D.progress(d, (VOICE + t) / TOTAL)
     return img
 
 # ---------------------------------------------------------------- frame
@@ -232,8 +280,10 @@ def frame(i):
     t = i / FPS
     if t >= VOICE:
         return endcard(t - VOICE)
-    img = D.BG.copy(); d = ImageDraw.Draw(img)
+    img = D.drifted(t); d = ImageDraw.Draw(img)
     D.header(d)
+    label, ta = domain_at(t)
+    D.domain_tag(d, label, ta * (1 - panel_alpha(t)))
     p = panel_at(t)
     if p: panel(img, d, p, t)
     for c in cap_at(t):
@@ -243,7 +293,7 @@ def frame(i):
     col = GOLD if (live and live[0]["speaker"] in (1, 3)) else BLUE
     k = stage_busy(t)
     wave(d, 1570, t, col=col, amp=0.85, a=k)                       # the quiet strip
-    wave(d, 820, t, col=col, amp=2.5, bars=62, gap=15, bw=5, a=1 - k)   # the stage
+    wave(d, 880, t, col=col, amp=2.5, bars=62, gap=15, bw=5, a=1 - k)   # the stage
     return img
 
 if __name__ == "__main__":

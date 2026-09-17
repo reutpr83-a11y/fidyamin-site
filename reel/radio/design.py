@@ -37,14 +37,26 @@ def rtl(d, s, size, weight, y, fill, right=RIGHT, a=255):
            direction="ltr" if is_num(s) else "rtl")
     return w
 
-def ground():
-    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    k = np.clip(0.30 * (xx / W) + 0.70 * (1 - yy / H), 0, 1)[..., None]
+def ground(w=W, h=H):
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    k = np.clip(0.30 * (xx / w) + 0.70 * (1 - yy / h), 0, 1)[..., None]
     g = np.array(NAVY, np.float32) + (np.array(MID, np.float32) - np.array(NAVY, np.float32)) * k
-    r = np.sqrt(((xx - W * 0.30) / (W * 1.05)) ** 2 + ((yy - H * 0.34) / (H * 0.62)) ** 2)
+    r = np.sqrt(((xx - w * 0.30) / (w * 1.05)) ** 2 + ((yy - h * 0.34) / (h * 0.62)) ** 2)
     g = g + (10.0 * np.clip(1 - r, 0, 1) ** 2)[..., None]
     return Image.fromarray(g.clip(0, 255).astype(np.uint8), "RGB").convert("RGBA")
 BG = ground()
+
+DRIFT = 40                       # how far the ground may wander, in pixels
+BG_BIG = ground(W + 2 * DRIFT, H + 2 * DRIFT)
+
+def drifted(t):
+    """The ground, panned. Nothing on this frame is footage, so without this
+    the picture is literally static between two caption fades. The periods are
+    long and mutually prime enough that it never repeats inside a reel, and the
+    speed works out under two pixels a second - felt, not seen."""
+    ox = DRIFT + int(DRIFT * math.sin(2 * math.pi * t / 46.0))
+    oy = DRIFT + int(DRIFT * math.sin(2 * math.pi * t / 61.0 + 1.1))
+    return BG_BIG.crop((ox, oy, ox + W, oy + H))
 
 def header(d, topic="עדכון תקציב 2026, עיריית חריש"):
     """Where the interview was broadcast, and what it was about.
@@ -65,6 +77,25 @@ def header(d, topic="עדכון תקציב 2026, עיריית חריש"):
         d.text((x - ww, 128), run, font=f, fill=(*BLUE, 255), direction="rtl")
         x -= ww
     rtl(d, topic, 52, 800, 212, CREAM)
+
+def domain_tag(d, label, a=1.0):
+    """Which area of the municipality is being talked about right now.
+
+    The cut is ordered by domain, which was the whole brief, but until this
+    existed the only place that order was visible was in the two number panels.
+    Everything between them - supervision, manpower, refuse - went by unmarked.
+    The tag hands over to a panel's own label when one comes up, so the domain
+    is never named twice on the same frame."""
+    if a <= 0.01 or not label: return
+    f = F(33, 600)
+    w = tw(d, label, f)
+    d.text((RIGHT - w, 292), label, font=f, fill=(*BLUE, int(235 * a)), direction="rtl")
+    d.rectangle([RIGHT - w - 22, 306, RIGHT - w - 8, 320], fill=(*GOLD, int(215 * a)))
+
+def progress(d, p):
+    """How much of the reel is left, read right to left like the words."""
+    d.rectangle([0, 0, W, 4], fill=(*DIM, 46))
+    d.rectangle([int(W * (1 - max(0.0, min(1.0, p)))), 0, W, 4], fill=(*GOLD, 240))
 
 def speaker(d, name, role, y, accent=GOLD):
     d.rectangle([RIGHT + 2, y + 6, RIGHT + 7, y + 74], fill=(*accent, 240))

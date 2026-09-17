@@ -20,7 +20,7 @@ def dur(word):
     to "נציגת" is 0.64s start to start and is not a break at all."""
     return min(0.90, max(0.12, 0.055 * len(word) + 0.06))
 MAXW = 830           # caption line width
-MAXW_BY = {"run": 880, "card": 880, "hook": 700, "fig": 880}
+MAXW_BY = {"run": 880, "card": 880, "hook": 760, "fig": 880}
                      # a hook wraps sooner so it splits into two lines that
                      # each say something, instead of orphaning its last word
 
@@ -52,7 +52,7 @@ STYLE = {
 
 }
 
-SIZE = {"run": 66, "card": 58, "hook": 66, "fig": 66}
+SIZE = {"run": 66, "card": 58, "hook": 76, "fig": 66}
 
 def build(mapfile="map.json", out="track.json"):
     m = json.load(open(mapfile))
