@@ -379,3 +379,37 @@ on his own questions, where it means something.
 
 The speaker line also grew from 33px to 37px and its rules were widened, so the
 one name that is left reads as a label rather than a footnote.
+
+---
+
+# v8 — who says what, corrected twice over
+
+Two attributions were wrong, and the second one was not a label problem but a
+reading of the interview.
+
+**The whole opening item is Itamar Rotem.** v6 moved its last sentence to the
+anchor on the client's ear; she has since listened again and it is the reporter
+throughout, which is also what the spectral measurement said in the first place
+(0.995 to the reporter against 0.969 to the anchor, for that exact block). It
+is back with Rotem.
+
+**"יכול להיות שיש דברים שעובדי העירייה לא יכולים לעשות וצריכים לפעמים יועצים
+חיצוניים" is the anchor, not her.** The reel had been running it as her
+concession. It is his — he puts the counter-case to her — and the transcriber
+had it as a separate speaker all along, which was missed.
+
+That changes the shape of the opening for the better. What had been a flat
+concession is an exchange, and her answer to it is stronger than the
+concession was:
+
+> **הדר:** יכול להיות שיש דברים שעובדי העירייה לא יכולים לעשות וצריכים לפעמים
+> יועצים חיצוניים.
+> **גרינברג:** ברור. מה זאת אומרת?
+> **גרינברג:** אבל אנחנו מדברים פה על מצב — 56 מיליון שקלים.
+
+The middle of her answer — "בתקופה שאני הייתי רוב הזמן הזה [?] ראש עיר, תמיד
+העלינו יועצים חיצוניים" — came back too uncertain to caption, so the cut keeps
+the two ends that are clean and drops what could not be verified, rather than
+guessing at a word.
+
+132.0s, 0 samples of A/V lag.
