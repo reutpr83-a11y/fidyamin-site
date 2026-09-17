@@ -687,3 +687,5 @@ Contrast of every text colour against the actual pixels behind it: captions
 17.1:1, the anchor's questions 13.6:1, gold hooks 9.5:1, the dim sub-line under
 a figure 6.0:1. The threshold is 4.5:1. Caption length runs to a median of 28
 characters and never more than two lines. None of it needed changing.
+
+146.7s (2:27), 4401 frames, -13.7 LUFS, 0 samples of A/V lag.
