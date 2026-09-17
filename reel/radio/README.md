@@ -200,3 +200,35 @@ have always worked. 32 of the 48 are hard swaps.
 The ground runs (5,15,35) to (11,36,82), from (11,43,68) to (18,61,96), and
 the radial lift came down from 14 to 10. The brand blue and gold are unchanged
 so the two reels still read as one family.
+
+---
+
+# v3 — the ending
+
+127.3s. The reel was ending on "אתה לא עושה את המהלך הזה באופן שיטתי ורחב",
+which is a rebuttal inside an argument, not a close.
+
+**The order is argued now, not chronological.** The two blocks that came 13th
+and 14th in the broadcast are last here:
+
+> **איך את מסבירה את זה?**
+> תראה, אני לא יודעת להסביר את הפעולות שלהם. **בעיניי, הם מובילים אותנו
+> למסלול ישיר לקריסה.**
+
+That is the headline of the article, it is the verdict of everything the reel
+has just shown, and it lands as an answer to a question he asks — which is
+worth more than the same sentence volunteered. Nothing else moved: he pushes
+back, she answers, and only then does he ask the one she cannot answer.
+
+**The address to the council is on the end card, not in her mouth.** The
+interview contains no appeal to the coalition — she is answering questions for
+four minutes, not making one — and assembling an appeal out of her sentences
+would be putting words in her mouth. So the card makes it plainly, in the
+campaign's own voice:
+
+> פחות אנשי מקצוע בעירייה.
+> יותר כסף לקבלנים מבחוץ.
+> **חברי המועצה, דרשו לעצור עד שיוסבר.**
+
+The first two lines are the same pair the budget reel's end card carries, so
+the two films close the same way.

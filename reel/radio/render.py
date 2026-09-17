@@ -14,7 +14,7 @@ import design as D
 W, H, FPS = 1080, 1920, 30
 NAVY, GOLD, CREAM, BLUE, DIM = D.NAVY, D.GOLD, D.CREAM, D.BLUE, D.DIM
 RIGHT = D.RIGHT
-TAIL = 5.0                         # end card
+TAIL = 6.2                         # end card
 
 m     = json.load(open("map.json"))
 caps  = json.load(open("track.json"))
@@ -199,26 +199,29 @@ def speaker_at(t):
     return nxt[0]["speaker"] if nxt else 2
 
 # ---------------------------------------------------------------- end card
-END = [("מיליונים עוברים החוצה,", 72, 800, CREAM, 0.15),
-       ("ומי שאמור לפקח",         72, 800, CREAM, 0.55),
-       ("כבר לא שם.",             72, 800, CREAM, 0.95),
-       ("תשאלו את חברי המועצה.",  58, 800, GOLD,  1.70)]
+# The interview holds no address to the council — she is answering questions,
+# not making an appeal — so the appeal is made here, in the campaign's own
+# voice and plainly as a card, rather than assembled out of her sentences.
+END = [("פחות אנשי מקצוע בעירייה.",  70, 800, CREAM, 0.15),
+       ("יותר כסף לקבלנים מבחוץ.",   70, 800, CREAM, 0.70),
+       ("חברי המועצה,",              70, 800, GOLD,  1.60),
+       ("דרשו לעצור עד שיוסבר.",     70, 800, GOLD,  2.10)]
 
 def endcard(t):
     img = D.BG.copy(); d = ImageDraw.Draw(img)
     a = ease(t / 0.5)
     D.header(d)
-    d.rectangle([RIGHT + 4, 640, RIGHT + 9, 640 + int(400 * ease(t / 0.8))],
+    d.rectangle([RIGHT + 4, 600, RIGHT + 9, 600 + int(470 * ease(t / 0.9))],
                 fill=(*GOLD, int(230 * a)))
-    y = 640
+    y = 600
     for s, size, wt, col, t0 in END:
         k = ease((t - t0) / 0.45)
         if k <= 0:
             y += size + 42; continue
         D.rtl(d, s, size, wt, y + int((1 - k) * 14), col, right=RIGHT - 30, a=255 * k)
         y += size + 42
-    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1180, D.DIM,
-          a=255 * ease((t - 2.3) / 0.5))
+    D.rtl(d, "מתוך הראיון ביומן החדשות", 32, 400, 1210, D.DIM,
+          a=255 * ease((t - 2.9) / 0.5))
     return img
 
 # ---------------------------------------------------------------- frame
