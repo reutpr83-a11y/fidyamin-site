@@ -861,3 +861,5 @@ judged on what it *contains*, not what it measures. Where a quiet window is
 shorter than the fade, shorten the fade.
 
 140.44s of voice, 4387 frames.
+
+146.2s (2:26), 4387 frames, -13.7 LUFS, 0 samples of A/V lag including across the question at 126s.
