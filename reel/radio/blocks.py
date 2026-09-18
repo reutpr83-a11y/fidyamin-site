@@ -162,13 +162,14 @@ SEGS = [
  # landed in the decay of "אבל", so what played was the wreck of a word and then
  # the question, which is what was being heard as two things at once.
  #
- # 194.88 is the one right answer here: 194.880-194.950 is a real silence,
- # -46 dB falling to -57 dB at the floor, and "איך" starts at 194.955. The whole
- # 0.07s crossfade therefore lands inside that silence and the question opens at
- # full level on its own first word, with nothing of "כן, אבל" left. The
- # out-point moves 196.05 -> 196.03 to stop just short of the next voice's onset
- # at 196.04.
- ("q3",     194.88, 196.03, [(1, [
+ # 194.94 is the in-point, with a 0.02s crossfade (see XF_BY). 194.880-194.950
+ # reads as silence at -46 to -57 dB, but the first half of it is the voiced
+ # decay of "אבל", and a 0.07s fade from 194.88 played it: faint, but in the one
+ # gap where nothing else is sounding. 194.94 is on the floor itself, and the
+ # short fade means his first word, which starts at 194.955, is not faded in to
+ # get there. The out-point stops at 196.03, just short of the next voice's
+ # onset at 196.04.
+ ("q3",     194.94, 196.03, [(1, [
     (194.96,"איך"),(195.07,"את"),(195.31,"מסבירה"),(195.63,"את"),(195.79,"זה?")])]),
 
  # Split, to drop 201.22-201.90. Between "שלהם" and "בעיניי" the broadcast

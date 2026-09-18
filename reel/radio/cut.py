@@ -12,9 +12,7 @@ def read(p):
 
 x = read(blocks.SRC)
 XF = blocks.XF
-nxf = int(XF*SR)
-fade_out = np.cos(np.linspace(0,np.pi/2,nxf))[:,None]   # equal power
-fade_in  = np.sin(np.linspace(0,np.pi/2,nxf))[:,None]
+XF_BY = getattr(blocks, "XF_BY", {})
 
 out = np.zeros((0,2),np.float32)
 starts = []
@@ -24,6 +22,11 @@ for i,(name,a,b,turns) in enumerate(blocks.SEGS):
         starts.append(0.0)
         out = seg
         continue
+    # the crossfade is per splice: a splice whose quiet window is short needs a
+    # short fade, or the fade reaches back into the speech on either side of it
+    nxf = int(XF_BY.get(name, XF)*SR)
+    fade_out = np.cos(np.linspace(0,np.pi/2,nxf))[:,None]   # equal power
+    fade_in  = np.sin(np.linspace(0,np.pi/2,nxf))[:,None]
     starts.append((len(out)-nxf)/SR)
     head = out[-nxf:]*fade_out + seg[:nxf]*fade_in
     out = np.concatenate([out[:-nxf], head, seg[nxf:]])

@@ -814,3 +814,50 @@ remembering: that test rules out corruption, never bad framing.
 140.50s of voice, 4389 frames.
 
 146.3s (2:26), 4389 frames, -13.7 LUFS, 0 samples of A/V lag including across the restored question at 126s.
+
+---
+
+# v21 — the crossfade was playing the thing the cut removed
+
+v20 put the in-point at 194.88 on the grounds that 194.880-194.950 measures as
+silence, -46 dB falling to a -57 dB floor. It does. But the first half of that
+window is not silence, it is the **voiced decay of "אבל"** — and a 0.07s fade
+starting at 194.88 reaches back and plays it. Traced on the v20 file itself, in
+the gap before his first word:
+
+    reel 125.920  f0 174 Hz  conf 0.50  -41.0 dB
+    reel 125.940  f0 178 Hz  conf 0.48  -43.5 dB
+
+A voiced male remnant, 25 dB under the speech either side but sitting in the one
+gap where nothing else is sounding, which is precisely where a thing that quiet
+gets heard. The cut had removed the word; the crossfade was putting a piece of
+it back.
+
+Two changes:
+
+- **`cut.py` takes a per-splice crossfade.** `XF_BY` overrides the global 0.07
+  per segment id, and the fade windows are built inside the loop instead of once
+  outside it. Everything not named in `XF_BY` is unchanged.
+- **`q3` uses `XF_BY["q3"] = 0.02`, in-point 194.94.** 194.94 is on the floor
+  itself, past the decay, and the short fade means his first word at 194.955 is
+  not faded in to get there — a 0.07s fade from that point would have covered
+  55ms of it.
+
+Traced again on the new cut, the same gap:
+
+    reel 125.920  -51.4 dB   conf 0.41   (noise floor, no stable period)
+    reel 125.930  -50.7 dB   conf 0.38
+    reel 125.950  -37.0 dB   his first word begins
+    reel 125.970  f0 138 Hz  conf 0.74  -31.8 dB
+
+The floor is 8-10 dB lower than it was and carries no voiced period. Her
+sentence decays, there is a clean gap, and the question starts.
+
+## The general lesson
+
+Choosing an in-point by the level in the window before the first word is not
+enough: an equal-power fade makes that window audible, so the window has to be
+judged on what it *contains*, not what it measures. Where a quiet window is
+shorter than the fade, shorten the fade.
+
+140.44s of voice, 4387 frames.
